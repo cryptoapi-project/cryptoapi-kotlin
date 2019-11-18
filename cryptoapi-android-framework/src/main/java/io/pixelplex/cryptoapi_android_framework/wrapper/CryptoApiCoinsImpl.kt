@@ -8,7 +8,7 @@ class CryptoApiCoinsImpl(
     private val crptoApiClient: CryptoApi
 ): CryptoApiCoins {
     override fun getCoins(onSuccess: (CoinsResponse) -> Unit, onError: (IOException) -> Unit) {
-        crptoApiClient.callApi<CoinsResponse>(
+        crptoApiClient.call<CoinsResponse>(
             COINS_PARAM,
             onSuccess,
             onError

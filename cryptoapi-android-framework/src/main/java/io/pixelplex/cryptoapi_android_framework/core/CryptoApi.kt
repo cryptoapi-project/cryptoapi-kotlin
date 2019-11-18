@@ -1,11 +1,16 @@
 package io.pixelplex.cryptoapi_android_framework.core
 
 import io.pixelplex.cryptoapi_android_framework.core.model.response.CryptoApiReponse
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import io.pixelplex.cryptoapi_android_framework.exception.ApiException
+import io.pixelplex.cryptoapi_android_framework.support.fromJson
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.lang.annotation.ElementType
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class CryptoApi(
     private val callTimeout: Long,
@@ -27,14 +32,31 @@ class CryptoApi(
         builder.build()
     }
 
-    fun <T : CryptoApiReponse> callApi(
+    /**
+     * Make API-call with callbacks
+     */
+    fun <T : CryptoApiReponse> call(
         params: String,
         onSuccess: (T) -> Unit,
-        onError: (IOException) -> Unit
+        onError: (ApiException) -> Unit
     ) {
-        httpClient.newCall(
-            makeRequest(CRYPTO_API_URL.urlWithParams(params))
-        )
+        httpClient.newCall(makeRequest(CRYPTO_API_URL.urlWithParams(params)))
+            .enqueue(TypedCallback(onSuccess, onError))
+    }
+
+    /**
+     * Make suspended API-call
+     */
+    suspend fun <T : CryptoApiReponse> call(
+        params: String
+    ): T {
+        return suspendCoroutine {
+            call<T>(params, { result ->
+                it.resumeWith(Result.success(result))
+            }, { error ->
+                it.resumeWithException(error)
+            })
+        }
     }
 
     private fun makeRequest(url: String) =
@@ -49,3 +71,28 @@ class CryptoApi(
         private const val CRYPTO_API_URL = "https://697-crypto-api.pixelplexlabs.com/api/v1/"
     }
 }
+
+private class TypedCallback<T>(
+    private val onSuccess: (T) -> Unit,
+    private val onError: (ApiException) -> Unit
+) : Callback {
+
+    override fun onFailure(call: Call, e: IOException) {
+        onError(ApiException(e))
+    }
+
+    override fun onResponse(call: Call, response: Response) {
+        onSuccess(fromJson(response.body?.string()))
+    }
+
+}
+
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.FUNCTION)
+annotation class GET
+
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.FUNCTION)
+annotation class POST
+
+
