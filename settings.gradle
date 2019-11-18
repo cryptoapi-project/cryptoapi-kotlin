@@ -1,0 +1,2 @@
+include ':app', ':cryptoapi-android-framework'
+rootProject.name='CryptoApiFramework'
