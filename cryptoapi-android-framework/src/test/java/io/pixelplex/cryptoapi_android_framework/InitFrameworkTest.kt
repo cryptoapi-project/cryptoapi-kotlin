@@ -1,6 +1,6 @@
 package io.pixelplex.cryptoapi_android_framework
 
-import io.pixelplex.cryptoapi_android_framework.model.response.CoinsResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.CoinsResponse
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
@@ -17,10 +17,11 @@ class InitFrameworkTest {
         var coinsFail: CoinsResponse? = null
         val testFuture = FutureTask<CoinsResponse>()
 
-        CryptoApiFramework().testCryptoApi({ coins ->
-            testFuture.setComplete(
-                coins
-            )
+        CryptoApiFramework.getInstance(600, 600)
+            .cryptoApiCoins.getCoins({ coins ->
+                testFuture.setComplete(
+                    coins
+                )
         }, { error ->
             testFuture.setComplete(
                 error,

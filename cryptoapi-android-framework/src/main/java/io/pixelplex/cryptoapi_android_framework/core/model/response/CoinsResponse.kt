@@ -1,13 +1,12 @@
-package io.pixelplex.cryptoapi_android_framework.model.response
+package io.pixelplex.cryptoapi_android_framework.core.model.response
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class CoinsResponse (
     val coins: List<Coin>
-) {
+): CryptoApiReponse {
     companion object {
-        const val COINS_KEY = "coins"
         const val ETH_KEY = "eth"
     }
 }
