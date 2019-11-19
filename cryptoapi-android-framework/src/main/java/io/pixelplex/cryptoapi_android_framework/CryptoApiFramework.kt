@@ -24,9 +24,11 @@ class CryptoApiFramework private constructor(
         CryptoApiEthImpl(cryptoApi)
     }
 
+    //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
     val generatedApiEth: EthApi by lazy {
         EthApiImpl(cryptoApi)
     }
+    //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
 
     companion object : SingletonHolder<CryptoApiFramework, Long, Long, String>(::CryptoApiFramework)
 }

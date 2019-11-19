@@ -8,6 +8,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceRe
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
+
 import io.pixelplex.model.exception.NetworkException
 
 interface CryptoApiEth {
