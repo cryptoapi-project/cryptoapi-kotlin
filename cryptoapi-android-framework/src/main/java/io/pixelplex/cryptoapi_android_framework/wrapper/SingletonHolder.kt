@@ -11,9 +11,9 @@ open class SingletonHolder<out T: Any, in CAT, in CNT>(creator: (CAT, CNT) -> T)
             return checkInstance
         }
 
-        return synchronized(this) {
+         synchronized(this) {
             val checkInstanceAgain = instance
-            if (checkInstanceAgain != null) {
+            return if (checkInstanceAgain != null) {
                 checkInstanceAgain
             } else {
                 val created = creator!!(callTimeout, connectTimeout)

@@ -10,10 +10,9 @@ import org.junit.Assert.*
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
-class InitFrameworkTest {
+class CoinsFrameworkTest {
     @Test
-    fun addition_isCorrect() {
-
+    fun coinsNotNull() {
         var coinsFail: CoinsResponse? = null
         val testFuture = FutureTask<CoinsResponse>()
 
@@ -31,7 +30,7 @@ class InitFrameworkTest {
             )
         })
 
-        testFuture.wrapResult<Exception, CoinsResponse>(1, TimeUnit.MINUTES)
+        testFuture.wrapResult<Exception, CoinsResponse>(2, TimeUnit.MINUTES)
             .fold({ coinsResponse ->
                 coinsFail = coinsResponse
             }, {

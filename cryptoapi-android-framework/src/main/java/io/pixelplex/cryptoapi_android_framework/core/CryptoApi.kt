@@ -1,8 +1,10 @@
 package io.pixelplex.cryptoapi_android_framework.core
 
-import io.pixelplex.cryptoapi_android_framework.core.model.response.CryptoApiReponse
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -27,14 +29,26 @@ class CryptoApi(
         builder.build()
     }
 
-    fun <T : CryptoApiReponse> callApi(
+    fun callApi(
         params: String,
-        onSuccess: (T) -> Unit,
+        onSuccess: (String) -> Unit,
         onError: (IOException) -> Unit
     ) {
         httpClient.newCall(
             makeRequest(CRYPTO_API_URL.urlWithParams(params))
-        )
+        ).enqueue(object: Callback {
+            override fun onResponse(call: Call, response: Response) {
+                onSuccess(
+                    response.body!!.string()
+                )
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                call.cancel()
+                onError(e)
+            }
+        })
     }
 
     private fun makeRequest(url: String) =
