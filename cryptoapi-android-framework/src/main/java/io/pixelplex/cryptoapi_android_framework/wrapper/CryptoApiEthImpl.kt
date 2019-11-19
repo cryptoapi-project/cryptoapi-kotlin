@@ -5,6 +5,7 @@ import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POST
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
 import io.pixelplex.cryptoapi_android_framework.exception.NetworkException
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
 
@@ -17,7 +18,7 @@ class CryptoApiEthImpl(
         onError: (NetworkException) -> Unit
     ) {
         cryptoApiClient.callApi(
-            params = COINS_PARAM,
+            params = ESTIMATE_GAS_PARAM,
             method = POST,
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = onError,
@@ -25,7 +26,19 @@ class CryptoApiEthImpl(
         )
     }
 
+    override fun getNetwork(
+        onSuccess: (EthNetworkResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = NETWORK_PARAM,
+            onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
+            onError = onError
+        )
+    }
+
     companion object {
-        private const val COINS_PARAM = "coins/eth/estimate-gas"
+        private const val ESTIMATE_GAS_PARAM = "coins/eth/estimate-gas"
+        private const val NETWORK_PARAM = "coins/eth/network"
     }
 }
