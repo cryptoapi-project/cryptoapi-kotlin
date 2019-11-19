@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CoinsResponse (
     val coins: List<Coin>
-): CryptoApiReponse {
+): CryptoApiResponse {
     companion object {
         const val ETH_KEY = "eth"
     }
