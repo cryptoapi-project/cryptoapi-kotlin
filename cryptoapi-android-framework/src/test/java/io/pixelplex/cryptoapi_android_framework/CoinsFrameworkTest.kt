@@ -1,6 +1,6 @@
 package io.pixelplex.cryptoapi_android_framework
 
-import io.pixelplex.cryptoapi_android_framework.model.response.CoinsResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.CoinsResponse
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
@@ -10,17 +10,17 @@ import org.junit.Assert.*
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
-class InitFrameworkTest {
+class CoinsFrameworkTest {
     @Test
-    fun addition_isCorrect() {
-
+    fun coinsNotNull() {
         var coinsFail: CoinsResponse? = null
         val testFuture = FutureTask<CoinsResponse>()
 
-        CryptoApiFramework().testCryptoApi({ coins ->
-            testFuture.setComplete(
-                coins
-            )
+        CryptoApiFramework.getInstance(CALL_TIMEOUT, CONNECT_TIMEOUT, TOKEN)
+            .cryptoApiCoins.getCoins({ coins ->
+                testFuture.setComplete(
+                    coins
+                )
         }, { error ->
             testFuture.setComplete(
                 error,
@@ -30,7 +30,7 @@ class InitFrameworkTest {
             )
         })
 
-        testFuture.wrapResult<Exception, CoinsResponse>(1, TimeUnit.MINUTES)
+        testFuture.wrapResult<Exception, CoinsResponse>(2, TimeUnit.MINUTES)
             .fold({ coinsResponse ->
                 coinsFail = coinsResponse
             }, {
@@ -38,5 +38,11 @@ class InitFrameworkTest {
             })
 
         assertTrue(coinsFail != null)
+    }
+
+    companion object {
+        const val CALL_TIMEOUT = 600L
+        const val CONNECT_TIMEOUT = 600L
+        const val TOKEN = ""
     }
 }
