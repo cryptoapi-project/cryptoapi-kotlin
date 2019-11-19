@@ -36,7 +36,7 @@ class CryptoApi(
 
     fun callApi(
         params: String,
-        method: RequestMethod,
+        method: RequestMethod = RequestMethod.GET,
         body: String? = null,
         onSuccess: (String) -> Unit,
         onError: (NetworkException) -> Unit
