@@ -11,7 +11,8 @@ import java.util.concurrent.TimeUnit
 
 class CryptoApi(
     private val callTimeout: Long,
-    private val connectTimeout: Long
+    private val connectTimeout: Long,
+    private val token: String
 ) {
     private val logging by lazy {
         HttpLoggingInterceptor().apply {
@@ -53,6 +54,7 @@ class CryptoApi(
 
     private fun makeRequest(url: String) =
         Request.Builder()
+            .header(AUTH_HEADER_KEY, BEARER_FORMAT.format(token))
             .url(url)
             .build()
 
@@ -60,6 +62,8 @@ class CryptoApi(
         this + params
 
     companion object {
+        private const val AUTH_HEADER_KEY = "Authorization"
+        private const val BEARER_FORMAT = "Bearer %s"
         private const val CRYPTO_API_URL = "https://697-crypto-api.pixelplexlabs.com/api/v1/"
     }
 }

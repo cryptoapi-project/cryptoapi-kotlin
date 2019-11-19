@@ -16,7 +16,7 @@ class CoinsFrameworkTest {
         var coinsFail: CoinsResponse? = null
         val testFuture = FutureTask<CoinsResponse>()
 
-        CryptoApiFramework.getInstance(600, 600)
+        CryptoApiFramework.getInstance(CALL_TIMEOUT, CONNECT_TIMEOUT, TOKEN)
             .cryptoApiCoins.getCoins({ coins ->
                 testFuture.setComplete(
                     coins
@@ -38,5 +38,11 @@ class CoinsFrameworkTest {
             })
 
         assertTrue(coinsFail != null)
+    }
+
+    companion object {
+        const val CALL_TIMEOUT = 600L
+        const val CONNECT_TIMEOUT = 600L
+        const val TOKEN = ""
     }
 }
