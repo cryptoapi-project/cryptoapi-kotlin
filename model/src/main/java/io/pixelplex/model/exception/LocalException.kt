@@ -1,4 +1,4 @@
-package io.pixelplex.cryptoapi_android_framework.exception
+package io.pixelplex.model.exception
 
 open class LocalException : RuntimeException {
     constructor() : super()

@@ -10,14 +10,13 @@ import org.junit.Assert.*
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
-class InitFrameworkTest {
+class CoinsFrameworkTest {
     @Test
-    fun addition_isCorrect() {
-
+    fun coinsNotNull() {
         var coinsFail: CoinsResponse? = null
         val testFuture = FutureTask<CoinsResponse>()
 
-        CryptoApiFramework.getInstance(600, 600)
+        CryptoApiFramework.getInstance(CALL_TIMEOUT, CONNECT_TIMEOUT, TOKEN)
             .cryptoApiCoins.getCoins({ coins ->
                 testFuture.setComplete(
                     coins
@@ -31,7 +30,7 @@ class InitFrameworkTest {
             )
         })
 
-        testFuture.wrapResult<Exception, CoinsResponse>(1, TimeUnit.MINUTES)
+        testFuture.wrapResult<Exception, CoinsResponse>(2, TimeUnit.MINUTES)
             .fold({ coinsResponse ->
                 coinsFail = coinsResponse
             }, {
@@ -39,5 +38,11 @@ class InitFrameworkTest {
             })
 
         assertTrue(coinsFail != null)
+    }
+
+    companion object {
+        const val CALL_TIMEOUT = 600L
+        const val CONNECT_TIMEOUT = 600L
+        const val TOKEN = ""
     }
 }

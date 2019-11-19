@@ -1,6 +1,6 @@
 package io.pixelplex.cryptoapi_android_framework.support.future
 
-import io.pixelplex.cryptoapi_android_framework.exception.LocalException
+import io.pixelplex.model.exception.LocalException
 import io.pixelplex.cryptoapi_android_framework.support.toError
 import io.pixelplex.cryptoapi_android_framework.support.toValue
 import io.pixelplex.cryptoapi_android_framework.support.Result
