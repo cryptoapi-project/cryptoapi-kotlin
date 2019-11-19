@@ -13,36 +13,37 @@ import java.util.concurrent.TimeUnit
 class CoinsFrameworkTest {
     @Test
     fun coinsNotNull() {
-        var coinsFail: CoinsResponse? = null
+        var coins: CoinsResponse? = null
         val testFuture = FutureTask<CoinsResponse>()
 
-        CryptoApiFramework.getInstance(CALL_TIMEOUT, CONNECT_TIMEOUT, TOKEN)
+        CryptoApiFramework
+            .getInstance(CALL_TIMEOUT, CONNECT_TIMEOUT, TOKEN)
             .cryptoApiCoins.getCoins({ coins ->
                 testFuture.setComplete(
                     coins
                 )
-        }, { error ->
-            testFuture.setComplete(
-                error,
-                CoinsResponse(
-                    arrayListOf()
+            }, { error ->
+                testFuture.setComplete(
+                    error,
+                    CoinsResponse(
+                        arrayListOf()
+                    )
                 )
-            )
-        })
+            })
 
         testFuture.wrapResult<Exception, CoinsResponse>(2, TimeUnit.MINUTES)
             .fold({ coinsResponse ->
-                coinsFail = coinsResponse
+                coins = coinsResponse
             }, {
-                coinsFail = null
+                coins = null
             })
 
-        assertTrue(coinsFail != null)
+        assertTrue(coins != null)
     }
 
     companion object {
-        const val CALL_TIMEOUT = 600L
-        const val CONNECT_TIMEOUT = 600L
+        const val CALL_TIMEOUT = 900L
+        const val CONNECT_TIMEOUT = 900L
         const val TOKEN = ""
     }
 }

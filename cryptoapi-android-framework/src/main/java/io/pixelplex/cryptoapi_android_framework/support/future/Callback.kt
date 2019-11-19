@@ -4,6 +4,7 @@ import io.pixelplex.model.exception.LocalException
 import io.pixelplex.cryptoapi_android_framework.support.Result
 import io.pixelplex.cryptoapi_android_framework.support.error
 import io.pixelplex.cryptoapi_android_framework.support.value
+import io.pixelplex.model.exception.ApiException
 
 interface Callback<T> {
 
@@ -19,7 +20,7 @@ interface Callback<T> {
      *
      * @param error Error occurred during operation process
      */
-    fun onError(error: LocalException)
+    fun onError(error: ApiException)
 
 }
 
@@ -29,7 +30,7 @@ interface Callback<T> {
 fun <T> Callback<T>.processResult(block: () -> T) {
     Result { block() }
         .value { result -> this.onSuccess(result) }
-        .error { error -> this.onError(LocalException(error)) }
+        .error { error -> this.onError(ApiException(error)) }
 }
 
 /**
@@ -38,5 +39,5 @@ fun <T> Callback<T>.processResult(block: () -> T) {
 fun <E : Exception, T> Callback<T>.processResult(targetResult: Result<E, T>) {
     targetResult
         .value { result -> this.onSuccess(result) }
-        .error { error -> this.onError(LocalException(error)) }
+        .error { error -> this.onError(ApiException(error)) }
 }

@@ -19,6 +19,7 @@ dependencies {
     implementation "me.eugeniomarletti.kotlin.metadata:kotlin-metadata:1.4.0"
 
     compileOnly project(':annotation')
+    implementation project(":model")
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

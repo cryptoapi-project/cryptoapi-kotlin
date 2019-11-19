@@ -1,5 +1,6 @@
 package io.pixelplex.cryptoapi_android_framework.support.future
 
+import io.pixelplex.model.exception.ApiException
 import io.pixelplex.model.exception.LocalException
 import java.util.concurrent.CancellationException
 import java.util.concurrent.ExecutionException
@@ -90,7 +91,7 @@ class FutureTask<T> : CancellableTask,
 
     private fun getResultOrThrow(): T? {
         if (exception != null)
-            throw LocalException(exception)
+            throw ApiException(exception)
         return result
     }
 

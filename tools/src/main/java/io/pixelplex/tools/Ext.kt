@@ -1,8 +1,6 @@
 package io.pixelplex.tools
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
-fun <T> fromJson(json: String?): T {
-    return Gson().fromJson(json, object : TypeToken<T>() {}.type)
-}
+inline fun <reified T> T.json(): String = Gson().toJson(this, T::class.java)
+inline fun <reified T> String.fromJson(c: Class<T>): T = Gson().fromJson(this, c)

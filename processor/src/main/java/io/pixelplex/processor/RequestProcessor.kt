@@ -2,26 +2,21 @@ package io.pixelplex.processor
 
 import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
-import io.pixelplex.annotation.COIN
-import io.pixelplex.annotation.GET
-import io.pixelplex.annotation.POST
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import io.pixelplex.annotation.*
 import me.eugeniomarletti.kotlin.metadata.KotlinMetadataUtils
 import me.eugeniomarletti.kotlin.metadata.shadow.name.FqName
 import me.eugeniomarletti.kotlin.metadata.shadow.platform.JavaToKotlinClassMap
 import me.eugeniomarletti.kotlin.processing.KotlinAbstractProcessor
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 import java.io.File
+import java.lang.IllegalArgumentException
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeElement
+import javax.lang.model.element.*
+import javax.lang.model.type.DeclaredType
 import javax.tools.Diagnostic
-
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -68,6 +63,13 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                 ClassName(CORE_PACKAGE, API_CLIENT_NAME)
             )
 
+            typeSpec.addSuperinterface(
+                ClassName(
+                    "io.pixelplex.cryptoapi_android_framework",
+                    getContractName(elements.first())
+                )
+            ) //TODO REFACTOR
+
             typeSpec.primaryConstructor(ctor.build())
 
             val idProperty = PropertySpec
@@ -82,21 +84,36 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
             elements.forEach { element ->
                 val funcBuilder = FunSpec.builder(element.simpleName.toString())
-                    .addModifiers(KModifier.PUBLIC)
+                    .addModifiers(KModifier.PUBLIC, KModifier.OVERRIDE)
                     .addParameters(element.parameters.map {
-
                         ParameterSpec(
                             it.simpleName.toString(),
                             it.asType().asTypeName().javaToKotlinType(),
                             it.modifiers as Iterable<KModifier>
                         )
                     })
-                    .addCode(
+                funcBuilder.addCode(
+                    """
+                    val queryParams = ArrayList<QueryParameter>()
+                    
+                """.trimIndent()
+                )
+
+                element.parameters.filter { getParamName(it) != null }.forEach {
+                    funcBuilder.addCode(
                         """
-                    apiCoins.callApi("${coinUrl + getPath(element)}", callback)
+                    queryParams.add(QueryParameter("${getParamName(it)}",${it.simpleName}, QueryType.PATH))
                     
                 """.trimIndent()
                     )
+                }
+
+                funcBuilder.addCode(
+                    """
+                    apiCoins.callApi(path = "${coinUrl + getPath(element)}", callback = callback, params = queryParams)
+                    
+                """.trimIndent()
+                )
                 //  .returns(element.returnType.asTypeName())
 
                 typeSpec.addFunction(funcBuilder.build())
@@ -104,6 +121,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
             val file = FileSpec.builder(pack, className)
                 .addImport(CORE_PACKAGE, API_CLIENT_NAME)
+                .addImport("io.pixelplex.model", "QueryParameter", "QueryType")
                 .addType(typeSpec.build())
 
 
@@ -117,6 +135,13 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         }
     }
 
+    private fun getParamName(param: VariableElement): String? {
+        param.getAnnotation(QUERY::class.java)?.name?.let { return it }
+        param.getAnnotation(PATH::class.java)?.name?.let { return it }
+        param.getAnnotation(BODY::class.java)?.let { return param.simpleName.toString() }
+        return null
+    }
+
     private fun getClassAnnotationKey(element: ExecutableElement): String {
         val declaringClass = element.enclosingElement as TypeElement
         val annotation = declaringClass.getAnnotation(COIN::class.java)
@@ -128,14 +153,19 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         return declaringClass.asClassName().simpleName + "Impl"
     }
 
-    private fun getPath(element: ExecutableElement): String {
-        val annotation = element.getAnnotation(GET::class.java)
-        return annotation.path
+    private fun getContractName(element: ExecutableElement): String {
+        val declaringClass = element.enclosingElement as TypeElement
+        return declaringClass.asClassName().simpleName
     }
 
-    private fun postPath(element: ExecutableElement): String {
-        val annotation = element.getAnnotation(POST::class.java)
-        return annotation.path
+    private fun getPath(element: ExecutableElement): String {
+        var path = element.getAnnotation(GET::class.java)?.path
+        path?.let { return it }
+
+        path = element.getAnnotation(POST::class.java)?.path
+        path?.let { return it }
+
+        throw IllegalArgumentException("method ${element.simpleName} must be annotated by GET or POST")
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
@@ -148,7 +178,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
         private const val CORE_PACKAGE = "io.pixelplex.cryptoapi_android_framework.core"
         private const val API_CLIENT_NAME = "CryptoApi"
-        private const val COINS_URL_FORMAT = "/coins/%s/"
+        private const val COINS_URL_FORMAT = "coins/%s/"
     }
 }
 
