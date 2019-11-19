@@ -8,6 +8,8 @@ import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalance
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfo
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
 import io.pixelplex.cryptoapi_android_framework.exception.NetworkException
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
@@ -55,6 +57,20 @@ class CryptoApiEthImpl(
         )
     }
 
+    override fun getEthInfo(
+        addresses: EthAddresses,
+        onSuccess: (EthInfoResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = ACCOUNTS_ADDRESS_INFO_PARAM.format(addresses.string()),
+            onSuccess = { responseJson ->
+                successEthInfo(responseJson, onSuccess)
+            },
+            onError = onError
+        )
+    }
+
     private fun successEthBalances(
         responseJson: String,
         onSuccess: (EthBalanceResponse) -> Unit
@@ -70,9 +86,25 @@ class CryptoApiEthImpl(
         }
     }
 
+    private fun successEthInfo(
+        responseJson: String,
+        onSuccess: (EthInfoResponse) -> Unit
+    ) {
+        if (responseJson.isJSONArray()) {
+            onSuccess(
+                EthInfoResponse(
+                    info = fromJson<List<EthInfo>>(responseJson)
+                )
+            )
+        } else {
+            onSuccess(fromJson(responseJson))
+        }
+    }
+
     companion object {
         private const val ESTIMATE_GAS_PARAM = "coins/eth/estimate-gas"
         private const val NETWORK_PARAM = "coins/eth/network"
         private const val ACCOUNTS_ADDRESS_BALANCE_PARAM = "coins/eth/accounts/%s/balance"
+        private const val ACCOUNTS_ADDRESS_INFO_PARAM = "coins/eth/accounts/%s/info"
     }
 }
