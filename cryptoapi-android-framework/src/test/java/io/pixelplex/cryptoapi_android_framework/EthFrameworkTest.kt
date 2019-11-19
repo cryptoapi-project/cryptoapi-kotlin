@@ -2,10 +2,12 @@ package io.pixelplex.cryptoapi_android_framework
 
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
@@ -21,11 +23,13 @@ class EthFrameworkTest {
     private var ethNetwork: EthNetworkResponse? = null
     private var ethBalances: EthBalanceResponse? = null
     private var ethInfo: EthInfoResponse? = null
+    private var ethTransferResponse: EthTransferResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
     private val testEthBalanceResponseFuture = FutureTask<EthBalanceResponse>()
     private val testEthInfoResponseFuture = FutureTask<EthInfoResponse>()
+    private val testEthTransfersResponseFuture = FutureTask<EthTransferResponse>()
 
     private val estimatedGas = EstimatedGas(
         from = ETH_ADDRESS_1,
@@ -41,6 +45,20 @@ class EthFrameworkTest {
 
     private val ethAddresses = EthAddresses(ETH_ADDRESS_1, ETH_ADDRESS_2)
     private val badEthAddresses = EthAddresses(ETH_ADDRESS_1, "0xb0202eBbF797Dd61A")
+
+    private val ethTransfer = EthTransfer(
+        addresses = ethAddresses,
+        skip = 0,
+        limit = 1,
+        positive = "positivestring"
+    )
+
+    private val badEthTransfer = EthTransfer(
+        addresses = badEthAddresses,
+        skip = 0,
+        limit = 1,
+        positive = "positivestring"
+    )
 
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
         CoinsFrameworkTest.CALL_TIMEOUT,
@@ -170,6 +188,42 @@ class EthFrameworkTest {
 
         assertTrue(ethInfo != null)
         assertTrue(ethInfo!!.errors!!.count() > 0)
+    }
+
+    @Test
+    fun getEthTransfers() {
+        cryptoApiFramework.cryptoApiEth.getEthTransfers(
+            ethTransfer,
+            { transferResp -> testEthTransfersResponseFuture.setComplete(transferResp) },
+            { transferError -> testEthTransfersResponseFuture.setComplete(transferError) }
+        )
+
+        testEthTransfersResponseFuture.wrapResult<Exception, EthTransferResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethTransferResponse = ethInfoResponse
+            }, { ethTransferResponse = null
+            })
+
+        assertTrue(ethTransferResponse != null)
+        assertTrue(ethTransferResponse!!.items.count() > 0)
+    }
+
+    @Test
+    fun getEthTransfersFail() {
+        cryptoApiFramework.cryptoApiEth.getEthTransfers(
+            badEthTransfer,
+            { transferResp -> testEthTransfersResponseFuture.setComplete(transferResp) },
+            { transferError -> testEthTransfersResponseFuture.setComplete(transferError) }
+        )
+
+        testEthTransfersResponseFuture.wrapResult<Exception, EthTransferResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethTransferResponse = ethInfoResponse
+            }, { ethTransferResponse = null
+            })
+
+        assertTrue(ethTransferResponse != null)
+        assertTrue(ethTransferResponse!!.errors!!.count() > 0)
     }
 
     companion object {
