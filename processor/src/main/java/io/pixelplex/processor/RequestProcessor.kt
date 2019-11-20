@@ -4,18 +4,20 @@ import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.pixelplex.annotation.*
+import io.pixelplex.model.QueryType
 import me.eugeniomarletti.kotlin.metadata.KotlinMetadataUtils
+import me.eugeniomarletti.kotlin.metadata.kotlinMetadata
 import me.eugeniomarletti.kotlin.metadata.shadow.name.FqName
 import me.eugeniomarletti.kotlin.metadata.shadow.platform.JavaToKotlinClassMap
 import me.eugeniomarletti.kotlin.processing.KotlinAbstractProcessor
 import java.io.File
 import java.lang.IllegalArgumentException
+import java.util.regex.Pattern
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.*
-import javax.lang.model.type.DeclaredType
 import javax.tools.Diagnostic
 
 @AutoService(Processor::class)
@@ -35,95 +37,79 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
 
         val elements = getExecutableElements(
-            roundEnv.getElementsAnnotatedWith(GET::class.java)
+            roundEnv.getElementsAnnotatedWith(Get::class.java)
+                    + roundEnv.getElementsAnnotatedWith(Post::class.java)
         )
-        generateCode(elements)
+
+        elements.forEach { (className, elements) ->
+            generateCode(className, elements)
+        }
 
         return true
     }
 
-    private fun getExecutableElements(elements: Set<Element>): List<ExecutableElement> {
+    private fun getExecutableElements(elements: Set<Element>): Map<String, List<ExecutableElement>> {
         return elements.filter { element -> element.kind == ElementKind.METHOD && element is ExecutableElement }
-            .map { it as ExecutableElement }
+            .map { it as ExecutableElement }.groupBy { getClassName(it) }
     }
 
-    private fun generateCode(elements: List<ExecutableElement>) {
+    private fun generateCode(className: String, elements: List<ExecutableElement>) {
+
+        var hasSuspend = false
 
         if (elements.isNotEmpty()) {
             val pack = elementUtils.getPackageOf(elements.first()).toString()
-
-            val className = getClassName(elements.first())
 
             val typeSpec = TypeSpec.classBuilder(className)
 
             val coinUrl = String.format(COINS_URL_FORMAT, getClassAnnotationKey(elements.first()))
 
             val ctor = FunSpec.constructorBuilder().addParameter(
-                "apiCoins",
+                API_CLIENT_PARAM_NAME,
                 ClassName(CORE_PACKAGE, API_CLIENT_NAME)
             )
 
             typeSpec.addSuperinterface(
                 ClassName(
-                    "io.pixelplex.cryptoapi_android_framework",
+                    pack,
                     getContractName(elements.first())
                 )
-            ) //TODO REFACTOR
+            )
 
             typeSpec.primaryConstructor(ctor.build())
 
             val idProperty = PropertySpec
                 .builder(
-                    "apiCoins",
+                    API_CLIENT_PARAM_NAME,
                     ClassName(CORE_PACKAGE, API_CLIENT_NAME),
                     KModifier.PRIVATE
-                ).initializer("apiCoins").build()
+                ).initializer(API_CLIENT_PARAM_NAME).build()
 
             typeSpec.addProperty(idProperty)
 
-
             elements.forEach { element ->
-                val funcBuilder = FunSpec.builder(element.simpleName.toString())
-                    .addModifiers(KModifier.PUBLIC, KModifier.OVERRIDE)
-                    .addParameters(element.parameters.map {
-                        ParameterSpec(
-                            it.simpleName.toString(),
-                            it.asType().asTypeName().javaToKotlinType(),
-                            it.modifiers as Iterable<KModifier>
-                        )
-                    })
-                funcBuilder.addCode(
-                    """
-                    val queryParams = ArrayList<QueryParameter>()
-                    
-                """.trimIndent()
+                messager.printMessage(
+                    Diagnostic.Kind.WARNING,
+                    element.parameters.map { getParamType(it) }.toString()
                 )
+                if (element.parameters.map { getParamType(it) }.any { it.contains("kotlin.coroutines.Continuation") }) {
+                    hasSuspend = true
+                    generateSuspendMethod(element, coinUrl, typeSpec)
 
-                element.parameters.filter { getParamName(it) != null }.forEach {
-                    funcBuilder.addCode(
-                        """
-                    queryParams.add(QueryParameter("${getParamName(it)}",${it.simpleName}, QueryType.PATH))
-                    
-                """.trimIndent()
-                    )
+                } else {
+                    generateMethod(element, coinUrl, typeSpec)
                 }
-
-                funcBuilder.addCode(
-                    """
-                    apiCoins.callApi(path = "${coinUrl + getPath(element)}", callback = callback, params = queryParams)
-                    
-                """.trimIndent()
-                )
-                //  .returns(element.returnType.asTypeName())
-
-                typeSpec.addFunction(funcBuilder.build())
             }
 
             val file = FileSpec.builder(pack, className)
                 .addImport(CORE_PACKAGE, API_CLIENT_NAME)
-                .addImport("io.pixelplex.model", "QueryParameter", "QueryType")
+                .addImport("io.pixelplex.model", "QueryParameter", "QueryType", "RequestParameter")
                 .addType(typeSpec.build())
 
+            if (hasSuspend) {
+                file.addImport("kotlin.coroutines", "resumeWithException", "suspendCoroutine")
+                file.addImport("io.pixelplex.tools", "TypedCallback")
+            }
 
             val sourceFile = file.build()
 
@@ -135,16 +121,200 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         }
     }
 
+    private fun generateMethod(
+        element: ExecutableElement,
+        coinUrl: String,
+        typeSpec: TypeSpec.Builder
+    ) {
+        val funcBuilder = FunSpec.builder(element.simpleName.toString())
+            .addModifiers(KModifier.PUBLIC, KModifier.OVERRIDE)
+            .addParameters(element.parameters.map {
+                ParameterSpec(
+                    it.simpleName.toString(),
+                    it.asType().asTypeName().javaToKotlinType(),
+                    it.modifiers as Iterable<KModifier>
+                )
+            })
+        if (element.parameters.isNotEmpty()) {
+            funcBuilder.addCode(
+                codeSnippetLine("val queryParams = ArrayList<QueryParameter<*>>()")
+            )
+
+            element.parameters.filter { getParamName(it) != null && getQueryType(it) != null }
+                .forEach {
+                    funcBuilder.addCode(
+                        codeSnippetLine(
+                            "queryParams.add(QueryParameter<${getParamType(it)}>(\"${getParamName(
+                                it
+                            )}\", RequestParameter<${getParamType(it)}>(${it.simpleName}), QueryType.${getQueryType(
+                                it
+                            )!!.name}))"
+                        )
+                    )
+                }
+            funcBuilder.addCode(
+                codeSnippetLine(
+                    "${API_CLIENT_PARAM_NAME}.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, params = queryParams)"
+                )
+            )
+        } else {
+            funcBuilder.addCode(
+                codeSnippetLine(
+                    "${API_CLIENT_PARAM_NAME}.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback)"
+                )
+            )
+        }
+        //   .returns(element.returnType.asTypeName().javaToKotlinType())
+
+        typeSpec.addFunction(funcBuilder.build())
+    }
+
+    //    override suspend fun getNetwork() = suspendCoroutine<EthNetworkResponse> {
+    //        getNetwork(it)
+    //    }
+
+    private fun generateSuspendMethod(
+        element: ExecutableElement,
+        coinUrl: String,
+        typeSpec: TypeSpec.Builder
+    ) {
+
+        val funcBuilder = FunSpec.builder(element.simpleName.toString())
+            .addModifiers(KModifier.PRIVATE)
+            .addParameters(element.parameters
+                .map {
+                    ParameterSpec(
+                        it.simpleName.toString(),
+                        it.asType().asTypeName().javaToKotlinType(),
+                        it.modifiers as Iterable<KModifier>
+                    )
+                })
+
+
+        funcBuilder.addCode(
+            """val callback = TypedCallback.withType(${getSuspendReturnType(element)}::class.java,
+                { result->
+                    ${element.parameters.last().simpleName}.resumeWith(Result.success(result))
+                },
+                { error->
+                    ${element.parameters.last().simpleName}.resumeWithException(error)
+                })
+            
+        """.trimIndent()
+        )
+
+        if (element.parameters.isNotEmpty()) {
+            funcBuilder.addCode(
+                codeSnippetLine("val queryParams = ArrayList<QueryParameter<*>>()")
+            )
+
+            element.parameters.filter { getParamName(it) != null && getQueryType(it) != null }
+                .forEach {
+                    funcBuilder.addCode(
+                        codeSnippetLine(
+                            "queryParams.add(QueryParameter<${getParamType(it)}>(\"${getParamName(
+                                it
+                            )}\", RequestParameter<${getParamType(it)}>(${it.simpleName}), QueryType.${getQueryType(
+                                it
+                            )!!.name}))"
+                        )
+                    )
+                }
+            funcBuilder.addCode(
+                codeSnippetLine(
+                    "${API_CLIENT_PARAM_NAME}.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, params = queryParams)"
+                )
+            )
+        } else {
+            funcBuilder.addCode(
+                codeSnippetLine(
+                    "${API_CLIENT_PARAM_NAME}.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback)"
+                )
+            )
+        }
+
+        typeSpec.addFunction(funcBuilder.build())
+
+        generateSuspendWrapper(element, typeSpec)
+    }
+
+    private fun generateSuspendWrapper(
+        element: ExecutableElement,
+        typeSpec: TypeSpec.Builder
+    ) {
+        val funcBuilder = FunSpec.builder(element.simpleName.toString())
+            .addModifiers(KModifier.PUBLIC, KModifier.OVERRIDE, KModifier.SUSPEND)
+            .addParameters(element.parameters.filter { !getParamType(it).contains("kotlin.coroutines.Continuation") }
+                .map {
+                    ParameterSpec(
+                        it.simpleName.toString(),
+                        it.asType().asTypeName().javaToKotlinType(),
+                        it.modifiers as Iterable<KModifier>
+                    )
+                })
+            .returns(getSuspendReturnType(element).toClassName())
+
+        if (funcBuilder.parameters.isNotEmpty()) {
+            funcBuilder.addCode(
+                """return suspendCoroutine {
+                    ${element.simpleName}(${funcBuilder.parameters.map { it.name }.joinToString(", ")}, it)
+                }
+                """
+            )
+        } else {
+            funcBuilder.addCode(
+                """return suspendCoroutine {
+                    ${element.simpleName}(it)
+                }
+                """
+            )
+        }
+
+        typeSpec.addFunction(funcBuilder.build())
+    }
+
+    private fun String.toClassName(): ClassName {
+        val pointIndex = this.lastIndexOf('.')
+        return ClassName(this.substring(0, pointIndex), this.substring(pointIndex))
+    }
+
+
+    private fun getSuspendReturnType(element: ExecutableElement): String {
+        val p = element.parameters.last().asType().asTypeName().toString()
+        Pattern.compile("Continuation<in (.*?)>").matcher(p).let {
+            if (it.find())
+                return it.group(1)
+        }
+        throw IllegalStateException("Unknown suspend return type ${p}")
+    }
+
+    private fun codeSnippetLine(code: String): String {
+        return """$code 
+            
+        """.trimIndent()
+    }
+
     private fun getParamName(param: VariableElement): String? {
-        param.getAnnotation(QUERY::class.java)?.name?.let { return it }
-        param.getAnnotation(PATH::class.java)?.name?.let { return it }
-        param.getAnnotation(BODY::class.java)?.let { return param.simpleName.toString() }
+        param.getAnnotation(Query::class.java)?.name?.let { return it }
+        param.getAnnotation(Path::class.java)?.name?.let { return it }
+        param.getAnnotation(Body::class.java)?.let { return param.simpleName.toString() }
+        return null
+    }
+
+    private fun getParamType(param: VariableElement): String {
+        return param.asType().asTypeName().javaToKotlinType().toString()
+    }
+
+    private fun getQueryType(param: VariableElement): QueryType? {
+        param.getAnnotation(Query::class.java)?.name?.let { return QueryType.QUERY }
+        param.getAnnotation(Path::class.java)?.name?.let { return QueryType.PATH }
+        param.getAnnotation(Body::class.java)?.let { return QueryType.BODY }
         return null
     }
 
     private fun getClassAnnotationKey(element: ExecutableElement): String {
         val declaringClass = element.enclosingElement as TypeElement
-        val annotation = declaringClass.getAnnotation(COIN::class.java)
+        val annotation = declaringClass.getAnnotation(Coin::class.java)
         return annotation.name
     }
 
@@ -159,17 +329,13 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
     }
 
     private fun getPath(element: ExecutableElement): String {
-        var path = element.getAnnotation(GET::class.java)?.path
-        path?.let { return it }
-
-        path = element.getAnnotation(POST::class.java)?.path
-        path?.let { return it }
-
+        element.getAnnotation(Get::class.java)?.path?.let { return it }
+        element.getAnnotation(Post::class.java)?.path?.let { return it }
         throw IllegalArgumentException("method ${element.simpleName} must be annotated by GET or POST")
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(GET::class.java.canonicalName, POST::class.java.canonicalName)
+        return setOf(Get::class.java.canonicalName, Post::class.java.canonicalName)
     }
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
@@ -179,6 +345,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         private const val CORE_PACKAGE = "io.pixelplex.cryptoapi_android_framework.core"
         private const val API_CLIENT_NAME = "CryptoApi"
         private const val COINS_URL_FORMAT = "coins/%s/"
+        private const val API_CLIENT_PARAM_NAME = "apiClient"
     }
 }
 

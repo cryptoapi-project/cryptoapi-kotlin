@@ -1,8 +1,8 @@
 package io.pixelplex.model
 
-class QueryParameter(
+class QueryParameter<T>(
     val name: String,
-    val value: Any,
+    val value: RequestParameter<T>,
     val type: QueryType
 )
 

@@ -3,16 +3,16 @@ package io.pixelplex.cryptoapi_android_framework.wrapper
 import com.google.gson.Gson
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POST
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalance
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfo
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
+import io.pixelplex.model.data.EstimatedGas
+import io.pixelplex.model.data.EthAddresses
+import io.pixelplex.model.data.EthTransfer
+import io.pixelplex.model.response.EstimatedGasResponse
+import io.pixelplex.model.response.EthBalance
+import io.pixelplex.model.response.EthBalanceResponse
+import io.pixelplex.model.response.EthInfo
+import io.pixelplex.model.response.EthInfoResponse
+import io.pixelplex.model.response.EthNetworkResponse
+import io.pixelplex.model.response.EthTransferResponse
 
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
 import io.pixelplex.cryptoapi_android_framework.support.isJSONArray

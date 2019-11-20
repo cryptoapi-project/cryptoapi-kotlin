@@ -36,33 +36,6 @@ class CryptoApi(
         builder.build()
     }
 
-//    /**
-//     * Make API-call with callbacks
-//     */
-//    fun <T : CryptoApiReponse> call(
-//        params: String,
-//        onSuccess: (T) -> Unit,
-//        onError: (ApiException) -> Unit
-//    ) {
-//        httpClient.newCall(makeRequest(CRYPTO_API_URL.urlWithParams(params)))
-//            .enqueue(TypedCallback(onSuccess, onError))
-//    }
-//
-//    /**
-//     * Make suspended API-call
-//     */
-//    suspend fun <T : CryptoApiReponse> call(
-//        params: String
-//    ): T {
-//        return suspendCoroutine {
-//            call<T>(params, { result ->
-//                it.resumeWith(Result.success(result))
-//            }, { error ->
-//                it.resumeWithException(error)
-//            })
-//        }
-
-
     fun callApi(
         params: String,
         method: RequestMethod = RequestMethod.GET,
@@ -132,14 +105,14 @@ class CryptoApi(
     fun callApi(
         path: String,
         callback: Callback,
-        params: List<QueryParameter>
+        params: List<QueryParameter<*>>
     ) {
         get(CRYPTO_API_URL.urlWithPath(path), params = params, responseCallback = callback)
     }
 
     operator fun get(
         url: String,
-        params: List<QueryParameter>,
+        params: List<QueryParameter<*>> = emptyList(),
         responseCallback: Callback
     ) {
 
@@ -161,14 +134,18 @@ class CryptoApi(
             }
         }
 
-        val request: Request =
+        val request =
             Request.Builder().url(httpBuilder.build())
                 .addHeader(AUTH_HEADER_KEY, String.format(BEARER_FORMAT, token))
                 .url(path)
-                .build()
 
-        httpClient.newCall(request).enqueue(responseCallback)
+        params.filter { it.type == QueryType.BODY }.forEach { param ->
+            request.post(getRequestBody(param.value.toGson()))
+        }
+
+        httpClient.newCall(request.build()).enqueue(responseCallback)
     }
+
 
     //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
 

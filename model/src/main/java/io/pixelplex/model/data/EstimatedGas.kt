@@ -1,4 +1,4 @@
-package io.pixelplex.cryptoapi_android_framework.core.model.data
+package io.pixelplex.model.data
 
 data class EstimatedGas (
     val from: String,

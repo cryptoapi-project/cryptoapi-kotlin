@@ -1,4 +1,4 @@
-package io.pixelplex.cryptoapi_android_framework.core.model.data
+package io.pixelplex.model.data
 
 class EthAddresses(vararg addresses: String) {
     private val addressesStrings: List<String>
