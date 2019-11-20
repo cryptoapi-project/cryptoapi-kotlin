@@ -14,6 +14,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceRe
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfo
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionExternalResponse
@@ -127,6 +128,18 @@ class CryptoApiEthImpl(
         )
     }
 
+    override fun getEthTransactionsByHash(
+        hash: String,
+        onSuccess: (EthTransactionResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = TRANSACTIONS_HASH_PARAM.format(hash),
+            onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
+            onError = onError
+        )
+    }
+
     private fun successEthBalances(
         responseJson: String,
         onSuccess: (EthBalanceResponse) -> Unit
@@ -165,5 +178,6 @@ class CryptoApiEthImpl(
         private const val ETH_TRANSFERS_PARAM = "coins/eth/accounts/%s/transfers?skip=%s&limit=%s&positive=%s"
         private const val TRANSACTIONS_EXTERNAL_PARAM = "coins/eth/accounts/%s/transactions/external?skip=%s&limit=%s"
         private const val TRANSACTIONS_PARAM = "coins/eth/transactions?from=%s&to=%s&skip=%s&limit=%s"
+        private const val TRANSACTIONS_HASH_PARAM = "coins/eth/transactions/%s"
     }
 }

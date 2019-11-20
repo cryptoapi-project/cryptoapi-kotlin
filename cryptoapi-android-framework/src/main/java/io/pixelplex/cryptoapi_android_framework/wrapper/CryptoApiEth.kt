@@ -9,6 +9,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGas
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionExternalResponse
@@ -53,6 +54,12 @@ interface CryptoApiEth {
     fun getEthTransactions(
         ethTransaction: EthTransaction,
         onSuccess: (EthTransactionsResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun getEthTransactionsByHash(
+        hash: String,
+        onSuccess: (EthTransactionResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
 }
