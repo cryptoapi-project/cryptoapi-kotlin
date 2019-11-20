@@ -4,10 +4,10 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class EthTransactionsResponse (
-    @SerializedName(ITEMS_KEY) @Expose
+    @SerializedName(ITEMS_KEY)
     val items: List<EthTransactionResponse>,
 
-    @SerializedName(TOTAL_KEY) @Expose
+    @SerializedName(TOTAL_KEY)
     val total: Int,
 
     @SerializedName(ERRORS_KEY)
@@ -43,52 +43,52 @@ data class EthTransactionsResponse (
 }
 
 data class EthTransactionResponse (
-    @SerializedName(EthTransactionsResponse.BLOCK_HASH_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.BLOCK_HASH_KEY)
     val blockHash: String,
 
-    @SerializedName(EthTransactionsResponse.BLOCK_NUMBER_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.BLOCK_NUMBER_KEY)
     val blockNumber: Long,
 
-    @SerializedName(EthTransactionsResponse.UTC_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.UTC_KEY)
     val utc: String,
 
-    @SerializedName(EthTransactionsResponse.FROM_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.FROM_KEY)
     val from: String,
 
-    @SerializedName(EthTransactionsResponse.GAS_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.GAS_KEY)
     val gas: Long,
 
-    @SerializedName(EthTransactionsResponse.GAS_PRICE_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.GAS_PRICE_KEY)
     val gasPrice: Long,
 
-    @SerializedName(EthTransactionsResponse.HASH_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.HASH_KEY)
     val hash: String,
 
-    @SerializedName(EthTransactionsResponse.INPUT_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.INPUT_KEY)
     val input: String,
 
-    @SerializedName(EthTransactionsResponse.NONCE_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.NONCE_KEY)
     val nonce: Int,
 
-    @SerializedName(EthTransactionsResponse.TO_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.TO_KEY)
     val to: String,
 
-    @SerializedName(EthTransactionsResponse.TRANSACTION_INDEX_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.TRANSACTION_INDEX_KEY)
     val transactionIndex: Int,
 
-    @SerializedName(EthTransactionsResponse.VALUE_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.VALUE_KEY)
     val value: Long,
 
-    @SerializedName(EthTransactionsResponse.V_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.V_KEY)
     val v: String,
 
-    @SerializedName(EthTransactionsResponse.S_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.S_KEY)
     val s: String,
 
-    @SerializedName(EthTransactionsResponse.R_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.R_KEY)
     val r: String,
 
-    @SerializedName(EthTransactionsResponse.INTERNAL_TRANSACTIONS_KEY) @Expose
+    @SerializedName(EthTransactionsResponse.INTERNAL_TRANSACTIONS_KEY)
     val internalTransactions: List<String>,
 
     @SerializedName(EthTransactionsResponse.CONFIRMATIONS_KEY)
@@ -113,18 +113,18 @@ data class EthTransactionResponse (
 }
 
 data class Receipt (
-    @SerializedName(EthTransactionResponse.CONTRACT_ADDRESS_KEY) @Expose
+    @SerializedName(EthTransactionResponse.CONTRACT_ADDRESS_KEY)
     val contractAddress: String? = null,
 
-    @SerializedName(EthTransactionResponse.CUMULATIVE_GAS_USED_KEY) @Expose
+    @SerializedName(EthTransactionResponse.CUMULATIVE_GAS_USED_KEY)
     val cumulativeGasUsed: Long,
 
-    @SerializedName(EthTransactionResponse.GAS_USED_KEY) @Expose
+    @SerializedName(EthTransactionResponse.GAS_USED_KEY)
     val gasUsed: Long,
 
-    @SerializedName(EthTransactionResponse.LOGS_KEY) @Expose
+    @SerializedName(EthTransactionResponse.LOGS_KEY)
     val logs: List<String>,
 
-    @SerializedName(EthTransactionResponse.STATUS_KEY) @Expose
+    @SerializedName(EthTransactionResponse.STATUS_KEY)
     val status: Boolean
 )

@@ -1,10 +1,9 @@
 package io.pixelplex.cryptoapi_android_framework.core.model.response
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class EthBalanceResponse (
-    val balances: List<EthBalance>?,
+data class EthCallContractResponse (
+    val response: String? = null,
 
     @SerializedName(ERRORS_KEY)
     val errors: List<ErrorResponse>? = null,
@@ -13,17 +12,7 @@ data class EthBalanceResponse (
     val status: Int? = null
 ): CryptoApiResponse {
     companion object {
-        const val ADDRESS_KEY = "address"
-        const val BALANCE_KEY = "balance"
         const val ERRORS_KEY = "errors"
         const val STATUS_KEY = "status"
     }
 }
-
-data class EthBalance (
-    @SerializedName(EthBalanceResponse.ADDRESS_KEY)
-    val address: String,
-
-    @SerializedName(EthBalanceResponse.BALANCE_KEY)
-    val balance: String
-)

@@ -4,13 +4,13 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class EstimatedGasResponse (
-    @SerializedName(ESTIMATE_GAS_KEY) @Expose
+    @SerializedName(ESTIMATE_GAS_KEY)
     val estimateGas: Long,
 
-    @SerializedName(GAS_PRICE_KEY) @Expose
+    @SerializedName(GAS_PRICE_KEY)
     val gasPrice: Long,
 
-    @SerializedName(NONCE_KEY) @Expose
+    @SerializedName(NONCE_KEY)
     val nonce: Int,
 
     @SerializedName(ERRORS_KEY)
