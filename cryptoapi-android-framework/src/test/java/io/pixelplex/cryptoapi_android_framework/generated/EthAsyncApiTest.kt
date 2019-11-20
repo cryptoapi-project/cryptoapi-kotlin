@@ -3,7 +3,8 @@ package io.pixelplex.cryptoapi_android_framework.generated
 import io.pixelplex.cryptoapi_android_framework.CoinsFrameworkTest
 import io.pixelplex.cryptoapi_android_framework.CryptoApiFramework
 import io.pixelplex.cryptoapi_android_framework.EthFrameworkTest
-import io.pixelplex.model.data.EstimatedGas
+import io.pixelplex.model.data.EstimatedGasBody
+
 import io.pixelplex.model.exception.ApiException
 import io.pixelplex.model.response.EstimatedGasResponse
 import io.pixelplex.model.response.EthNetworkResponse
@@ -13,13 +14,13 @@ import org.junit.Test
 
 class EthAsyncApiTest {
 
-    private val estimatedGas = EstimatedGas(
+    private val estimatedGas = EstimatedGasBody(
         from = EthFrameworkTest.ETH_ADDRESS_1,
         to = EthFrameworkTest.ETH_ADDRESS_2,
         value = "10"
     )
 
-    private val badEstimatedGas = EstimatedGas(
+    private val badEstimatedGas = EstimatedGasBody(
         from = "0x141d59",
         to = EthFrameworkTest.ETH_ADDRESS_2,
         value = "10"
