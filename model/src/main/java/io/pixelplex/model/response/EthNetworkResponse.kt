@@ -4,19 +4,19 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class EthNetworkResponse (
-    @SerializedName(LAST_BLOCK_KEY) @Expose
+    @SerializedName(LAST_BLOCK_KEY)
     val lastBlock: Long,
 
-    @SerializedName(COUNT_TRANSACTIONS_KEY) @Expose
+    @SerializedName(COUNT_TRANSACTIONS_KEY)
     val countTransactions: String,
 
-    @SerializedName(GAS_PRICE_KEY) @Expose
+    @SerializedName(GAS_PRICE_KEY)
     val gasPrice: Long,
 
-    @SerializedName(HASH_RATE_KEY) @Expose
+    @SerializedName(HASH_RATE_KEY)
     val hashRate: Long,
 
-    @SerializedName(DIFFICULTY_KEY) @Expose
+    @SerializedName(DIFFICULTY_KEY)
     val difficulty: Long
 ): CryptoApiResponse {
     companion object {

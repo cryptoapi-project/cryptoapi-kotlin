@@ -135,7 +135,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                     it.modifiers as Iterable<KModifier>
                 )
             })
-        if (element.parameters.isNotEmpty()) {
+        if (element.parameters.mapNotNull { getQueryType(it) }.any()) {
             funcBuilder.addCode(
                 codeSnippetLine("val queryParams = ArrayList<QueryParameter<*>>()")
             )
@@ -164,14 +164,9 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                 )
             )
         }
-        //   .returns(element.returnType.asTypeName().javaToKotlinType())
 
         typeSpec.addFunction(funcBuilder.build())
     }
-
-    //    override suspend fun getNetwork() = suspendCoroutine<EthNetworkResponse> {
-    //        getNetwork(it)
-    //    }
 
     private fun generateSuspendMethod(
         element: ExecutableElement,
@@ -203,7 +198,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         """.trimIndent()
         )
 
-        if (element.parameters.isNotEmpty()) {
+        if (element.parameters.mapNotNull { getQueryType(it) }.any()) {
             funcBuilder.addCode(
                 codeSnippetLine("val queryParams = ArrayList<QueryParameter<*>>()")
             )
@@ -290,7 +285,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
     private fun codeSnippetLine(code: String): String {
         return """$code 
-            
+
         """.trimIndent()
     }
 

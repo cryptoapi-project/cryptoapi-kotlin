@@ -24,18 +24,18 @@ data class EthInfoResponse(
 }
 
 data class EthInfo (
-    @SerializedName(EthInfoResponse.ADDRESS_KEY) @Expose
+    @SerializedName(EthInfoResponse.ADDRESS_KEY)
     val address: String,
 
-    @SerializedName(EthInfoResponse.BALANCE_KEY) @Expose
+    @SerializedName(EthInfoResponse.BALANCE_KEY)
     val balance: String,
 
-    @SerializedName(EthInfoResponse.IS_CONTRACT_KEY) @Expose
+    @SerializedName(EthInfoResponse.IS_CONTRACT_KEY)
     val isContract: Boolean,
 
-    @SerializedName(EthInfoResponse.TYPE_KEY) @Expose
+    @SerializedName(EthInfoResponse.TYPE_KEY)
     val type: String,
 
-    @SerializedName(EthInfoResponse.COUNT_TRANSACTIONS_KEY) @Expose
+    @SerializedName(EthInfoResponse.COUNT_TRANSACTIONS_KEY)
     val countTransactions: Long
 )

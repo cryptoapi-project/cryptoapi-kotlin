@@ -9,3 +9,5 @@ inline fun <reified T> fromJson(json: String): T {
 
 fun String.isJSONArray() = this.startsWith("[")
 
+fun String.isNotJSON() = !this.startsWith("{")
+

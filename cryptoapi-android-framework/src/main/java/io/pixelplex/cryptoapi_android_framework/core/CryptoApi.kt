@@ -105,7 +105,7 @@ class CryptoApi(
     fun callApi(
         path: String,
         callback: Callback,
-        params: List<QueryParameter<*>>
+        params: List<QueryParameter<*>> = emptyList()
     ) {
         get(CRYPTO_API_URL.urlWithPath(path), params = params, responseCallback = callback)
     }

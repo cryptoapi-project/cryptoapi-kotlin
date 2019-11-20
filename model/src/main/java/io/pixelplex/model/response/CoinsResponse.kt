@@ -1,6 +1,5 @@
 package io.pixelplex.model.response
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class CoinsResponse (
@@ -12,6 +11,6 @@ data class CoinsResponse (
 }
 
 enum class Coin(coin: String) {
-    @SerializedName(CoinsResponse.ETH_KEY) @Expose
+    @SerializedName(CoinsResponse.ETH_KEY)
     ETH(CoinsResponse.ETH_KEY)
 }

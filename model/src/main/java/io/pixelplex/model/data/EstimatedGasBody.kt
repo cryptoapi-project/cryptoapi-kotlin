@@ -1,6 +1,6 @@
 package io.pixelplex.model.data
 
-data class EstimatedGas (
+data class EstimatedGasBody (
     val from: String,
     val to: String,
     val data: String? = null,
