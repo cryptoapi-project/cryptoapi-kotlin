@@ -2,6 +2,7 @@ package io.pixelplex.cryptoapi_android_framework
 
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
@@ -32,6 +33,7 @@ class EthFrameworkTest {
     private var ethTransExternalResponse: TransactionExternalResponse? = null
     private var ethTranactionsResponse: EthTransactionsResponse? = null
     private var ethTranactionResponse: EthTransactionResponse? = null
+    private var contractsBytecodeResponse: EthContractBytecodeResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
@@ -41,6 +43,7 @@ class EthFrameworkTest {
     private val testEthTransactionExternalResponseFuture = FutureTask<TransactionExternalResponse>()
     private val testEthTransactionsFuture = FutureTask<EthTransactionsResponse>()
     private val testEthTransactionFuture = FutureTask<EthTransactionResponse>()
+    private val testEthBytecodenFuture = FutureTask<EthContractBytecodeResponse>()
 
     private val estimatedGas = EstimatedGas(
         from = ETH_ADDRESS_1,
@@ -372,10 +375,47 @@ class EthFrameworkTest {
         assertTrue(ethTranactionResponse!!.errors!!.count() > 0)
     }
 
+    @Test
+    fun getEthContractsInfo() {
+        cryptoApiFramework.cryptoApiEth.getEthContractsInfo(
+            CONTRACT_ADDRESS,
+            { transferResp -> testEthBytecodenFuture.setComplete(transferResp) },
+            { transferError -> testEthBytecodenFuture.setComplete(transferError) }
+        )
+
+        testEthBytecodenFuture.wrapResult<Exception, EthContractBytecodeResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                contractsBytecodeResponse = ethInfoResponse
+            }, { contractsBytecodeResponse = null
+            })
+
+        assertTrue(contractsBytecodeResponse != null)
+        assertTrue(contractsBytecodeResponse!!.bytecode.isNotEmpty())
+    }
+
+    @Test
+    fun getEthContractsInfoFail() {
+        cryptoApiFramework.cryptoApiEth.getEthContractsInfo(
+            ETH_ADDRESS_1,
+            { transferResp -> testEthBytecodenFuture.setComplete(transferResp) },
+            { transferError -> testEthBytecodenFuture.setComplete(transferError) }
+        )
+
+        testEthBytecodenFuture.wrapResult<Exception, EthContractBytecodeResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                contractsBytecodeResponse = ethInfoResponse
+            }, { contractsBytecodeResponse = null
+            })
+
+        assertTrue(contractsBytecodeResponse != null)
+        assertTrue(contractsBytecodeResponse!!.errors!!.count() > 0)
+    }
+
     companion object {
         const val INVALID_ADDRESS_ERROR = 422
         const val ETH_ADDRESS_1 = "0x141d5937C7b0e4fB4C535c900C0964B4852007eA"
         const val ETH_ADDRESS_2 = "0xb0202eBbF797Dd61A3b28d5E82fbA2523edc1a9B"
         const val HASH = "0x2ebfff2a09f677229dced9a9d25500694f9d63e1a4cc7bf65cc635272380ac02"
+        const val CONTRACT_ADDRESS = "0xf36c145eff2771ea22ece5fd87392fc8eeae719c"
     }
 }

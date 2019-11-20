@@ -42,7 +42,7 @@ class CoinsFrameworkTest {
     }
 
     companion object {
-        const val CALL_TIMEOUT = 900L
+        const val CALL_TIMEOUT = 15000L
         const val CONNECT_TIMEOUT = 900L
         const val TOKEN = ""
     }

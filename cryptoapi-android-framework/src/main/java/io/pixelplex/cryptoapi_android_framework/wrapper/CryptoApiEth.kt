@@ -2,6 +2,7 @@ package io.pixelplex.cryptoapi_android_framework.wrapper
 
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
@@ -60,6 +61,12 @@ interface CryptoApiEth {
     fun getEthTransactionsByHash(
         hash: String,
         onSuccess: (EthTransactionResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun getEthContractsInfo(
+        address: String,
+        onSuccess: (EthContractBytecodeResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
 }
