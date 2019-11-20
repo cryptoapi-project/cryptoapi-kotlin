@@ -5,6 +5,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractCallBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransactionRawBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
@@ -12,6 +13,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceRe
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
@@ -37,6 +39,7 @@ class EthFrameworkTest {
     private var ethTranactionResponse: EthTransactionResponse? = null
     private var contractsBytecodeResponse: EthContractBytecodeResponse? = null
     private var contractResponse: EthCallContractResponse? = null
+    private var ethRawContractResponse: EthTransactionRawResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
@@ -48,6 +51,7 @@ class EthFrameworkTest {
     private val testEthTransactionFuture = FutureTask<EthTransactionResponse>()
     private val testEthBytecodenFuture = FutureTask<EthContractBytecodeResponse>()
     private val testEthContractFuture = FutureTask<EthCallContractResponse>()
+    private val testEthRawContractFuture = FutureTask<EthTransactionRawResponse>()
 
     private val estimatedGas = EstimatedGasBody(
         from = ETH_ADDRESS_1,
@@ -114,6 +118,14 @@ class EthFrameworkTest {
         sender = "0x141d593",
         amount = 0,
         bytecode = "0x899426490000000000000000000000000000000000000000000000000000000000000001"
+    )
+
+    private val ethTransactionRawBody = EthTransactionRawBody(
+        tx = TX
+    )
+
+    private val badEthTransactionRawBody = EthTransactionRawBody(
+        tx = "0xf86e8386ca0"
     )
 
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
@@ -465,11 +477,30 @@ class EthFrameworkTest {
         assertTrue(contractResponse!!.errors!!.count() > 0)
     }
 
+    @Test
+    fun transactionsRawSendFail() {
+        cryptoApiFramework.cryptoApiEth.transactionsRawSend(
+            ethTransactionRawBody,
+            { transferResp -> testEthRawContractFuture.setComplete(transferResp) },
+            { transferError -> testEthRawContractFuture.setComplete(transferError) }
+        )
+
+        testEthRawContractFuture.wrapResult<Exception, EthTransactionRawResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethRawContractResponse = ethInfoResponse
+            }, { ethRawContractResponse = null
+            })
+
+        assertTrue(ethRawContractResponse != null)
+        assertTrue(ethRawContractResponse!!.errors!!.isNotEmpty())
+    }
+
     companion object {
         const val INVALID_ADDRESS_ERROR = 422
         const val ETH_ADDRESS_1 = "0x141d5937C7b0e4fB4C535c900C0964B4852007eA"
         const val ETH_ADDRESS_2 = "0xb0202eBbF797Dd61A3b28d5E82fbA2523edc1a9B"
         const val HASH = "0x2ebfff2a09f677229dced9a9d25500694f9d63e1a4cc7bf65cc635272380ac02"
         const val CONTRACT_ADDRESS = "0xf36c145eff2771ea22ece5fd87392fc8eeae719c"
+        const val TX = "0xf86e8386ca038602bba7f5220083632ea0941de29f644d555fe9cc3241e1083de0868f959bfa8545d964b800801ca04ef1f13c58af9a9ac4be66b838a238b24db798d585d882865637fdc35bdc49c4a04b7d1dfc3d9672080347a0d3559628f5f757bd6f6a005d1c4f7cdccce020ea02"
     }
 }

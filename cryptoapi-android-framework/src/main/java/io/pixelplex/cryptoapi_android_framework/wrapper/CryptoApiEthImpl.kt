@@ -8,6 +8,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractCallBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransactionRawBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
@@ -17,6 +18,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContr
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfo
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
@@ -57,6 +59,22 @@ class CryptoApiEthImpl(
             },
             onError = onError,
             body = Gson().toJson(ethContractCallBody, ethContractCallBody::class.java)
+        )
+    }
+
+    override fun transactionsRawSend(
+        ethTransactionRawBody: EthTransactionRawBody,
+        onSuccess: (EthTransactionRawResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = ETH_TRANSACTIONS_RAW_SEND_PARAM,
+            method = POST,
+            onSuccess = { responseJson ->
+                successEthTransactionsRawSend(responseJson, onSuccess)
+            },
+            onError = onError,
+            body = Gson().toJson(ethTransactionRawBody, EthTransactionRawBody::class.java)
         )
     }
 
@@ -218,6 +236,21 @@ class CryptoApiEthImpl(
         }
     }
 
+    private fun successEthTransactionsRawSend(
+        responseJson: String,
+        onSuccess: (EthTransactionRawResponse) -> Unit
+    ) {
+        if (responseJson.isNotJSON()) {
+            onSuccess(
+                EthTransactionRawResponse(
+                    hash = responseJson
+                )
+            )
+        } else {
+            onSuccess(fromJson(responseJson))
+        }
+    }
+
     companion object {
         private const val ESTIMATE_GAS_PARAM = "coins/eth/estimate-gas"
         private const val NETWORK_PARAM = "coins/eth/network"
@@ -229,5 +262,6 @@ class CryptoApiEthImpl(
         private const val TRANSACTIONS_HASH_PARAM = "coins/eth/transactions/%s"
         private const val CONTRACTS_INFO_PARAM = "coins/eth/contracts/%s/info"
         private const val CONTRACTS_CALL_PARAM = "coins/eth/contracts/%s/call"
+        private const val ETH_TRANSACTIONS_RAW_SEND_PARAM = "coins/eth/transactions/raw/send"
     }
 }
