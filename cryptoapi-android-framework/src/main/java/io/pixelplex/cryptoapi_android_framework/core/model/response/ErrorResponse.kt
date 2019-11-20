@@ -8,10 +8,14 @@ data class ErrorResponse(
     val message: String,
 
     @SerializedName(FIELD_KEY) @Expose
-    val field: String
+    val field: String? = null,
+
+    @SerializedName(VALUE_KEY) @Expose
+    val value: String? = null
 ): CryptoApiResponse {
     companion object {
         const val MESSAGE_KEY = "message"
         const val FIELD_KEY = "field"
+        const val VALUE_KEY = "value"
     }
 }

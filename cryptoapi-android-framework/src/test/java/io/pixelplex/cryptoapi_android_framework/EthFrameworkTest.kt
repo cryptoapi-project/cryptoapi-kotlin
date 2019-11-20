@@ -2,12 +2,16 @@ package io.pixelplex.cryptoapi_android_framework
 
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionExternalResponse
 import io.pixelplex.cryptoapi_android_framework.support.fold
@@ -27,13 +31,19 @@ class EthFrameworkTest {
     private var ethInfo: EthInfoResponse? = null
     private var ethTransferResponse: EthTransferResponse? = null
     private var ethTransExternalResponse: TransactionExternalResponse? = null
+    private var ethTranactionsResponse: EthTransactionsResponse? = null
+    private var ethTranactionResponse: EthTransactionResponse? = null
+    private var contractsBytecodeResponse: EthContractBytecodeResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
     private val testEthBalanceResponseFuture = FutureTask<EthBalanceResponse>()
     private val testEthInfoResponseFuture = FutureTask<EthInfoResponse>()
     private val testEthTransfersResponseFuture = FutureTask<EthTransferResponse>()
-    private val testEtTransactionExternalResponseFuture = FutureTask<TransactionExternalResponse>()
+    private val testEthTransactionExternalResponseFuture = FutureTask<TransactionExternalResponse>()
+    private val testEthTransactionsFuture = FutureTask<EthTransactionsResponse>()
+    private val testEthTransactionFuture = FutureTask<EthTransactionResponse>()
+    private val testEthBytecodenFuture = FutureTask<EthContractBytecodeResponse>()
 
     private val estimatedGas = EstimatedGas(
         from = ETH_ADDRESS_1,
@@ -74,6 +84,20 @@ class EthFrameworkTest {
         addresses = badEthAddresses,
         skip = 0,
         limit = 1
+    )
+
+    private val ethTransaction = EthTransaction(
+        from = ETH_ADDRESS_1,
+        to = ETH_ADDRESS_2,
+        skip = 0,
+        limit = 3
+    )
+
+    private val badEthTransaction = EthTransaction(
+        from = "0x141d5937C7b",
+        to = ETH_ADDRESS_2,
+        skip = 0,
+        limit = 3
     )
 
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
@@ -246,11 +270,11 @@ class EthFrameworkTest {
     fun getEthTransactionsExternal() {
         cryptoApiFramework.cryptoApiEth.getTransactionsExternal(
             ethTransactionExternal,
-            { transferResp -> testEtTransactionExternalResponseFuture.setComplete(transferResp) },
-            { transferError -> testEtTransactionExternalResponseFuture.setComplete(transferError) }
+            { transferResp -> testEthTransactionExternalResponseFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionExternalResponseFuture.setComplete(transferError) }
         )
 
-        testEtTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
+        testEthTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 ethTransExternalResponse = ethInfoResponse
             }, { ethTransExternalResponse = null
@@ -264,11 +288,11 @@ class EthFrameworkTest {
     fun getEthTransactionsExternalFail() {
         cryptoApiFramework.cryptoApiEth.getTransactionsExternal(
             badEthTransactionExternal,
-            { transferResp -> testEtTransactionExternalResponseFuture.setComplete(transferResp) },
-            { transferError -> testEtTransactionExternalResponseFuture.setComplete(transferError) }
+            { transferResp -> testEthTransactionExternalResponseFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionExternalResponseFuture.setComplete(transferError) }
         )
 
-        testEtTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
+        testEthTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 ethTransExternalResponse = ethInfoResponse
             }, { ethTransExternalResponse = null
@@ -278,9 +302,120 @@ class EthFrameworkTest {
         assertTrue(ethTransExternalResponse!!.errors!!.count() > 0)
     }
 
+    @Test
+    fun getEthTransactions() {
+        cryptoApiFramework.cryptoApiEth.getEthTransactions(
+            ethTransaction,
+            { transferResp -> testEthTransactionsFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionsFuture.setComplete(transferError) }
+        )
+
+        testEthTransactionsFuture.wrapResult<Exception, EthTransactionsResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethTranactionsResponse = ethInfoResponse
+            }, { ethTranactionsResponse = null
+            })
+
+        assertTrue(ethTranactionsResponse != null)
+        assertTrue(ethTranactionsResponse!!.items.count() > 0)
+    }
+
+    @Test
+    fun getEthTransactionsFail() {
+        cryptoApiFramework.cryptoApiEth.getEthTransactions(
+            badEthTransaction,
+            { transferResp -> testEthTransactionsFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionsFuture.setComplete(transferError) }
+        )
+
+        testEthTransactionsFuture.wrapResult<Exception, EthTransactionsResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethTranactionsResponse = ethInfoResponse
+            }, { ethTranactionsResponse = null
+            })
+
+        assertTrue(ethTranactionsResponse != null)
+        assertTrue(ethTranactionsResponse!!.errors!!.count() > 0)
+    }
+
+    @Test
+    fun getEthTransactionsByHash() {
+        cryptoApiFramework.cryptoApiEth.getEthTransactionsByHash(
+            HASH,
+            { transferResp -> testEthTransactionFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionFuture.setComplete(transferError) }
+        )
+
+        testEthTransactionFuture.wrapResult<Exception, EthTransactionResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethTranactionResponse = ethInfoResponse
+            }, { ethTranactionResponse = null
+            })
+
+        assertTrue(ethTranactionResponse != null)
+        assertTrue(ethTranactionResponse!!.blockNumber == 5358039L)
+        assertTrue(ethTranactionResponse!!.blockHash == "0x3c690b08e73dbb0d042d855a3881f1e5a87b0ee4e892fd6e84642265797612d0")
+    }
+
+    @Test
+    fun getEthTransactionsByHashFail() {
+        cryptoApiFramework.cryptoApiEth.getEthTransactionsByHash(
+            "0x2ebfff2a09f6",
+            { transferResp -> testEthTransactionFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionFuture.setComplete(transferError) }
+        )
+
+        testEthTransactionFuture.wrapResult<Exception, EthTransactionResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethTranactionResponse = ethInfoResponse
+            }, { ethTranactionResponse = null
+            })
+
+        assertTrue(ethTranactionResponse != null)
+        assertTrue(ethTranactionResponse!!.errors!!.count() > 0)
+    }
+
+    @Test
+    fun getEthContractsInfo() {
+        cryptoApiFramework.cryptoApiEth.getEthContractsInfo(
+            CONTRACT_ADDRESS,
+            { transferResp -> testEthBytecodenFuture.setComplete(transferResp) },
+            { transferError -> testEthBytecodenFuture.setComplete(transferError) }
+        )
+
+        testEthBytecodenFuture.wrapResult<Exception, EthContractBytecodeResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                contractsBytecodeResponse = ethInfoResponse
+            }, { contractsBytecodeResponse = null
+            })
+
+        assertTrue(contractsBytecodeResponse != null)
+        assertTrue(contractsBytecodeResponse!!.bytecode.isNotEmpty())
+    }
+
+    @Test
+    fun getEthContractsInfoFail() {
+        cryptoApiFramework.cryptoApiEth.getEthContractsInfo(
+            ETH_ADDRESS_1,
+            { transferResp -> testEthBytecodenFuture.setComplete(transferResp) },
+            { transferError -> testEthBytecodenFuture.setComplete(transferError) }
+        )
+
+        testEthBytecodenFuture.wrapResult<Exception, EthContractBytecodeResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                contractsBytecodeResponse = ethInfoResponse
+            }, { contractsBytecodeResponse = null
+            })
+
+        assertTrue(contractsBytecodeResponse != null)
+        assertTrue(contractsBytecodeResponse!!.errors!!.count() > 0)
+    }
+
     companion object {
         const val INVALID_ADDRESS_ERROR = 422
         const val ETH_ADDRESS_1 = "0x141d5937C7b0e4fB4C535c900C0964B4852007eA"
         const val ETH_ADDRESS_2 = "0xb0202eBbF797Dd61A3b28d5E82fbA2523edc1a9B"
+        const val HASH = "0x2ebfff2a09f677229dced9a9d25500694f9d63e1a4cc7bf65cc635272380ac02"
+        const val CONTRACT_ADDRESS = "0xf36c145eff2771ea22ece5fd87392fc8eeae719c"
     }
 }
