@@ -9,6 +9,7 @@ import io.pixelplex.model.data.EthTransaction
 import io.pixelplex.model.data.EthTransactionRawBody
 import io.pixelplex.model.data.TransactionExternal
 import io.pixelplex.model.data.EstimatedGasBody
+import io.pixelplex.model.data.EthTokensBalancesBody
 import io.pixelplex.model.response.*
 
 interface CryptoApiEth {
@@ -81,6 +82,12 @@ interface CryptoApiEth {
     fun getEthContractsInfo(
         address: String,
         onSuccess: (EthContractBytecodeResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun getTokensBalances(
+        ethTokensBalancesBody: EthTokensBalancesBody,
+        onSuccess: (EthTokensBalancesResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
 }

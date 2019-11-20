@@ -13,6 +13,7 @@ import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
 import io.pixelplex.model.data.EstimatedGasBody
+import io.pixelplex.model.data.EthTokensBalancesBody
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -33,6 +34,7 @@ class EthFrameworkTest {
     private var contractResponse: EthCallContractResponse? = null
     private var ethRawContractResponse: EthTransactionRawResponse? = null
     private var ethRawDecodeResponse: EthTransactionRawDecodeResponse? = null
+    private var ethTokensBalancesResponse: EthTokensBalancesResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
@@ -46,6 +48,7 @@ class EthFrameworkTest {
     private val testEthContractFuture = FutureTask<EthCallContractResponse>()
     private val testEthRawContractFuture = FutureTask<EthTransactionRawResponse>()
     private val testEthRawDecodeFuture = FutureTask<EthTransactionRawDecodeResponse>()
+    private val testEthTokensBalancesFuture = FutureTask<EthTokensBalancesResponse>()
 
     private val estimatedGas = EstimatedGasBody(
         from = ETH_ADDRESS_1,
@@ -125,6 +128,20 @@ class EthFrameworkTest {
     private val badEthTransactionRawBody =
         EthTransactionRawBody(
             tx = "0xf86e8386ca0"
+        )
+
+    private val ethTokensBalancesBody =
+        EthTokensBalancesBody(
+            skip = 0,
+            limit = 3,
+            address = ETH_ADDRESS_1
+        )
+
+    private val badEthTokensBalancesBody =
+        EthTokensBalancesBody(
+            skip = 0,
+            limit = 3,
+            address = "0x141d5937C7"
         )
 
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
@@ -583,6 +600,50 @@ class EthFrameworkTest {
 
         assertTrue(ethRawDecodeResponse != null)
         assertTrue(ethRawDecodeResponse!!.errors!!.count() > 0)
+    }
+
+    @Test
+    fun tokensBalances() {
+        cryptoApiFramework.cryptoApiEth.getTokensBalances(
+            ethTokensBalancesBody,
+            { transferResp -> testEthTokensBalancesFuture.setComplete(transferResp) },
+            { transferError -> testEthTokensBalancesFuture.setComplete(transferError) }
+        )
+
+        testEthTokensBalancesFuture.wrapResult<Exception, EthTokensBalancesResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokensBalancesResponse = ethInfoResponse
+            }, {
+                ethTokensBalancesResponse = null
+            })
+
+        assertTrue(ethTokensBalancesResponse != null)
+        assertTrue(ethTokensBalancesResponse!!.items.count() > 0)
+    }
+
+    @Test
+    fun tokensBalancesFail() {
+        cryptoApiFramework.cryptoApiEth.getTokensBalances(
+            badEthTokensBalancesBody,
+            { transferResp -> testEthTokensBalancesFuture.setComplete(transferResp) },
+            { transferError -> testEthTokensBalancesFuture.setComplete(transferError) }
+        )
+
+        testEthTokensBalancesFuture.wrapResult<Exception, EthTokensBalancesResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokensBalancesResponse = ethInfoResponse
+            }, {
+                ethTokensBalancesResponse = null
+            })
+
+        assertTrue(ethTokensBalancesResponse != null)
+        assertTrue(ethTokensBalancesResponse!!.errors!!.count() > 0)
     }
 
     companion object {
