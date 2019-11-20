@@ -6,13 +6,6 @@ import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POS
 
 import io.pixelplex.model.data.EthAddresses
 import io.pixelplex.model.data.EthTransfer
-import io.pixelplex.model.response.EstimatedGasResponse
-import io.pixelplex.model.response.EthBalance
-import io.pixelplex.model.response.EthBalanceResponse
-import io.pixelplex.model.response.EthInfo
-import io.pixelplex.model.response.EthInfoResponse
-import io.pixelplex.model.response.EthNetworkResponse
-import io.pixelplex.model.response.EthTransferResponse
 
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
 import io.pixelplex.cryptoapi_android_framework.support.isJSONArray
@@ -22,18 +15,14 @@ import io.pixelplex.model.data.EthContractCallBody
 import io.pixelplex.model.data.EthTransaction
 import io.pixelplex.model.data.EthTransactionRawBody
 import io.pixelplex.model.data.TransactionExternal
-import io.pixelplex.model.response.EthCallContractResponse
-import io.pixelplex.model.response.EthTransactionRawResponse
-import io.pixelplex.model.response.EthTransactionResponse
-import io.pixelplex.model.response.EthTransactionsResponse
-import io.pixelplex.model.response.TransactionExternalResponse
 
 import io.pixelplex.cryptoapi_android_framework.support.isNotJSON
 import io.pixelplex.model.data.EstimatedGasBody
+import io.pixelplex.model.response.*
 
 class CryptoApiEthImpl(
     private val cryptoApiClient: CryptoApi
-): CryptoApiEth {
+) : CryptoApiEth {
     override fun estimateGas(
         estimatedGasBody: EstimatedGasBody,
         onSuccess: (EstimatedGasResponse) -> Unit,
@@ -75,6 +64,22 @@ class CryptoApiEthImpl(
             method = POST,
             onSuccess = { responseJson ->
                 successEthTransactionsRawSend(responseJson, onSuccess)
+            },
+            onError = onError,
+            body = Gson().toJson(ethTransactionRawBody, EthTransactionRawBody::class.java)
+        )
+    }
+
+    override fun transactionsRawDecode(
+        ethTransactionRawBody: EthTransactionRawBody,
+        onSuccess: (EthTransactionRawDecodeResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = ETH_TRANSACTIONS_RAW_DECODE_PARAM,
+            method = POST,
+            onSuccess = { responseJson ->
+                onSuccess(fromJson(responseJson))
             },
             onError = onError,
             body = Gson().toJson(ethTransactionRawBody, EthTransactionRawBody::class.java)
@@ -259,12 +264,16 @@ class CryptoApiEthImpl(
         private const val NETWORK_PARAM = "coins/eth/network"
         private const val ACCOUNTS_ADDRESS_BALANCE_PARAM = "coins/eth/accounts/%s/balance"
         private const val ACCOUNTS_ADDRESS_INFO_PARAM = "coins/eth/accounts/%s/info"
-        private const val ETH_TRANSFERS_PARAM = "coins/eth/accounts/%s/transfers?skip=%s&limit=%s&positive=%s"
-        private const val TRANSACTIONS_EXTERNAL_PARAM = "coins/eth/accounts/%s/transactions/external?skip=%s&limit=%s"
-        private const val TRANSACTIONS_PARAM = "coins/eth/transactions?from=%s&to=%s&skip=%s&limit=%s"
+        private const val ETH_TRANSFERS_PARAM =
+            "coins/eth/accounts/%s/transfers?skip=%s&limit=%s&positive=%s"
+        private const val TRANSACTIONS_EXTERNAL_PARAM =
+            "coins/eth/accounts/%s/transactions/external?skip=%s&limit=%s"
+        private const val TRANSACTIONS_PARAM =
+            "coins/eth/transactions?from=%s&to=%s&skip=%s&limit=%s"
         private const val TRANSACTIONS_HASH_PARAM = "coins/eth/transactions/%s"
         private const val CONTRACTS_INFO_PARAM = "coins/eth/contracts/%s/info"
         private const val CONTRACTS_CALL_PARAM = "coins/eth/contracts/%s/call"
         private const val ETH_TRANSACTIONS_RAW_SEND_PARAM = "coins/eth/transactions/raw/send"
+        private const val ETH_TRANSACTIONS_RAW_DECODE_PARAM = "coins/eth/transactions/raw/decode"
     }
 }

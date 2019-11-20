@@ -1,26 +1,15 @@
 package io.pixelplex.cryptoapi_android_framework.wrapper
 
-
 import io.pixelplex.model.data.EthAddresses
 import io.pixelplex.model.data.EthTransfer
-import io.pixelplex.model.response.EstimatedGasResponse
-import io.pixelplex.model.response.EthBalanceResponse
-import io.pixelplex.model.response.EthInfoResponse
-import io.pixelplex.model.response.EthNetworkResponse
-import io.pixelplex.model.response.EthTransferResponse
 import io.pixelplex.model.exception.NetworkException
 import io.pixelplex.model.data.EthContractBytecodeResponse
 import io.pixelplex.model.data.EthContractCallBody
 import io.pixelplex.model.data.EthTransaction
 import io.pixelplex.model.data.EthTransactionRawBody
 import io.pixelplex.model.data.TransactionExternal
-import io.pixelplex.model.response.EthCallContractResponse
-import io.pixelplex.model.response.EthTransactionRawResponse
-import io.pixelplex.model.response.EthTransactionResponse
-import io.pixelplex.model.response.EthTransactionsResponse
-import io.pixelplex.model.response.TransactionExternalResponse
 import io.pixelplex.model.data.EstimatedGasBody
-
+import io.pixelplex.model.response.*
 
 interface CryptoApiEth {
     fun estimateGas(
@@ -39,6 +28,12 @@ interface CryptoApiEth {
     fun transactionsRawSend(
         ethTransactionRawBody: EthTransactionRawBody,
         onSuccess: (EthTransactionRawResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun transactionsRawDecode(
+        ethTransactionRawBody: EthTransactionRawBody,
+        onSuccess: (EthTransactionRawDecodeResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
 
