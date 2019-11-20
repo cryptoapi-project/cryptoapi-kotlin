@@ -18,6 +18,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContr
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfo
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawDecodeResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
@@ -72,6 +73,22 @@ class CryptoApiEthImpl(
             method = POST,
             onSuccess = { responseJson ->
                 successEthTransactionsRawSend(responseJson, onSuccess)
+            },
+            onError = onError,
+            body = Gson().toJson(ethTransactionRawBody, EthTransactionRawBody::class.java)
+        )
+    }
+
+    override fun transactionsRawDecode(
+        ethTransactionRawBody: EthTransactionRawBody,
+        onSuccess: (EthTransactionRawDecodeResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = ETH_TRANSACTIONS_RAW_DECODE_PARAM,
+            method = POST,
+            onSuccess = { responseJson ->
+                onSuccess(fromJson(responseJson))
             },
             onError = onError,
             body = Gson().toJson(ethTransactionRawBody, EthTransactionRawBody::class.java)
@@ -263,5 +280,6 @@ class CryptoApiEthImpl(
         private const val CONTRACTS_INFO_PARAM = "coins/eth/contracts/%s/info"
         private const val CONTRACTS_CALL_PARAM = "coins/eth/contracts/%s/call"
         private const val ETH_TRANSACTIONS_RAW_SEND_PARAM = "coins/eth/transactions/raw/send"
+        private const val ETH_TRANSACTIONS_RAW_DECODE_PARAM = "coins/eth/transactions/raw/decode"
     }
 }

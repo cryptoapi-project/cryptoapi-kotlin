@@ -13,6 +13,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceRe
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawDecodeResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
@@ -37,6 +38,12 @@ interface CryptoApiEth {
     fun transactionsRawSend(
         ethTransactionRawBody: EthTransactionRawBody,
         onSuccess: (EthTransactionRawResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun transactionsRawDecode(
+        ethTransactionRawBody: EthTransactionRawBody,
+        onSuccess: (EthTransactionRawDecodeResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
 
