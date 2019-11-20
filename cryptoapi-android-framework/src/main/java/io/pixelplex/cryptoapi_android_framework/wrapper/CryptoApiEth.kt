@@ -5,6 +5,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractCallBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransactionRawBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
@@ -12,6 +13,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceRe
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
@@ -29,6 +31,12 @@ interface CryptoApiEth {
         ethContractCallBody: EthContractCallBody,
         contractAddress: String,
         onSuccess: (EthCallContractResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun transactionsRawSend(
+        ethTransactionRawBody: EthTransactionRawBody,
+        onSuccess: (EthTransactionRawResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
 
