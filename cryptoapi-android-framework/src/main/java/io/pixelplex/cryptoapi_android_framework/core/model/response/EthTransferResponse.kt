@@ -1,6 +1,5 @@
 package io.pixelplex.cryptoapi_android_framework.core.model.response
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class EthTransferResponse (

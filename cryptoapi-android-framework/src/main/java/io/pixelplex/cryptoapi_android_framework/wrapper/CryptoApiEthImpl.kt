@@ -3,15 +3,17 @@ package io.pixelplex.cryptoapi_android_framework.wrapper
 import com.google.gson.Gson
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POST
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGasBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractCallBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalance
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfo
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
@@ -22,12 +24,13 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionE
 import io.pixelplex.cryptoapi_android_framework.exception.NetworkException
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
 import io.pixelplex.cryptoapi_android_framework.support.isJSONArray
+import io.pixelplex.cryptoapi_android_framework.support.isNotJSON
 
 class CryptoApiEthImpl(
     private val cryptoApiClient: CryptoApi
 ): CryptoApiEth {
     override fun estimateGas(
-        estimatedGas: EstimatedGas,
+        estimatedGasBody: EstimatedGasBody,
         onSuccess: (EstimatedGasResponse) -> Unit,
         onError: (NetworkException) -> Unit
     ) {
@@ -36,7 +39,24 @@ class CryptoApiEthImpl(
             method = POST,
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = onError,
-            body = Gson().toJson(estimatedGas, EstimatedGas::class.java)
+            body = Gson().toJson(estimatedGasBody, EstimatedGasBody::class.java)
+        )
+    }
+
+    override fun callContract(
+        ethContractCallBody: EthContractCallBody,
+        contractAddress: String,
+        onSuccess: (EthCallContractResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = CONTRACTS_CALL_PARAM.format(contractAddress),
+            method = POST,
+            onSuccess = { responseJson ->
+                successEthContractCall(responseJson, onSuccess)
+            },
+            onError = onError,
+            body = Gson().toJson(ethContractCallBody, ethContractCallBody::class.java)
         )
     }
 
@@ -183,6 +203,21 @@ class CryptoApiEthImpl(
         }
     }
 
+    private fun successEthContractCall(
+        responseJson: String,
+        onSuccess: (EthCallContractResponse) -> Unit
+    ) {
+        if (responseJson.isNotJSON()) {
+            onSuccess(
+                EthCallContractResponse(
+                    response = responseJson
+                )
+            )
+        } else {
+            onSuccess(fromJson(responseJson))
+        }
+    }
+
     companion object {
         private const val ESTIMATE_GAS_PARAM = "coins/eth/estimate-gas"
         private const val NETWORK_PARAM = "coins/eth/network"
@@ -193,5 +228,6 @@ class CryptoApiEthImpl(
         private const val TRANSACTIONS_PARAM = "coins/eth/transactions?from=%s&to=%s&skip=%s&limit=%s"
         private const val TRANSACTIONS_HASH_PARAM = "coins/eth/transactions/%s"
         private const val CONTRACTS_INFO_PARAM = "coins/eth/contracts/%s/info"
+        private const val CONTRACTS_CALL_PARAM = "coins/eth/contracts/%s/call"
     }
 }

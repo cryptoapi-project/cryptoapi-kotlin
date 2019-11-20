@@ -1,13 +1,15 @@
 package io.pixelplex.cryptoapi_android_framework
 
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGasBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractCallBody
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
@@ -34,6 +36,7 @@ class EthFrameworkTest {
     private var ethTranactionsResponse: EthTransactionsResponse? = null
     private var ethTranactionResponse: EthTransactionResponse? = null
     private var contractsBytecodeResponse: EthContractBytecodeResponse? = null
+    private var contractResponse: EthCallContractResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
@@ -44,14 +47,15 @@ class EthFrameworkTest {
     private val testEthTransactionsFuture = FutureTask<EthTransactionsResponse>()
     private val testEthTransactionFuture = FutureTask<EthTransactionResponse>()
     private val testEthBytecodenFuture = FutureTask<EthContractBytecodeResponse>()
+    private val testEthContractFuture = FutureTask<EthCallContractResponse>()
 
-    private val estimatedGas = EstimatedGas(
+    private val estimatedGas = EstimatedGasBody(
         from = ETH_ADDRESS_1,
         to = ETH_ADDRESS_2,
         value = "10"
     )
 
-    private val badEstimatedGas = EstimatedGas(
+    private val badEstimatedGas = EstimatedGasBody(
         from = "0x141d59",
         to = ETH_ADDRESS_2,
         value = "10"
@@ -98,6 +102,18 @@ class EthFrameworkTest {
         to = ETH_ADDRESS_2,
         skip = 0,
         limit = 3
+    )
+
+    private val contractCallBody = EthContractCallBody(
+        sender = ETH_ADDRESS_1,
+        amount = 0,
+        bytecode = "0x899426490000000000000000000000000000000000000000000000000000000000000001"
+    )
+
+    private val badContractCallBody = EthContractCallBody(
+        sender = "0x141d593",
+        amount = 0,
+        bytecode = "0x899426490000000000000000000000000000000000000000000000000000000000000001"
     )
 
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
@@ -409,6 +425,44 @@ class EthFrameworkTest {
 
         assertTrue(contractsBytecodeResponse != null)
         assertTrue(contractsBytecodeResponse!!.errors!!.count() > 0)
+    }
+
+    @Test
+    fun callEthContract() {
+        cryptoApiFramework.cryptoApiEth.callContract(
+            contractCallBody,
+            CONTRACT_ADDRESS,
+            { transferResp -> testEthContractFuture.setComplete(transferResp) },
+            { transferError -> testEthContractFuture.setComplete(transferError) }
+        )
+
+        testEthContractFuture.wrapResult<Exception, EthCallContractResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                contractResponse = ethInfoResponse
+            }, { contractResponse = null
+            })
+
+        assertTrue(contractResponse != null)
+        assertTrue(contractResponse!!.response!!.isNotEmpty())
+    }
+
+    @Test
+    fun callEthContractFail() {
+        cryptoApiFramework.cryptoApiEth.callContract(
+            badContractCallBody,
+            CONTRACT_ADDRESS,
+            { transferResp -> testEthContractFuture.setComplete(transferResp) },
+            { transferError -> testEthContractFuture.setComplete(transferError) }
+        )
+
+        testEthContractFuture.wrapResult<Exception, EthCallContractResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                contractResponse = ethInfoResponse
+            }, { contractResponse = null
+            })
+
+        assertTrue(contractResponse != null)
+        assertTrue(contractResponse!!.errors!!.count() > 0)
     }
 
     companion object {
