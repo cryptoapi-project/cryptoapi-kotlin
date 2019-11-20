@@ -13,6 +13,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceRe
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawDecodeResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
@@ -40,6 +41,7 @@ class EthFrameworkTest {
     private var contractsBytecodeResponse: EthContractBytecodeResponse? = null
     private var contractResponse: EthCallContractResponse? = null
     private var ethRawContractResponse: EthTransactionRawResponse? = null
+    private var ethRawDecodeResponse: EthTransactionRawDecodeResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
@@ -52,6 +54,7 @@ class EthFrameworkTest {
     private val testEthBytecodenFuture = FutureTask<EthContractBytecodeResponse>()
     private val testEthContractFuture = FutureTask<EthCallContractResponse>()
     private val testEthRawContractFuture = FutureTask<EthTransactionRawResponse>()
+    private val testEthRawDecodeFuture = FutureTask<EthTransactionRawDecodeResponse>()
 
     private val estimatedGas = EstimatedGasBody(
         from = ETH_ADDRESS_1,
@@ -493,6 +496,42 @@ class EthFrameworkTest {
 
         assertTrue(ethRawContractResponse != null)
         assertTrue(ethRawContractResponse!!.errors!!.isNotEmpty())
+    }
+
+    @Test
+    fun transactionsRawDecode() {
+        cryptoApiFramework.cryptoApiEth.transactionsRawDecode(
+            ethTransactionRawBody,
+            { transferResp -> testEthRawDecodeFuture.setComplete(transferResp) },
+            { transferError -> testEthRawDecodeFuture.setComplete(transferError) }
+        )
+
+        testEthRawDecodeFuture.wrapResult<Exception, EthTransactionRawDecodeResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethRawDecodeResponse = ethInfoResponse
+            }, { ethRawDecodeResponse = null
+            })
+
+        assertTrue(ethRawDecodeResponse != null)
+        assertTrue(ethRawDecodeResponse!!.v!! > 0)
+    }
+
+    @Test
+    fun transactionsRawDecodeFail() {
+        cryptoApiFramework.cryptoApiEth.transactionsRawDecode(
+            badEthTransactionRawBody,
+            { transferResp -> testEthRawDecodeFuture.setComplete(transferResp) },
+            { transferError -> testEthRawDecodeFuture.setComplete(transferError) }
+        )
+
+        testEthRawDecodeFuture.wrapResult<Exception, EthTransactionRawDecodeResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethRawDecodeResponse = ethInfoResponse
+            }, { ethRawDecodeResponse = null
+            })
+
+        assertTrue(ethRawDecodeResponse != null)
+        assertTrue(ethRawDecodeResponse!!.errors!!.count() > 0)
     }
 
     companion object {
