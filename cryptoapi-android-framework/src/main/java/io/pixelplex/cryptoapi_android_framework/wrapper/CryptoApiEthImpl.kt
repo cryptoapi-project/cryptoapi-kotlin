@@ -3,35 +3,26 @@ package io.pixelplex.cryptoapi_android_framework.wrapper
 import com.google.gson.Gson
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POST
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGasBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractCallBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransactionRawBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
-import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalance
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfo
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawDecodeResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionExternalResponse
-import io.pixelplex.cryptoapi_android_framework.exception.NetworkException
+
+import io.pixelplex.model.data.EthAddresses
+import io.pixelplex.model.data.EthTransfer
+
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
 import io.pixelplex.cryptoapi_android_framework.support.isJSONArray
+import io.pixelplex.model.exception.NetworkException
+import io.pixelplex.model.data.EthContractBytecodeResponse
+import io.pixelplex.model.data.EthContractCallBody
+import io.pixelplex.model.data.EthTransaction
+import io.pixelplex.model.data.EthTransactionRawBody
+import io.pixelplex.model.data.TransactionExternal
+
 import io.pixelplex.cryptoapi_android_framework.support.isNotJSON
+import io.pixelplex.model.data.EstimatedGasBody
+import io.pixelplex.model.response.*
 
 class CryptoApiEthImpl(
     private val cryptoApiClient: CryptoApi
-): CryptoApiEth {
+) : CryptoApiEth {
     override fun estimateGas(
         estimatedGasBody: EstimatedGasBody,
         onSuccess: (EstimatedGasResponse) -> Unit,
@@ -273,9 +264,12 @@ class CryptoApiEthImpl(
         private const val NETWORK_PARAM = "coins/eth/network"
         private const val ACCOUNTS_ADDRESS_BALANCE_PARAM = "coins/eth/accounts/%s/balance"
         private const val ACCOUNTS_ADDRESS_INFO_PARAM = "coins/eth/accounts/%s/info"
-        private const val ETH_TRANSFERS_PARAM = "coins/eth/accounts/%s/transfers?skip=%s&limit=%s&positive=%s"
-        private const val TRANSACTIONS_EXTERNAL_PARAM = "coins/eth/accounts/%s/transactions/external?skip=%s&limit=%s"
-        private const val TRANSACTIONS_PARAM = "coins/eth/transactions?from=%s&to=%s&skip=%s&limit=%s"
+        private const val ETH_TRANSFERS_PARAM =
+            "coins/eth/accounts/%s/transfers?skip=%s&limit=%s&positive=%s"
+        private const val TRANSACTIONS_EXTERNAL_PARAM =
+            "coins/eth/accounts/%s/transactions/external?skip=%s&limit=%s"
+        private const val TRANSACTIONS_PARAM =
+            "coins/eth/transactions?from=%s&to=%s&skip=%s&limit=%s"
         private const val TRANSACTIONS_HASH_PARAM = "coins/eth/transactions/%s"
         private const val CONTRACTS_INFO_PARAM = "coins/eth/contracts/%s/info"
         private const val CONTRACTS_CALL_PARAM = "coins/eth/contracts/%s/call"

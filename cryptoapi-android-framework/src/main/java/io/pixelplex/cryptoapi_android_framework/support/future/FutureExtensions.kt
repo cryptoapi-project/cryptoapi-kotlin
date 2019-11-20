@@ -1,9 +1,10 @@
 package io.pixelplex.cryptoapi_android_framework.support.future
 
-import io.pixelplex.cryptoapi_android_framework.exception.LocalException
+import io.pixelplex.model.exception.LocalException
 import io.pixelplex.cryptoapi_android_framework.support.toError
 import io.pixelplex.cryptoapi_android_framework.support.toValue
 import io.pixelplex.cryptoapi_android_framework.support.Result
+import io.pixelplex.model.exception.ApiException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -48,7 +49,7 @@ fun <E : Exception, T> FutureTask<T>.wrapResult(default: T): Result<E, T> =
  */
 fun <T> FutureTask<T>.completeCallback(
     successBlock: (T) -> Unit = {},
-    errorBlock: (LocalException) -> Unit = {}
+    errorBlock: (ApiException) -> Unit = {}
 ): Callback<T> {
     return object : Callback<T> {
         override fun onSuccess(result: T) {
@@ -56,7 +57,7 @@ fun <T> FutureTask<T>.completeCallback(
             setComplete(result)
         }
 
-        override fun onError(error: LocalException) {
+        override fun onError(error: ApiException) {
             errorBlock(error)
             setComplete(error)
         }

@@ -1,6 +1,6 @@
 package io.pixelplex.cryptoapi_android_framework
 
-import io.pixelplex.cryptoapi_android_framework.core.model.response.CoinsResponse
+import io.pixelplex.model.response.CoinsResponse
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult

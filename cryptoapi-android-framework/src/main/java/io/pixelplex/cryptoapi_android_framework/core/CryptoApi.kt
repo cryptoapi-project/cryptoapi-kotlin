@@ -1,17 +1,19 @@
 package io.pixelplex.cryptoapi_android_framework.core
 
-import io.pixelplex.cryptoapi_android_framework.exception.NetworkException
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+
+import io.pixelplex.model.QueryParameter
+import io.pixelplex.model.QueryType
+import io.pixelplex.model.exception.NetworkException
+import okhttp3.*
+
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.IOException
+import java.util.regex.Pattern
 
 class CryptoApi(
     private val callTimeout: Long,
@@ -43,11 +45,11 @@ class CryptoApi(
     ) {
         httpClient.newCall(
             makeRequest(
-                CRYPTO_API_URL.urlWithParams(params),
+                CRYPTO_API_URL.urlWithPath(params),
                 method,
                 body
             )
-        ).enqueue(object: Callback {
+        ).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 onSuccess(
                     response.body!!.string()
@@ -80,8 +82,8 @@ class CryptoApi(
         return requestBuilder.build()
     }
 
-    private fun String.urlWithParams(params: String) =
-        this + params
+    private fun String.urlWithPath(path: String): String =
+        this + path
 
     private fun getRequestBody(body: String?) =
         body?.let {
@@ -94,10 +96,62 @@ class CryptoApi(
         private const val CRYPTO_API_URL = "https://697-crypto-api.pixelplexlabs.com/api/v1/"
         private const val MEDIA_TYPE = "application/json; charset=utf-8"
         private const val EMPTY_BODY = ""
+
+        private val PATH_REGEXP_PATTERN = Pattern.compile("[^{\\}]+(?=})")
     }
+
+    //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
+
+    fun callApi(
+        path: String,
+        callback: Callback,
+        params: List<QueryParameter<*>> = emptyList()
+    ) {
+        get(CRYPTO_API_URL.urlWithPath(path), params = params, responseCallback = callback)
+    }
+
+    operator fun get(
+        url: String,
+        params: List<QueryParameter<*>> = emptyList(),
+        responseCallback: Callback
+    ) {
+
+        var path = url
+
+        val httpBuilder = path.toHttpUrlOrNull()!!.newBuilder()
+
+        params.filter { it.type == QueryType.QUERY }.forEach { param ->
+            httpBuilder.addQueryParameter(param.name, param.value.toString())
+        }
+
+        val paths = params.filter { it.type == QueryType.PATH }
+
+        if (paths.isNotEmpty()) {
+            val matcher = PATH_REGEXP_PATTERN.matcher(path)
+            while (matcher.find()) {
+                val param = matcher.group(0)
+                path = path.replace("{$param}", paths.find { it.name == param }!!.value.toString())
+            }
+        }
+
+        val request =
+            Request.Builder().url(httpBuilder.build())
+                .addHeader(AUTH_HEADER_KEY, String.format(BEARER_FORMAT, token))
+                .url(path)
+
+        params.filter { it.type == QueryType.BODY }.forEach { param ->
+            request.post(getRequestBody(param.value.toGson()))
+        }
+
+        httpClient.newCall(request.build()).enqueue(responseCallback)
+    }
+
+
+    //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
 
     enum class RequestMethod {
         POST,
         GET
     }
 }
+

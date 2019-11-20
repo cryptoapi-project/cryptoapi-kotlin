@@ -1,2 +1,2 @@
-include ':app', ':cryptoapi-android-framework'
+include ':app', ':cryptoapi-android-framework', ':processor', ':annotation', ':tools', ':model'
 rootProject.name='CryptoApiFramework'

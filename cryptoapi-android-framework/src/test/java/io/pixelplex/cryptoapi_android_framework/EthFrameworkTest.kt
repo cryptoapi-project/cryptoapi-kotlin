@@ -1,27 +1,18 @@
 package io.pixelplex.cryptoapi_android_framework
 
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGasBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractCallBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransactionRawBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
-import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawDecodeResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionExternalResponse
+import io.pixelplex.model.response.*
+
+import io.pixelplex.model.data.EthAddresses
+import io.pixelplex.model.data.EthTransfer
+import io.pixelplex.model.data.EthContractBytecodeResponse
+import io.pixelplex.model.data.EthContractCallBody
+import io.pixelplex.model.data.EthTransaction
+import io.pixelplex.model.data.EthTransactionRawBody
+import io.pixelplex.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
+import io.pixelplex.model.data.EstimatedGasBody
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -85,17 +76,19 @@ class EthFrameworkTest {
         positive = "positivestring"
     )
 
-    private val ethTransactionExternal = TransactionExternal(
-        addresses = ethAddresses,
-        skip = 0,
-        limit = 1
-    )
+    private val ethTransactionExternal =
+        TransactionExternal(
+            addresses = ethAddresses,
+            skip = 0,
+            limit = 1
+        )
 
-    private val badEthTransactionExternal = TransactionExternal(
-        addresses = badEthAddresses,
-        skip = 0,
-        limit = 1
-    )
+    private val badEthTransactionExternal =
+        TransactionExternal(
+            addresses = badEthAddresses,
+            skip = 0,
+            limit = 1
+        )
 
     private val ethTransaction = EthTransaction(
         from = ETH_ADDRESS_1,
@@ -117,19 +110,22 @@ class EthFrameworkTest {
         bytecode = "0x899426490000000000000000000000000000000000000000000000000000000000000001"
     )
 
-    private val badContractCallBody = EthContractCallBody(
-        sender = "0x141d593",
-        amount = 0,
-        bytecode = "0x899426490000000000000000000000000000000000000000000000000000000000000001"
-    )
+    private val badContractCallBody =
+        EthContractCallBody(
+            sender = "0x141d593",
+            amount = 0,
+            bytecode = "0x899426490000000000000000000000000000000000000000000000000000000000000001"
+        )
 
-    private val ethTransactionRawBody = EthTransactionRawBody(
-        tx = TX
-    )
+    private val ethTransactionRawBody =
+        EthTransactionRawBody(
+            tx = TX
+        )
 
-    private val badEthTransactionRawBody = EthTransactionRawBody(
-        tx = "0xf86e8386ca0"
-    )
+    private val badEthTransactionRawBody =
+        EthTransactionRawBody(
+            tx = "0xf86e8386ca0"
+        )
 
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
         CoinsFrameworkTest.CALL_TIMEOUT,
@@ -142,13 +138,14 @@ class EthFrameworkTest {
         cryptoApiFramework.cryptoApiEth.estimateGas(
             estimatedGas,
             { estimatedGasResp -> testEstimatedGasFuture.setComplete(estimatedGasResp) },
-            { estimatedGasError -> testEstimatedGasFuture.setComplete(estimatedGasError)}
+            { estimatedGasError -> testEstimatedGasFuture.setComplete(estimatedGasError) }
         )
 
         testEstimatedGasFuture.wrapResult<Exception, EstimatedGasResponse>(2, TimeUnit.MINUTES)
             .fold({ estimatedGasResp ->
                 estimatedEthGas = estimatedGasResp
-            }, { estimatedEthGas = null
+            }, {
+                estimatedEthGas = null
             })
 
         assertTrue(estimatedEthGas != null)
@@ -160,13 +157,14 @@ class EthFrameworkTest {
         cryptoApiFramework.cryptoApiEth.estimateGas(
             badEstimatedGas,
             { estimatedGasResp -> testEstimatedGasFuture.setComplete(estimatedGasResp) },
-            { estimatedGasError -> testEstimatedGasFuture.setComplete(estimatedGasError)}
+            { estimatedGasError -> testEstimatedGasFuture.setComplete(estimatedGasError) }
         )
 
         testEstimatedGasFuture.wrapResult<Exception, EstimatedGasResponse>(2, TimeUnit.MINUTES)
             .fold({ estimatedGasResp ->
                 estimatedEthGasFail = estimatedGasResp
-            }, { estimatedEthGasFail = null
+            }, {
+                estimatedEthGasFail = null
             })
 
         assertTrue(estimatedEthGasFail != null)
@@ -177,13 +175,14 @@ class EthFrameworkTest {
     fun getNetwork() {
         cryptoApiFramework.cryptoApiEth.getNetwork(
             { estimatedGasResp -> testEthNetworkResponseFuture.setComplete(estimatedGasResp) },
-            { estimatedGasError -> testEthNetworkResponseFuture.setComplete(estimatedGasError)}
+            { estimatedGasError -> testEthNetworkResponseFuture.setComplete(estimatedGasError) }
         )
 
         testEthNetworkResponseFuture.wrapResult<Exception, EthNetworkResponse>(2, TimeUnit.MINUTES)
             .fold({ ethNetworkResponse ->
                 ethNetwork = ethNetworkResponse
-            }, { ethNetwork = null
+            }, {
+                ethNetwork = null
             })
 
         assertTrue(ethNetwork != null)
@@ -194,13 +193,14 @@ class EthFrameworkTest {
         cryptoApiFramework.cryptoApiEth.getBalances(
             ethAddresses,
             { estimatedGasResp -> testEthBalanceResponseFuture.setComplete(estimatedGasResp) },
-            { estimatedGasError -> testEthBalanceResponseFuture.setComplete(estimatedGasError)}
+            { estimatedGasError -> testEthBalanceResponseFuture.setComplete(estimatedGasError) }
         )
 
         testEthBalanceResponseFuture.wrapResult<Exception, EthBalanceResponse>(2, TimeUnit.MINUTES)
             .fold({ ethNetworkResponse ->
                 ethBalances = ethNetworkResponse
-            }, { ethBalances = null
+            }, {
+                ethBalances = null
             })
 
         assertTrue(ethBalances != null)
@@ -212,13 +212,14 @@ class EthFrameworkTest {
         cryptoApiFramework.cryptoApiEth.getBalances(
             badEthAddresses,
             { estimatedGasResp -> testEthBalanceResponseFuture.setComplete(estimatedGasResp) },
-            { estimatedGasError -> testEthBalanceResponseFuture.setComplete(estimatedGasError)}
+            { estimatedGasError -> testEthBalanceResponseFuture.setComplete(estimatedGasError) }
         )
 
         testEthBalanceResponseFuture.wrapResult<Exception, EthBalanceResponse>(2, TimeUnit.MINUTES)
             .fold({ ethNetworkResponse ->
                 ethBalances = ethNetworkResponse
-            }, { ethBalances = null
+            }, {
+                ethBalances = null
             })
 
         assertTrue(ethBalances != null)
@@ -230,13 +231,14 @@ class EthFrameworkTest {
         cryptoApiFramework.cryptoApiEth.getEthInfo(
             ethAddresses,
             { estimatedGasResp -> testEthInfoResponseFuture.setComplete(estimatedGasResp) },
-            { estimatedGasError -> testEthInfoResponseFuture.setComplete(estimatedGasError)}
+            { estimatedGasError -> testEthInfoResponseFuture.setComplete(estimatedGasError) }
         )
 
         testEthInfoResponseFuture.wrapResult<Exception, EthInfoResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 ethInfo = ethInfoResponse
-            }, { ethInfo = null
+            }, {
+                ethInfo = null
             })
 
         assertTrue(ethInfo != null)
@@ -248,13 +250,14 @@ class EthFrameworkTest {
         cryptoApiFramework.cryptoApiEth.getEthInfo(
             badEthAddresses,
             { estimatedGasResp -> testEthInfoResponseFuture.setComplete(estimatedGasResp) },
-            { estimatedGasError -> testEthInfoResponseFuture.setComplete(estimatedGasError)}
+            { estimatedGasError -> testEthInfoResponseFuture.setComplete(estimatedGasError) }
         )
 
         testEthInfoResponseFuture.wrapResult<Exception, EthInfoResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 ethInfo = ethInfoResponse
-            }, { ethInfo = null
+            }, {
+                ethInfo = null
             })
 
         assertTrue(ethInfo != null)
@@ -269,10 +272,14 @@ class EthFrameworkTest {
             { transferError -> testEthTransfersResponseFuture.setComplete(transferError) }
         )
 
-        testEthTransfersResponseFuture.wrapResult<Exception, EthTransferResponse>(2, TimeUnit.MINUTES)
+        testEthTransfersResponseFuture.wrapResult<Exception, EthTransferResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethTransferResponse = ethInfoResponse
-            }, { ethTransferResponse = null
+            }, {
+                ethTransferResponse = null
             })
 
         assertTrue(ethTransferResponse != null)
@@ -287,10 +294,14 @@ class EthFrameworkTest {
             { transferError -> testEthTransfersResponseFuture.setComplete(transferError) }
         )
 
-        testEthTransfersResponseFuture.wrapResult<Exception, EthTransferResponse>(2, TimeUnit.MINUTES)
+        testEthTransfersResponseFuture.wrapResult<Exception, EthTransferResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethTransferResponse = ethInfoResponse
-            }, { ethTransferResponse = null
+            }, {
+                ethTransferResponse = null
             })
 
         assertTrue(ethTransferResponse != null)
@@ -305,10 +316,14 @@ class EthFrameworkTest {
             { transferError -> testEthTransactionExternalResponseFuture.setComplete(transferError) }
         )
 
-        testEthTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
+        testEthTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethTransExternalResponse = ethInfoResponse
-            }, { ethTransExternalResponse = null
+            }, {
+                ethTransExternalResponse = null
             })
 
         assertTrue(ethTransExternalResponse != null)
@@ -323,10 +338,14 @@ class EthFrameworkTest {
             { transferError -> testEthTransactionExternalResponseFuture.setComplete(transferError) }
         )
 
-        testEthTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
+        testEthTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethTransExternalResponse = ethInfoResponse
-            }, { ethTransExternalResponse = null
+            }, {
+                ethTransExternalResponse = null
             })
 
         assertTrue(ethTransExternalResponse != null)
@@ -341,10 +360,14 @@ class EthFrameworkTest {
             { transferError -> testEthTransactionsFuture.setComplete(transferError) }
         )
 
-        testEthTransactionsFuture.wrapResult<Exception, EthTransactionsResponse>(2, TimeUnit.MINUTES)
+        testEthTransactionsFuture.wrapResult<Exception, EthTransactionsResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethTranactionsResponse = ethInfoResponse
-            }, { ethTranactionsResponse = null
+            }, {
+                ethTranactionsResponse = null
             })
 
         assertTrue(ethTranactionsResponse != null)
@@ -359,10 +382,14 @@ class EthFrameworkTest {
             { transferError -> testEthTransactionsFuture.setComplete(transferError) }
         )
 
-        testEthTransactionsFuture.wrapResult<Exception, EthTransactionsResponse>(2, TimeUnit.MINUTES)
+        testEthTransactionsFuture.wrapResult<Exception, EthTransactionsResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethTranactionsResponse = ethInfoResponse
-            }, { ethTranactionsResponse = null
+            }, {
+                ethTranactionsResponse = null
             })
 
         assertTrue(ethTranactionsResponse != null)
@@ -380,7 +407,8 @@ class EthFrameworkTest {
         testEthTransactionFuture.wrapResult<Exception, EthTransactionResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 ethTranactionResponse = ethInfoResponse
-            }, { ethTranactionResponse = null
+            }, {
+                ethTranactionResponse = null
             })
 
         assertTrue(ethTranactionResponse != null)
@@ -399,7 +427,8 @@ class EthFrameworkTest {
         testEthTransactionFuture.wrapResult<Exception, EthTransactionResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 ethTranactionResponse = ethInfoResponse
-            }, { ethTranactionResponse = null
+            }, {
+                ethTranactionResponse = null
             })
 
         assertTrue(ethTranactionResponse != null)
@@ -414,10 +443,14 @@ class EthFrameworkTest {
             { transferError -> testEthBytecodenFuture.setComplete(transferError) }
         )
 
-        testEthBytecodenFuture.wrapResult<Exception, EthContractBytecodeResponse>(2, TimeUnit.MINUTES)
+        testEthBytecodenFuture.wrapResult<Exception, EthContractBytecodeResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 contractsBytecodeResponse = ethInfoResponse
-            }, { contractsBytecodeResponse = null
+            }, {
+                contractsBytecodeResponse = null
             })
 
         assertTrue(contractsBytecodeResponse != null)
@@ -432,10 +465,14 @@ class EthFrameworkTest {
             { transferError -> testEthBytecodenFuture.setComplete(transferError) }
         )
 
-        testEthBytecodenFuture.wrapResult<Exception, EthContractBytecodeResponse>(2, TimeUnit.MINUTES)
+        testEthBytecodenFuture.wrapResult<Exception, EthContractBytecodeResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 contractsBytecodeResponse = ethInfoResponse
-            }, { contractsBytecodeResponse = null
+            }, {
+                contractsBytecodeResponse = null
             })
 
         assertTrue(contractsBytecodeResponse != null)
@@ -454,7 +491,8 @@ class EthFrameworkTest {
         testEthContractFuture.wrapResult<Exception, EthCallContractResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 contractResponse = ethInfoResponse
-            }, { contractResponse = null
+            }, {
+                contractResponse = null
             })
 
         assertTrue(contractResponse != null)
@@ -473,7 +511,8 @@ class EthFrameworkTest {
         testEthContractFuture.wrapResult<Exception, EthCallContractResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 contractResponse = ethInfoResponse
-            }, { contractResponse = null
+            }, {
+                contractResponse = null
             })
 
         assertTrue(contractResponse != null)
@@ -488,10 +527,14 @@ class EthFrameworkTest {
             { transferError -> testEthRawContractFuture.setComplete(transferError) }
         )
 
-        testEthRawContractFuture.wrapResult<Exception, EthTransactionRawResponse>(2, TimeUnit.MINUTES)
+        testEthRawContractFuture.wrapResult<Exception, EthTransactionRawResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethRawContractResponse = ethInfoResponse
-            }, { ethRawContractResponse = null
+            }, {
+                ethRawContractResponse = null
             })
 
         assertTrue(ethRawContractResponse != null)
@@ -506,10 +549,14 @@ class EthFrameworkTest {
             { transferError -> testEthRawDecodeFuture.setComplete(transferError) }
         )
 
-        testEthRawDecodeFuture.wrapResult<Exception, EthTransactionRawDecodeResponse>(2, TimeUnit.MINUTES)
+        testEthRawDecodeFuture.wrapResult<Exception, EthTransactionRawDecodeResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethRawDecodeResponse = ethInfoResponse
-            }, { ethRawDecodeResponse = null
+            }, {
+                ethRawDecodeResponse = null
             })
 
         assertTrue(ethRawDecodeResponse != null)
@@ -524,10 +571,14 @@ class EthFrameworkTest {
             { transferError -> testEthRawDecodeFuture.setComplete(transferError) }
         )
 
-        testEthRawDecodeFuture.wrapResult<Exception, EthTransactionRawDecodeResponse>(2, TimeUnit.MINUTES)
+        testEthRawDecodeFuture.wrapResult<Exception, EthTransactionRawDecodeResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
             .fold({ ethInfoResponse ->
                 ethRawDecodeResponse = ethInfoResponse
-            }, { ethRawDecodeResponse = null
+            }, {
+                ethRawDecodeResponse = null
             })
 
         assertTrue(ethRawDecodeResponse != null)
@@ -540,6 +591,7 @@ class EthFrameworkTest {
         const val ETH_ADDRESS_2 = "0xb0202eBbF797Dd61A3b28d5E82fbA2523edc1a9B"
         const val HASH = "0x2ebfff2a09f677229dced9a9d25500694f9d63e1a4cc7bf65cc635272380ac02"
         const val CONTRACT_ADDRESS = "0xf36c145eff2771ea22ece5fd87392fc8eeae719c"
-        const val TX = "0xf86e8386ca038602bba7f5220083632ea0941de29f644d555fe9cc3241e1083de0868f959bfa8545d964b800801ca04ef1f13c58af9a9ac4be66b838a238b24db798d585d882865637fdc35bdc49c4a04b7d1dfc3d9672080347a0d3559628f5f757bd6f6a005d1c4f7cdccce020ea02"
+        const val TX =
+            "0xf86e8386ca038602bba7f5220083632ea0941de29f644d555fe9cc3241e1083de0868f959bfa8545d964b800801ca04ef1f13c58af9a9ac4be66b838a238b24db798d585d882865637fdc35bdc49c4a04b7d1dfc3d9672080347a0d3559628f5f757bd6f6a005d1c4f7cdccce020ea02"
     }
 }

@@ -1,25 +1,15 @@
 package io.pixelplex.cryptoapi_android_framework.wrapper
 
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGasBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractBytecodeResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthContractCallBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransactionRawBody
-import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
-import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthCallContractResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawDecodeResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionRawResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
-import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionExternalResponse
-import io.pixelplex.cryptoapi_android_framework.exception.NetworkException
+import io.pixelplex.model.data.EthAddresses
+import io.pixelplex.model.data.EthTransfer
+import io.pixelplex.model.exception.NetworkException
+import io.pixelplex.model.data.EthContractBytecodeResponse
+import io.pixelplex.model.data.EthContractCallBody
+import io.pixelplex.model.data.EthTransaction
+import io.pixelplex.model.data.EthTransactionRawBody
+import io.pixelplex.model.data.TransactionExternal
+import io.pixelplex.model.data.EstimatedGasBody
+import io.pixelplex.model.response.*
 
 interface CryptoApiEth {
     fun estimateGas(
