@@ -5,6 +5,7 @@ import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POST
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
@@ -13,6 +14,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceRe
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfo
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionExternalResponse
 import io.pixelplex.cryptoapi_android_framework.exception.NetworkException
@@ -103,9 +105,24 @@ class CryptoApiEthImpl(
                 ethTransactionExternal.skip,
                 ethTransactionExternal.limit
             ),
-            onSuccess = { responseJson ->
-                onSuccess(fromJson(responseJson))
-            },
+            onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
+            onError = onError
+        )
+    }
+
+    override fun getEthTransactions(
+        ethTransaction: EthTransaction,
+        onSuccess: (EthTransactionsResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = TRANSACTIONS_PARAM.format(
+                ethTransaction.from,
+                ethTransaction.to,
+                ethTransaction.skip,
+                ethTransaction.limit
+            ),
+            onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = onError
         )
     }
@@ -147,5 +164,6 @@ class CryptoApiEthImpl(
         private const val ACCOUNTS_ADDRESS_INFO_PARAM = "coins/eth/accounts/%s/info"
         private const val ETH_TRANSFERS_PARAM = "coins/eth/accounts/%s/transfers?skip=%s&limit=%s&positive=%s"
         private const val TRANSACTIONS_EXTERNAL_PARAM = "coins/eth/accounts/%s/transactions/external?skip=%s&limit=%s"
+        private const val TRANSACTIONS_PARAM = "coins/eth/transactions?from=%s&to=%s&skip=%s&limit=%s"
     }
 }

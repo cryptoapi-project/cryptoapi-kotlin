@@ -2,12 +2,14 @@ package io.pixelplex.cryptoapi_android_framework
 
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EstimatedGas
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthAddresses
+import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransaction
 import io.pixelplex.cryptoapi_android_framework.core.model.data.EthTransfer
 import io.pixelplex.cryptoapi_android_framework.core.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EstimatedGasResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthBalanceResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthInfoResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthNetworkResponse
+import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransactionsResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.EthTransferResponse
 import io.pixelplex.cryptoapi_android_framework.core.model.response.TransactionExternalResponse
 import io.pixelplex.cryptoapi_android_framework.support.fold
@@ -27,13 +29,15 @@ class EthFrameworkTest {
     private var ethInfo: EthInfoResponse? = null
     private var ethTransferResponse: EthTransferResponse? = null
     private var ethTransExternalResponse: TransactionExternalResponse? = null
+    private var ethTranactionsResponse: EthTransactionsResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
     private val testEthBalanceResponseFuture = FutureTask<EthBalanceResponse>()
     private val testEthInfoResponseFuture = FutureTask<EthInfoResponse>()
     private val testEthTransfersResponseFuture = FutureTask<EthTransferResponse>()
-    private val testEtTransactionExternalResponseFuture = FutureTask<TransactionExternalResponse>()
+    private val testEthTransactionExternalResponseFuture = FutureTask<TransactionExternalResponse>()
+    private val testEthTransactionsFuture = FutureTask<EthTransactionsResponse>()
 
     private val estimatedGas = EstimatedGas(
         from = ETH_ADDRESS_1,
@@ -74,6 +78,20 @@ class EthFrameworkTest {
         addresses = badEthAddresses,
         skip = 0,
         limit = 1
+    )
+
+    private val ethTransaction = EthTransaction(
+        from = ETH_ADDRESS_1,
+        to = ETH_ADDRESS_2,
+        skip = 0,
+        limit = 3
+    )
+
+    private val badEthTransaction = EthTransaction(
+        from = "0x141d5937C7b",
+        to = ETH_ADDRESS_2,
+        skip = 0,
+        limit = 3
     )
 
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
@@ -246,11 +264,11 @@ class EthFrameworkTest {
     fun getEthTransactionsExternal() {
         cryptoApiFramework.cryptoApiEth.getTransactionsExternal(
             ethTransactionExternal,
-            { transferResp -> testEtTransactionExternalResponseFuture.setComplete(transferResp) },
-            { transferError -> testEtTransactionExternalResponseFuture.setComplete(transferError) }
+            { transferResp -> testEthTransactionExternalResponseFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionExternalResponseFuture.setComplete(transferError) }
         )
 
-        testEtTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
+        testEthTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 ethTransExternalResponse = ethInfoResponse
             }, { ethTransExternalResponse = null
@@ -264,11 +282,11 @@ class EthFrameworkTest {
     fun getEthTransactionsExternalFail() {
         cryptoApiFramework.cryptoApiEth.getTransactionsExternal(
             badEthTransactionExternal,
-            { transferResp -> testEtTransactionExternalResponseFuture.setComplete(transferResp) },
-            { transferError -> testEtTransactionExternalResponseFuture.setComplete(transferError) }
+            { transferResp -> testEthTransactionExternalResponseFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionExternalResponseFuture.setComplete(transferError) }
         )
 
-        testEtTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
+        testEthTransactionExternalResponseFuture.wrapResult<Exception, TransactionExternalResponse>(2, TimeUnit.MINUTES)
             .fold({ ethInfoResponse ->
                 ethTransExternalResponse = ethInfoResponse
             }, { ethTransExternalResponse = null
@@ -277,6 +295,43 @@ class EthFrameworkTest {
         assertTrue(ethTransExternalResponse != null)
         assertTrue(ethTransExternalResponse!!.errors!!.count() > 0)
     }
+
+    @Test
+    fun getEthTransactions() {
+        cryptoApiFramework.cryptoApiEth.getEthTransactions(
+            ethTransaction,
+            { transferResp -> testEthTransactionsFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionsFuture.setComplete(transferError) }
+        )
+
+        testEthTransactionsFuture.wrapResult<Exception, EthTransactionsResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethTranactionsResponse = ethInfoResponse
+            }, { ethTranactionsResponse = null
+            })
+
+        assertTrue(ethTranactionsResponse != null)
+        assertTrue(ethTranactionsResponse!!.items.count() > 0)
+    }
+
+    @Test
+    fun getEthTransactionsFail() {
+        cryptoApiFramework.cryptoApiEth.getEthTransactions(
+            badEthTransaction,
+            { transferResp -> testEthTransactionsFuture.setComplete(transferResp) },
+            { transferError -> testEthTransactionsFuture.setComplete(transferError) }
+        )
+
+        testEthTransactionsFuture.wrapResult<Exception, EthTransactionsResponse>(2, TimeUnit.MINUTES)
+            .fold({ ethInfoResponse ->
+                ethTranactionsResponse = ethInfoResponse
+            }, { ethTranactionsResponse = null
+            })
+
+        assertTrue(ethTranactionsResponse != null)
+        assertTrue(ethTranactionsResponse!!.errors!!.count() > 0)
+    }
+
 
     companion object {
         const val INVALID_ADDRESS_ERROR = 422

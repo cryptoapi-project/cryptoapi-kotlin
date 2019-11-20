@@ -17,7 +17,7 @@ data class TransactionExternalResponse (
     val count: Int,
 
     @SerializedName(ITEMS_KEY) @Expose
-    val items: List<TransactionExternalItem>,
+    val items: List<EthTransactionExternal>,
 
     @SerializedName(ERRORS_KEY)
     val errors: List<ErrorResponse>? = null,
@@ -51,7 +51,7 @@ data class TransactionExternalResponse (
     }
 }
 
-data class TransactionExternalItem (
+data class EthTransactionExternal (
     @SerializedName(TransactionExternalResponse.BLOCK_HASH_KEY) @Expose
     val blockHash: String,
 
