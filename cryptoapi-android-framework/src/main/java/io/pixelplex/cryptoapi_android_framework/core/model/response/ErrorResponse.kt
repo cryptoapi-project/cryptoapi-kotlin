@@ -4,13 +4,13 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class ErrorResponse(
-    @SerializedName(MESSAGE_KEY) @Expose
+    @SerializedName(MESSAGE_KEY)
     val message: String,
 
-    @SerializedName(FIELD_KEY) @Expose
+    @SerializedName(FIELD_KEY)
     val field: String? = null,
 
-    @SerializedName(VALUE_KEY) @Expose
+    @SerializedName(VALUE_KEY)
     val value: String? = null
 ): CryptoApiResponse {
     companion object {

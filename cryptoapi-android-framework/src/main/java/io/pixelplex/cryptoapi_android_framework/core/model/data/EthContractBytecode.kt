@@ -6,7 +6,7 @@ import io.pixelplex.cryptoapi_android_framework.core.model.response.CryptoApiRes
 import io.pixelplex.cryptoapi_android_framework.core.model.response.ErrorResponse
 
 data class EthContractBytecodeResponse (
-    @SerializedName(BYTECODE_KEY) @Expose
+    @SerializedName(BYTECODE_KEY)
     val bytecode: String,
 
     @SerializedName(ERRORS_KEY)

@@ -4,19 +4,19 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class EthTransferResponse (
-    @SerializedName(ADDRESSES_KEY) @Expose
+    @SerializedName(ADDRESSES_KEY)
     val addresses: List<String>,
 
-    @SerializedName(SKIP_KEY) @Expose
+    @SerializedName(SKIP_KEY)
     val skip: Int,
 
-    @SerializedName(LIMIT_KEY) @Expose
+    @SerializedName(LIMIT_KEY)
     val limit: Int,
 
-    @SerializedName(ITEMS_KEY) @Expose
+    @SerializedName(ITEMS_KEY)
     val items: List<EthTransferItem>,
 
-    @SerializedName(COUNT_KEY) @Expose
+    @SerializedName(COUNT_KEY)
     val count: Int,
 
     @SerializedName(ERRORS_KEY)
@@ -46,30 +46,30 @@ data class EthTransferResponse (
 }
 
 data class EthTransferItem(
-    @SerializedName(EthTransferResponse.BLOCK_NUMBER_KEY) @Expose
+    @SerializedName(EthTransferResponse.BLOCK_NUMBER_KEY)
     val blockNumber: Long,
 
-    @SerializedName(EthTransferResponse.UTC_KEY) @Expose
+    @SerializedName(EthTransferResponse.UTC_KEY)
     val utc: String,
 
-    @SerializedName(EthTransferResponse.FROM_KEY) @Expose
+    @SerializedName(EthTransferResponse.FROM_KEY)
     val from: String,
 
-    @SerializedName(EthTransferResponse.GAS_KEY) @Expose
+    @SerializedName(EthTransferResponse.GAS_KEY)
     val gas: Long,
 
-    @SerializedName(EthTransferResponse.HASH_KEY) @Expose
+    @SerializedName(EthTransferResponse.HASH_KEY)
     val hash: String,
 
-    @SerializedName(EthTransferResponse.TO_KEY) @Expose
+    @SerializedName(EthTransferResponse.TO_KEY)
     val to: String,
 
-    @SerializedName(EthTransferResponse.VALUE_KEY) @Expose
+    @SerializedName(EthTransferResponse.VALUE_KEY)
     val value: Long,
 
-    @SerializedName(EthTransferResponse.GAS_PRICE_KEY) @Expose
+    @SerializedName(EthTransferResponse.GAS_PRICE_KEY)
     val gasPrice: Long,
 
-    @SerializedName(EthTransferResponse.INTERNAL_KEY) @Expose
+    @SerializedName(EthTransferResponse.INTERNAL_KEY)
     val internal: Boolean
 )

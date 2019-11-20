@@ -4,19 +4,19 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class TransactionExternalResponse (
-    @SerializedName(ADDRESSES_KEY) @Expose
+    @SerializedName(ADDRESSES_KEY)
     val addresses: List<String>,
 
-    @SerializedName(LIMIT_KEY) @Expose
+    @SerializedName(LIMIT_KEY)
     val limit: Int,
 
-    @SerializedName(SKIP_KEY) @Expose
+    @SerializedName(SKIP_KEY)
     val skip: Int,
 
-    @SerializedName(COUNT_KEY) @Expose
+    @SerializedName(COUNT_KEY)
     val count: Int,
 
-    @SerializedName(ITEMS_KEY) @Expose
+    @SerializedName(ITEMS_KEY)
     val items: List<EthTransactionExternal>,
 
     @SerializedName(ERRORS_KEY)
@@ -52,48 +52,48 @@ data class TransactionExternalResponse (
 }
 
 data class EthTransactionExternal (
-    @SerializedName(TransactionExternalResponse.BLOCK_HASH_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.BLOCK_HASH_KEY)
     val blockHash: String,
 
-    @SerializedName(TransactionExternalResponse.BLOCK_NUMBER_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.BLOCK_NUMBER_KEY)
     val blockNumber: Long,
 
-    @SerializedName(TransactionExternalResponse.UTC_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.UTC_KEY)
     val utc: String,
 
-    @SerializedName(TransactionExternalResponse.FROM_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.FROM_KEY)
     val from: String,
 
-    @SerializedName(TransactionExternalResponse.GAS_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.GAS_KEY)
     val gas: Long,
 
-    @SerializedName(TransactionExternalResponse.GAS_PRICE_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.GAS_PRICE_KEY)
     val gasPrice: Long,
 
-    @SerializedName(TransactionExternalResponse.HASH_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.HASH_KEY)
     val hash: String,
 
-    @SerializedName(TransactionExternalResponse.INPUT_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.INPUT_KEY)
     val input: String,
 
-    @SerializedName(TransactionExternalResponse.NONCE_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.NONCE_KEY)
     val nonce: Int,
 
-    @SerializedName(TransactionExternalResponse.TO_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.TO_KEY)
     val to: String,
 
-    @SerializedName(TransactionExternalResponse.TRANSACTION_INDEX_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.TRANSACTION_INDEX_KEY)
     val transactionIndex: Int,
 
-    @SerializedName(TransactionExternalResponse.VALUE_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.VALUE_KEY)
     val value: Long,
 
-    @SerializedName(TransactionExternalResponse.V_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.V_KEY)
     val v: String,
 
-    @SerializedName(TransactionExternalResponse.S_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.S_KEY)
     val s: String,
 
-    @SerializedName(TransactionExternalResponse.R_KEY) @Expose
+    @SerializedName(TransactionExternalResponse.R_KEY)
     val r: String
 )

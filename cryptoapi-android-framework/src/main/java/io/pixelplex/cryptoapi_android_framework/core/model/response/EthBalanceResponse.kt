@@ -21,9 +21,9 @@ data class EthBalanceResponse (
 }
 
 data class EthBalance (
-    @SerializedName(EthBalanceResponse.ADDRESS_KEY) @Expose
+    @SerializedName(EthBalanceResponse.ADDRESS_KEY)
     val address: String,
 
-    @SerializedName(EthBalanceResponse.BALANCE_KEY) @Expose
+    @SerializedName(EthBalanceResponse.BALANCE_KEY)
     val balance: String
 )
