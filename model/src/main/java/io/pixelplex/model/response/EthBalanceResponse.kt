@@ -3,19 +3,11 @@ package io.pixelplex.model.response
 import com.google.gson.annotations.SerializedName
 
 data class EthBalanceResponse (
-    val balances: List<EthBalance>?,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val balances: List<EthBalance>
 ): CryptoApiResponse {
     companion object {
         const val ADDRESS_KEY = "address"
         const val BALANCE_KEY = "balance"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }
 

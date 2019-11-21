@@ -1,18 +1,18 @@
 package io.pixelplex.cryptoapi_android_framework.core
 
-
 import io.pixelplex.model.QueryParameter
 import io.pixelplex.model.QueryType
-import io.pixelplex.model.exception.NetworkException
-import okhttp3.*
-
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import okhttp3.logging.HttpLoggingInterceptor
-import java.util.concurrent.TimeUnit
-
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 class CryptoApi(
@@ -41,7 +41,7 @@ class CryptoApi(
         method: RequestMethod = RequestMethod.GET,
         body: String? = null,
         onSuccess: (String) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (String) -> Unit
     ) {
         httpClient.newCall(
             makeRequest(
@@ -51,15 +51,16 @@ class CryptoApi(
             )
         ).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
-                onSuccess(
-                    response.body!!.string()
-                )
+                if (response.isSuccessful) {
+                    onSuccess(response.body!!.string())
+                } else {
+                    onError(response.body!!.string())
+                }
             }
 
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
                 call.cancel()
-                onError(e as NetworkException)
             }
         })
     }

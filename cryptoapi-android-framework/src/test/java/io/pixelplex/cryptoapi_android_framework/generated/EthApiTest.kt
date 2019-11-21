@@ -68,49 +68,49 @@ class EthApiTest {
         value = "10"
     )
 
-    @Test
-    fun estimateGas() {
-        cryptoApi.estimateGas(
-            estimatedGas,
-            TypedCallback.withType(EstimatedGasResponse::class.java, {
-                testEstimatedGasFuture.setComplete(it)
-            }, {
-                testEstimatedGasFuture.setComplete(it)
-            })
-        )
-
-        testEstimatedGasFuture.wrapResult<Exception, EstimatedGasResponse>(2, TimeUnit.MINUTES)
-            .fold({ estimatedGasResp ->
-                estimatedEthGas = estimatedGasResp
-            }, {
-                estimatedEthGas = null
-            })
-
-        Assert.assertNotNull(estimatedEthGas)
-        Assert.assertNull(estimatedEthGas!!.errors)
-    }
-
-    @Test
-    fun estimateGasFail() {
-        cryptoApi.estimateGas(
-            badEstimatedGas,
-            TypedCallback.withType(EstimatedGasResponse::class.java, {
-                testEstimatedGasFuture.setComplete(it)
-            }, {
-                testEstimatedGasFuture.setComplete(it)
-            })
-        )
-
-        testEstimatedGasFuture.wrapResult<Exception, EstimatedGasResponse>(2, TimeUnit.MINUTES)
-            .fold({ estimatedGasResp ->
-                estimatedEthGasFail = estimatedGasResp
-            }, {
-                estimatedEthGasFail = null
-            })
-
-        Assert.assertNotNull(estimatedEthGasFail)
-        Assert.assertEquals(estimatedEthGasFail!!.status,
-            EthFrameworkTest.INVALID_ADDRESS_ERROR
-        )
-    }
+//    @Test
+//    fun estimateGas() {
+//        cryptoApi.estimateGas(
+//            estimatedGas,
+//            TypedCallback.withType(EstimatedGasResponse::class.java, {
+//                testEstimatedGasFuture.setComplete(it)
+//            }, {
+//                testEstimatedGasFuture.setComplete(it)
+//            })
+//        )
+//
+//        testEstimatedGasFuture.wrapResult<Exception, EstimatedGasResponse>(2, TimeUnit.MINUTES)
+//            .fold({ estimatedGasResp ->
+//                estimatedEthGas = estimatedGasResp
+//            }, {
+//                estimatedEthGas = null
+//            })
+//
+//        Assert.assertNotNull(estimatedEthGas)
+//        Assert.assertNull(estimatedEthGas!!.errors)
+//    }
+//
+//    @Test
+//    fun estimateGasFail() {
+//        cryptoApi.estimateGas(
+//            badEstimatedGas,
+//            TypedCallback.withType(EstimatedGasResponse::class.java, {
+//                testEstimatedGasFuture.setComplete(it)
+//            }, {
+//                testEstimatedGasFuture.setComplete(it)
+//            })
+//        )
+//
+//        testEstimatedGasFuture.wrapResult<Exception, EstimatedGasResponse>(2, TimeUnit.MINUTES)
+//            .fold({ estimatedGasResp ->
+//                estimatedEthGasFail = estimatedGasResp
+//            }, {
+//                estimatedEthGasFail = null
+//            })
+//
+//        Assert.assertNotNull(estimatedEthGasFail)
+//        Assert.assertEquals(estimatedEthGasFail!!.status,
+//            EthFrameworkTest.INVALID_ADDRESS_ERROR
+//        )
+//    }
 }

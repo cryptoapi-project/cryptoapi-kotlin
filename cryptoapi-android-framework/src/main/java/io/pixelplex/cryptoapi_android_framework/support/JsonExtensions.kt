@@ -6,8 +6,3 @@ import com.google.gson.reflect.TypeToken
 inline fun <reified T> fromJson(json: String): T {
     return Gson().fromJson(json, object : TypeToken<T>() {}.type)
 }
-
-fun String.isJSONArray() = this.startsWith("[")
-
-fun String.isNotJSON() = !this.startsWith("{")
-

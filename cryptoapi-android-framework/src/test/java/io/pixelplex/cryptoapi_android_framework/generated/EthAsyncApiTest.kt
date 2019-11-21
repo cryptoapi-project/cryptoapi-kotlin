@@ -32,56 +32,56 @@ class EthAsyncApiTest {
             CoinsFrameworkTest.TOKEN
         ).generatedAsyncApiEth
 
-    @Test
-    fun getNetwork() {
-        var result: EthNetworkResponse? = null
-        var error: ApiException? = null
-
-        runBlocking {
-            try {
-                result = cryptoApi.getNetwork()
-            } catch (e: ApiException) {
-                error = e
-            }
-        }
-
-        Assert.assertNotNull(result)
-        Assert.assertNull(error)
-    }
-
-    @Test
-    fun estimateGas() {
-
-        var estimatedEthGas: EstimatedGasResponse? = null
-
-        runBlocking {
-            try {
-                estimatedEthGas = cryptoApi.estimateGas(estimatedGas)
-            } catch (e: ApiException) {
-
-            }
-        }
-
-        Assert.assertNotNull(estimatedEthGas)
-        Assert.assertNull(estimatedEthGas!!.errors)
-    }
-
-    @Test
-    fun estimateGasFail() {
-        var estimatedEthGas: EstimatedGasResponse? = null
-
-        runBlocking {
-            try {
-                estimatedEthGas = cryptoApi.estimateGas(badEstimatedGas)
-            } catch (e: ApiException) {
-                e.printStackTrace()
-            }
-        }
-
-        Assert.assertNotNull(estimatedEthGas)
-        Assert.assertEquals(
-            estimatedEthGas!!.status,
-            EthFrameworkTest.INVALID_ADDRESS_ERROR
-        )
-    }
+//    @Test
+//    fun getNetwork() {
+//        var result: EthNetworkResponse? = null
+//        var error: ApiException? = null
+//
+//        runBlocking {
+//            try {
+//                result = cryptoApi.getNetwork()
+//            } catch (e: ApiException) {
+//                error = e
+//            }
+//        }
+//
+//        Assert.assertNotNull(result)
+//        Assert.assertNull(error)
+//    }
+//
+//    @Test
+//    fun estimateGas() {
+//
+//        var estimatedEthGas: EstimatedGasResponse? = null
+//
+//        runBlocking {
+//            try {
+//                estimatedEthGas = cryptoApi.estimateGas(estimatedGas)
+//            } catch (e: ApiException) {
+//
+//            }
+//        }
+//
+//        Assert.assertNotNull(estimatedEthGas)
+//        Assert.assertNull(estimatedEthGas!!.errors)
+//    }
+//
+//    @Test
+//    fun estimateGasFail() {
+//        var estimatedEthGas: EstimatedGasResponse? = null
+//
+//        runBlocking {
+//            try {
+//                estimatedEthGas = cryptoApi.estimateGas(badEstimatedGas)
+//            } catch (e: ApiException) {
+//                e.printStackTrace()
+//            }
+//        }
+//
+//        Assert.assertNotNull(estimatedEthGas)
+//        Assert.assertEquals(
+//            estimatedEthGas!!.status,
+//            EthFrameworkTest.INVALID_ADDRESS_ERROR
+//        )
+//    }
 }

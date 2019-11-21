@@ -1,16 +1,9 @@
 package io.pixelplex.model.response
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class EthInfoResponse(
-    val info: List<EthInfo>?,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val info: List<EthInfo>
 ) : CryptoApiResponse {
     companion object {
         const val ADDRESS_KEY = "address"
@@ -23,7 +16,7 @@ data class EthInfoResponse(
     }
 }
 
-data class EthInfo (
+data class EthInfo(
     @SerializedName(EthInfoResponse.ADDRESS_KEY)
     val address: String,
 

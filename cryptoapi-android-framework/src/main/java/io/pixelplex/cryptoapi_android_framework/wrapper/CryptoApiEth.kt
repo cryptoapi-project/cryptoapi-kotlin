@@ -18,96 +18,96 @@ interface CryptoApiEth {
     fun estimateGas(
         estimatedGasBody: EstimatedGasBody,
         onSuccess: (EstimatedGasResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun callContract(
         ethContractCallBody: EthContractCallBody,
         contractAddress: String,
         onSuccess: (EthCallContractResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun transactionsRawSend(
         ethTransactionRawBody: EthTransactionRawBody,
         onSuccess: (EthTransactionRawResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun transactionsRawDecode(
         ethTransactionRawBody: EthTransactionRawBody,
         onSuccess: (EthTransactionRawDecodeResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getNetwork(
         onSuccess: (EthNetworkResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getBalances(
         typedParams: EthTypedParams,
         onSuccess: (EthBalanceResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getEthInfo(
         typedParams: EthTypedParams,
         onSuccess: (EthInfoResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getEthTransfers(
         ethTransfer: EthTransfer,
         onSuccess: (EthTransferResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getTransactionsExternal(
         ethTransactionExternal: TransactionExternal,
         onSuccess: (TransactionExternalResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getEthTransactions(
         ethTransaction: EthTransaction,
         onSuccess: (EthTransactionsResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getEthTransactionsByHash(
         hash: String,
         onSuccess: (EthTransactionResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getEthContractsInfo(
         address: String,
         onSuccess: (EthContractBytecodeResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getTokensBalances(
         ethTokensBalancesBody: EthTokensBalancesBody,
         onSuccess: (EthTokensBalancesResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getTokensTransfers(
         tokensTransfersCallBody: TokensTransfersCallBody,
         onSuccess: (EthTokensTransfersResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getTokenInfo(
         tokenAddress: String,
         onSuccess: (EthTokenInfoResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
     fun getTokensSearch(
         ethTokensSearchBody: EthTokensSearchBody,
         onSuccess: (EthTokenSearchResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 }
