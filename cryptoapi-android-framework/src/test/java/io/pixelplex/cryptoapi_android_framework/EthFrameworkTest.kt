@@ -205,7 +205,7 @@ class EthFrameworkTest {
                 }
             }, { fail() })
     }
-
+    
     @Test
     fun getNetwork() {
         cryptoApiFramework.cryptoApiEth.getNetwork(
