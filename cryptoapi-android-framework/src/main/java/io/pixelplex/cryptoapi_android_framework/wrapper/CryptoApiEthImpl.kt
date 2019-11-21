@@ -18,6 +18,7 @@ import io.pixelplex.model.data.TransactionExternal
 
 import io.pixelplex.cryptoapi_android_framework.support.isNotJSON
 import io.pixelplex.model.data.EstimatedGasBody
+import io.pixelplex.model.data.EthTokensBalancesBody
 import io.pixelplex.model.response.*
 
 class CryptoApiEthImpl(
@@ -199,6 +200,22 @@ class CryptoApiEthImpl(
         )
     }
 
+    override fun getTokensBalances(
+        ethTokensBalancesBody: EthTokensBalancesBody,
+        onSuccess: (EthTokensBalancesResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = ETH_TOKENS_BALANCES_PARAM.format(
+                ethTokensBalancesBody.address,
+                ethTokensBalancesBody.skip,
+                ethTokensBalancesBody.limit
+            ),
+            onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
+            onError = onError
+        )
+    }
+
     private fun successEthBalances(
         responseJson: String,
         onSuccess: (EthBalanceResponse) -> Unit
@@ -275,5 +292,6 @@ class CryptoApiEthImpl(
         private const val CONTRACTS_CALL_PARAM = "coins/eth/contracts/%s/call"
         private const val ETH_TRANSACTIONS_RAW_SEND_PARAM = "coins/eth/transactions/raw/send"
         private const val ETH_TRANSACTIONS_RAW_DECODE_PARAM = "coins/eth/transactions/raw/decode"
+        private const val ETH_TOKENS_BALANCES_PARAM = "coins/eth/tokens/%s/balances?skip=%s&limit=%s"
     }
 }

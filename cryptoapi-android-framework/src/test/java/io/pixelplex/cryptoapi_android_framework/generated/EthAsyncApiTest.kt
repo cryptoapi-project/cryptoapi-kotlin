@@ -4,7 +4,6 @@ import io.pixelplex.cryptoapi_android_framework.CoinsFrameworkTest
 import io.pixelplex.cryptoapi_android_framework.CryptoApiFramework
 import io.pixelplex.cryptoapi_android_framework.EthFrameworkTest
 import io.pixelplex.model.data.EstimatedGasBody
-
 import io.pixelplex.model.exception.ApiException
 import io.pixelplex.model.response.EstimatedGasResponse
 import io.pixelplex.model.response.EthNetworkResponse
