@@ -1,7 +1,7 @@
 package io.pixelplex.cryptoapi_android_framework.generation
 
 import io.pixelplex.annotation.*
-import io.pixelplex.model.data.EstimatedGasBody
+import io.pixelplex.model.data.EthEstimatedGasCallBody
 
 import io.pixelplex.model.response.EstimatedGasResponse
 import io.pixelplex.model.response.EthBalanceResponse
@@ -32,7 +32,7 @@ interface EthApi {
 
     @Post("estimate-gas")
     fun estimateGas(
-        @Body estimatedGas: EstimatedGasBody,
+        @Body ethEstimatedGasCall: EthEstimatedGasCallBody,
         callback: TypedCallback<EstimatedGasResponse>
     )
 }

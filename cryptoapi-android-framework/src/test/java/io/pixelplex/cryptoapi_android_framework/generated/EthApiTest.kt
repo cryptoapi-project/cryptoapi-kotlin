@@ -8,12 +8,11 @@ import io.pixelplex.model.response.EthNetworkResponse
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
-import io.pixelplex.model.data.EstimatedGasBody
+import io.pixelplex.model.data.EthEstimatedGasCallBody
 import io.pixelplex.model.exception.ApiException
 import io.pixelplex.tools.TypedCallback
 import org.junit.Assert
 import org.junit.Test
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class EthApiTest {
@@ -56,13 +55,13 @@ class EthApiTest {
     private var estimatedEthGas: EstimatedGasResponse? = null
     private var estimatedEthGasFail: EstimatedGasResponse? = null
 
-    private val estimatedGas = EstimatedGasBody(
+    private val estimatedGas = EthEstimatedGasCallBody(
         from = EthFrameworkTest.ETH_ADDRESS_1,
         to = EthFrameworkTest.ETH_ADDRESS_2,
         value = "10"
     )
 
-    private val badEstimatedGas = EstimatedGasBody(
+    private val badEstimatedGas = EthEstimatedGasCallBody(
         from = "0x141d59",
         to = EthFrameworkTest.ETH_ADDRESS_2,
         value = "10"

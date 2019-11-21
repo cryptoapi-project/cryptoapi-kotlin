@@ -4,4 +4,4 @@ data class EthContractCallBody (
     val sender: String,
     val amount: Long,
     val bytecode: String
-)
+): EthCallBody

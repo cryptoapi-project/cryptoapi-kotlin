@@ -1,9 +1,6 @@
-package io.pixelplex.model.data
+package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
-import io.pixelplex.model.response.CryptoApiResponse
-import io.pixelplex.model.response.ErrorResponse
-
 
 data class EthContractBytecodeResponse (
     @SerializedName(BYTECODE_KEY)

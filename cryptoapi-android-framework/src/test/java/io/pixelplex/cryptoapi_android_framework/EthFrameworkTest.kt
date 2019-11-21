@@ -3,17 +3,17 @@ package io.pixelplex.cryptoapi_android_framework
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
-import io.pixelplex.model.data.EstimatedGasBody
-import io.pixelplex.model.data.EthContractBytecodeResponse
+import io.pixelplex.model.data.EthEstimatedGasCallBody
+import io.pixelplex.model.response.EthContractBytecodeResponse
 import io.pixelplex.model.data.EthContractCallBody
-import io.pixelplex.model.data.EthTokensBalancesBody
-import io.pixelplex.model.data.EthTokensSearchBody
-import io.pixelplex.model.data.EthTransaction
-import io.pixelplex.model.data.EthTransactionRawBody
-import io.pixelplex.model.data.EthTransfer
+import io.pixelplex.model.data.EthTokenBalanceCallBody
+import io.pixelplex.model.data.EthTokenSearchCallBody
+import io.pixelplex.model.data.EthTransactionCallBody
+import io.pixelplex.model.data.EthTransactionRawCallBody
+import io.pixelplex.model.data.EthTransferCallBody
 import io.pixelplex.model.data.EthTypedParams
-import io.pixelplex.model.data.TokensTransfersCallBody
-import io.pixelplex.model.data.TransactionExternal
+import io.pixelplex.model.data.EthTokenTransferCallBody
+import io.pixelplex.model.data.EthTransactionExternalCallBody
 import io.pixelplex.model.response.CryptoApiResponse
 import io.pixelplex.model.response.ErrorResponse
 import io.pixelplex.model.response.EstimatedGasResponse
@@ -38,13 +38,13 @@ import java.util.concurrent.TimeUnit
 class EthFrameworkTest {
     private val testEstimatedGasFuture = FutureTask<CryptoApiResponse>()
 
-    private val estimatedGas = EstimatedGasBody(
+    private val estimatedGas = EthEstimatedGasCallBody(
         from = ETH_ADDRESS_1,
         to = ETH_ADDRESS_2,
         value = "10"
     )
 
-    private val badEstimatedGas = EstimatedGasBody(
+    private val badEstimatedGas = EthEstimatedGasCallBody(
         from = "0x141d59",
         to = ETH_ADDRESS_2,
         value = "10"
@@ -53,14 +53,14 @@ class EthFrameworkTest {
     private val ethAddresses = EthTypedParams(ETH_ADDRESS_1, ETH_ADDRESS_2)
     private val badEthAddresses = EthTypedParams(ETH_ADDRESS_1, "0xb0202eBbF797Dd61A")
 
-    private val ethTransfer = EthTransfer(
+    private val ethTransfer = EthTransferCallBody(
         typedParams = ethAddresses,
         skip = 0,
         limit = 1,
         positive = "positivestring"
     )
 
-    private val badEthTransfer = EthTransfer(
+    private val badEthTransfer = EthTransferCallBody(
         typedParams = badEthAddresses,
         skip = 0,
         limit = 1,
@@ -68,27 +68,27 @@ class EthFrameworkTest {
     )
 
     private val ethTransactionExternal =
-        TransactionExternal(
+        EthTransactionExternalCallBody(
             typedParams = ethAddresses,
             skip = 0,
             limit = 1
         )
 
     private val badEthTransactionExternal =
-        TransactionExternal(
+        EthTransactionExternalCallBody(
             typedParams = badEthAddresses,
             skip = 0,
             limit = 1
         )
 
-    private val ethTransaction = EthTransaction(
+    private val ethTransaction = EthTransactionCallBody(
         from = ETH_ADDRESS_1,
         to = ETH_ADDRESS_2,
         skip = 0,
         limit = 3
     )
 
-    private val badEthTransaction = EthTransaction(
+    private val badEthTransaction = EthTransactionCallBody(
         from = "0x141d5937C7b",
         to = ETH_ADDRESS_2,
         skip = 0,
@@ -109,31 +109,31 @@ class EthFrameworkTest {
         )
 
     private val ethTransactionRawBody =
-        EthTransactionRawBody(
+        EthTransactionRawCallBody(
             tx = TX
         )
 
     private val badEthTransactionRawBody =
-        EthTransactionRawBody(
+        EthTransactionRawCallBody(
             tx = "0xf86e8386ca0"
         )
 
     private val ethTokensBalancesBody =
-        EthTokensBalancesBody(
+        EthTokenBalanceCallBody(
             skip = 0,
             limit = 3,
             address = ETH_ADDRESS_1
         )
 
     private val badEthTokensBalancesBody =
-        EthTokensBalancesBody(
+        EthTokenBalanceCallBody(
             skip = 0,
             limit = 3,
             address = "0x141d5937C7"
         )
 
     private val ethTokensTransfersBody =
-        TokensTransfersCallBody(
+        EthTokenTransferCallBody(
             skip = 0,
             limit = 3,
             typedParams = EthTypedParams(ETH_ADDRESS_1, ETH_ADDRESS_2),
@@ -141,7 +141,7 @@ class EthFrameworkTest {
         )
 
     private val badEthTokensTransfersBody =
-        TokensTransfersCallBody(
+        EthTokenTransferCallBody(
             skip = 0,
             limit = 3,
             typedParams = EthTypedParams("0xb0202eBbF79"),
@@ -149,7 +149,7 @@ class EthFrameworkTest {
         )
 
     private val ethTokensSearchBody =
-        EthTokensSearchBody(
+        EthTokenSearchCallBody(
             skip = 0,
             limit = 3,
             types = EthTypedParams("ERC20"),
@@ -157,7 +157,7 @@ class EthFrameworkTest {
         )
 
     private val badEthTokensSearchBody =
-        EthTokensSearchBody(
+        EthTokenSearchCallBody(
             skip = 0,
             limit = 3,
             types = EthTypedParams(ETH_ADDRESS_1, ETH_ADDRESS_2),

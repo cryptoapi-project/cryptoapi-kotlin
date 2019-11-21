@@ -4,17 +4,17 @@ import com.google.gson.Gson
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POST
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
-import io.pixelplex.model.data.EstimatedGasBody
-import io.pixelplex.model.data.EthContractBytecodeResponse
+import io.pixelplex.model.data.EthEstimatedGasCallBody
+import io.pixelplex.model.response.EthContractBytecodeResponse
 import io.pixelplex.model.data.EthContractCallBody
-import io.pixelplex.model.data.EthTokensBalancesBody
-import io.pixelplex.model.data.EthTokensSearchBody
-import io.pixelplex.model.data.EthTransaction
-import io.pixelplex.model.data.EthTransactionRawBody
-import io.pixelplex.model.data.EthTransfer
+import io.pixelplex.model.data.EthTokenBalanceCallBody
+import io.pixelplex.model.data.EthTokenSearchCallBody
+import io.pixelplex.model.data.EthTransactionCallBody
+import io.pixelplex.model.data.EthTransactionRawCallBody
+import io.pixelplex.model.data.EthTransferCallBody
 import io.pixelplex.model.data.EthTypedParams
-import io.pixelplex.model.data.TokensTransfersCallBody
-import io.pixelplex.model.data.TransactionExternal
+import io.pixelplex.model.data.EthTokenTransferCallBody
+import io.pixelplex.model.data.EthTransactionExternalCallBody
 import io.pixelplex.model.response.ErrorResponse
 import io.pixelplex.model.response.EstimatedGasResponse
 import io.pixelplex.model.response.EthBalanceResponse
@@ -36,7 +36,7 @@ class CryptoApiEthImpl(
     private val cryptoApiClient: CryptoApi
 ) : CryptoApiEth {
     override fun estimateGas(
-        estimatedGasBody: EstimatedGasBody,
+        ethEstimatedGasCallBody: EthEstimatedGasCallBody,
         onSuccess: (EstimatedGasResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
@@ -45,7 +45,7 @@ class CryptoApiEthImpl(
             method = POST,
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) },
-            body = Gson().toJson(estimatedGasBody, EstimatedGasBody::class.java)
+            body = Gson().toJson(ethEstimatedGasCallBody, EthEstimatedGasCallBody::class.java)
         )
     }
 
@@ -71,7 +71,7 @@ class CryptoApiEthImpl(
     }
 
     override fun transactionsRawSend(
-        ethTransactionRawBody: EthTransactionRawBody,
+        ethTransactionRawCallBody: EthTransactionRawCallBody,
         onSuccess: (EthTransactionRawResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
@@ -80,12 +80,12 @@ class CryptoApiEthImpl(
             method = POST,
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) },
-            body = Gson().toJson(ethTransactionRawBody, EthTransactionRawBody::class.java)
+            body = Gson().toJson(ethTransactionRawCallBody, EthTransactionRawCallBody::class.java)
         )
     }
 
     override fun transactionsRawDecode(
-        ethTransactionRawBody: EthTransactionRawBody,
+        ethTransactionRawCallBody: EthTransactionRawCallBody,
         onSuccess: (EthTransactionRawDecodeResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
@@ -94,7 +94,7 @@ class CryptoApiEthImpl(
             method = POST,
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) },
-            body = Gson().toJson(ethTransactionRawBody, EthTransactionRawBody::class.java)
+            body = Gson().toJson(ethTransactionRawCallBody, EthTransactionRawCallBody::class.java)
         )
     }
 
@@ -146,16 +146,16 @@ class CryptoApiEthImpl(
     }
 
     override fun getEthTransfers(
-        ethTransfer: EthTransfer,
+        ethTransferCallBody: EthTransferCallBody,
         onSuccess: (EthTransferResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
             params = ETH_TRANSFERS_PARAM.format(
-                ethTransfer.typedParams.string(),
-                ethTransfer.skip,
-                ethTransfer.limit,
-                ethTransfer.positive
+                ethTransferCallBody.typedParams.string(),
+                ethTransferCallBody.skip,
+                ethTransferCallBody.limit,
+                ethTransferCallBody.positive
             ),
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) }
@@ -163,15 +163,15 @@ class CryptoApiEthImpl(
     }
 
     override fun getTransactionsExternal(
-        ethTransactionExternal: TransactionExternal,
+        ethEthTransactionExternalCallBody: EthTransactionExternalCallBody,
         onSuccess: (TransactionExternalResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
             params = TRANSACTIONS_EXTERNAL_PARAM.format(
-                ethTransactionExternal.typedParams.string(),
-                ethTransactionExternal.skip,
-                ethTransactionExternal.limit
+                ethEthTransactionExternalCallBody.typedParams.string(),
+                ethEthTransactionExternalCallBody.skip,
+                ethEthTransactionExternalCallBody.limit
             ),
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) }
@@ -179,16 +179,16 @@ class CryptoApiEthImpl(
     }
 
     override fun getEthTransactions(
-        ethTransaction: EthTransaction,
+        ethTransactionCallBody: EthTransactionCallBody,
         onSuccess: (EthTransactionsResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
             params = TRANSACTIONS_PARAM.format(
-                ethTransaction.from,
-                ethTransaction.to,
-                ethTransaction.skip,
-                ethTransaction.limit
+                ethTransactionCallBody.from,
+                ethTransactionCallBody.to,
+                ethTransactionCallBody.skip,
+                ethTransactionCallBody.limit
             ),
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) }
@@ -220,15 +220,15 @@ class CryptoApiEthImpl(
     }
 
     override fun getTokensBalances(
-        ethTokensBalancesBody: EthTokensBalancesBody,
+        ethTokenBalanceCallBody: EthTokenBalanceCallBody,
         onSuccess: (EthTokensBalancesResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
             params = ETH_TOKENS_BALANCES_PARAM.format(
-                ethTokensBalancesBody.address,
-                ethTokensBalancesBody.skip,
-                ethTokensBalancesBody.limit
+                ethTokenBalanceCallBody.address,
+                ethTokenBalanceCallBody.skip,
+                ethTokenBalanceCallBody.limit
             ),
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) }
@@ -236,16 +236,16 @@ class CryptoApiEthImpl(
     }
 
     override fun getTokensTransfers(
-        tokensTransfersCallBody: TokensTransfersCallBody,
+        ethTokenTransferCallBody: EthTokenTransferCallBody,
         onSuccess: (EthTokensTransfersResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
             params = ETH_TOKENS_TRANSFERS_PARAM.format(
-                tokensTransfersCallBody.token,
-                tokensTransfersCallBody.typedParams.string(),
-                tokensTransfersCallBody.skip,
-                tokensTransfersCallBody.limit
+                ethTokenTransferCallBody.token,
+                ethTokenTransferCallBody.typedParams.string(),
+                ethTokenTransferCallBody.skip,
+                ethTokenTransferCallBody.limit
             ),
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) }
@@ -265,16 +265,16 @@ class CryptoApiEthImpl(
     }
 
     override fun getTokensSearch(
-        ethTokensSearchBody: EthTokensSearchBody,
+        ethTokenSearchCallBody: EthTokenSearchCallBody,
         onSuccess: (EthTokenSearchResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
             params = ETH_TOKENS_SEARCH_PARAM.format(
-                ethTokensSearchBody.query,
-                ethTokensSearchBody.skip,
-                ethTokensSearchBody.limit,
-                ethTokensSearchBody.types.string()
+                ethTokenSearchCallBody.query,
+                ethTokenSearchCallBody.skip,
+                ethTokenSearchCallBody.limit,
+                ethTokenSearchCallBody.types.string()
             ),
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = { responseJson -> onError(fromJson(responseJson)) }
