@@ -1,6 +1,6 @@
 package io.pixelplex.cryptoapi_android_framework.wrapper
 
-import io.pixelplex.model.data.EthAddresses
+import io.pixelplex.model.data.EthTypedParams
 import io.pixelplex.model.data.EthTransfer
 import io.pixelplex.model.exception.NetworkException
 import io.pixelplex.model.data.EthContractBytecodeResponse
@@ -10,6 +10,8 @@ import io.pixelplex.model.data.EthTransactionRawBody
 import io.pixelplex.model.data.TransactionExternal
 import io.pixelplex.model.data.EstimatedGasBody
 import io.pixelplex.model.data.EthTokensBalancesBody
+import io.pixelplex.model.data.EthTokensSearchBody
+import io.pixelplex.model.data.TokensTransfersCallBody
 import io.pixelplex.model.response.*
 
 interface CryptoApiEth {
@@ -44,13 +46,13 @@ interface CryptoApiEth {
     )
 
     fun getBalances(
-        addresses: EthAddresses,
+        typedParams: EthTypedParams,
         onSuccess: (EthBalanceResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
 
     fun getEthInfo(
-        addresses: EthAddresses,
+        typedParams: EthTypedParams,
         onSuccess: (EthInfoResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
@@ -88,6 +90,24 @@ interface CryptoApiEth {
     fun getTokensBalances(
         ethTokensBalancesBody: EthTokensBalancesBody,
         onSuccess: (EthTokensBalancesResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun getTokensTransfers(
+        tokensTransfersCallBody: TokensTransfersCallBody,
+        onSuccess: (EthTokensTransfersResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun getTokenInfo(
+        tokenAddress: String,
+        onSuccess: (EthTokenInfoResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
+
+    fun getTokensSearch(
+        ethTokensSearchBody: EthTokensSearchBody,
+        onSuccess: (EthTokenSearchResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
 }

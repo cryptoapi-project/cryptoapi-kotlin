@@ -2,7 +2,7 @@ package io.pixelplex.cryptoapi_android_framework
 
 import io.pixelplex.model.response.*
 
-import io.pixelplex.model.data.EthAddresses
+import io.pixelplex.model.data.EthTypedParams
 import io.pixelplex.model.data.EthTransfer
 import io.pixelplex.model.data.EthContractBytecodeResponse
 import io.pixelplex.model.data.EthContractCallBody
@@ -14,6 +14,8 @@ import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
 import io.pixelplex.model.data.EstimatedGasBody
 import io.pixelplex.model.data.EthTokensBalancesBody
+import io.pixelplex.model.data.EthTokensSearchBody
+import io.pixelplex.model.data.TokensTransfersCallBody
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -35,6 +37,9 @@ class EthFrameworkTest {
     private var ethRawContractResponse: EthTransactionRawResponse? = null
     private var ethRawDecodeResponse: EthTransactionRawDecodeResponse? = null
     private var ethTokensBalancesResponse: EthTokensBalancesResponse? = null
+    private var ethTokensTransfersResponse: EthTokensTransfersResponse? = null
+    private var ethTokenInfoResponse: EthTokenInfoResponse? = null
+    private var ethTokenSearchResponse: EthTokenSearchResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
@@ -49,6 +54,9 @@ class EthFrameworkTest {
     private val testEthRawContractFuture = FutureTask<EthTransactionRawResponse>()
     private val testEthRawDecodeFuture = FutureTask<EthTransactionRawDecodeResponse>()
     private val testEthTokensBalancesFuture = FutureTask<EthTokensBalancesResponse>()
+    private val testEthTokensTransfersFuture = FutureTask<EthTokensTransfersResponse>()
+    private val testEthTokenInfoFuture = FutureTask<EthTokenInfoResponse>()
+    private val testEthTokenSearchFuture = FutureTask<EthTokenSearchResponse>()
 
     private val estimatedGas = EstimatedGasBody(
         from = ETH_ADDRESS_1,
@@ -62,18 +70,18 @@ class EthFrameworkTest {
         value = "10"
     )
 
-    private val ethAddresses = EthAddresses(ETH_ADDRESS_1, ETH_ADDRESS_2)
-    private val badEthAddresses = EthAddresses(ETH_ADDRESS_1, "0xb0202eBbF797Dd61A")
+    private val ethAddresses = EthTypedParams(ETH_ADDRESS_1, ETH_ADDRESS_2)
+    private val badEthAddresses = EthTypedParams(ETH_ADDRESS_1, "0xb0202eBbF797Dd61A")
 
     private val ethTransfer = EthTransfer(
-        addresses = ethAddresses,
+        typedParams = ethAddresses,
         skip = 0,
         limit = 1,
         positive = "positivestring"
     )
 
     private val badEthTransfer = EthTransfer(
-        addresses = badEthAddresses,
+        typedParams = badEthAddresses,
         skip = 0,
         limit = 1,
         positive = "positivestring"
@@ -81,14 +89,14 @@ class EthFrameworkTest {
 
     private val ethTransactionExternal =
         TransactionExternal(
-            addresses = ethAddresses,
+            typedParams = ethAddresses,
             skip = 0,
             limit = 1
         )
 
     private val badEthTransactionExternal =
         TransactionExternal(
-            addresses = badEthAddresses,
+            typedParams = badEthAddresses,
             skip = 0,
             limit = 1
         )
@@ -142,6 +150,38 @@ class EthFrameworkTest {
             skip = 0,
             limit = 3,
             address = "0x141d5937C7"
+        )
+
+    private val ethTokensTransfersBody =
+        TokensTransfersCallBody(
+            skip = 0,
+            limit = 3,
+            typedParams = EthTypedParams(ETH_ADDRESS_1, ETH_ADDRESS_2),
+            token = CONTRACT_ADDRESS
+        )
+
+    private val badEthTokensTransfersBody =
+        TokensTransfersCallBody(
+            skip = 0,
+            limit = 3,
+            typedParams = EthTypedParams("0xb0202eBbF79"),
+            token = CONTRACT_ADDRESS
+        )
+
+    private val ethTokensSearchBody =
+        EthTokensSearchBody(
+            skip = 0,
+            limit = 3,
+            types = EthTypedParams("ERC20"),
+            query = "r"
+        )
+
+    private val badEthTokensSearchBody =
+        EthTokensSearchBody(
+            skip = 0,
+            limit = 3,
+            types = EthTypedParams(ETH_ADDRESS_1, ETH_ADDRESS_2),
+            query = "r"
         )
 
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
@@ -644,6 +684,138 @@ class EthFrameworkTest {
 
         assertTrue(ethTokensBalancesResponse != null)
         assertTrue(ethTokensBalancesResponse!!.errors!!.count() > 0)
+    }
+
+    @Test
+    fun tokensTransfers() {
+        cryptoApiFramework.cryptoApiEth.getTokensTransfers(
+            ethTokensTransfersBody,
+            { transferResp -> testEthTokensTransfersFuture.setComplete(transferResp) },
+            { transferError -> testEthTokensTransfersFuture.setComplete(transferError) }
+        )
+
+        testEthTokensTransfersFuture.wrapResult<Exception, EthTokensTransfersResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokensTransfersResponse = ethInfoResponse
+            }, {
+                ethTokensTransfersResponse = null
+            })
+
+        assertTrue(ethTokensTransfersResponse != null)
+        assertTrue(ethTokensTransfersResponse!!.items.count() > 0)
+    }
+
+    @Test
+    fun tokensTransfersFail() {
+        cryptoApiFramework.cryptoApiEth.getTokensTransfers(
+            badEthTokensTransfersBody,
+            { transferResp -> testEthTokensTransfersFuture.setComplete(transferResp) },
+            { transferError -> testEthTokensTransfersFuture.setComplete(transferError) }
+        )
+
+        testEthTokensTransfersFuture.wrapResult<Exception, EthTokensTransfersResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokensTransfersResponse = ethInfoResponse
+            }, {
+                ethTokensTransfersResponse = null
+            })
+
+        assertTrue(ethTokensTransfersResponse != null)
+        assertTrue(ethTokensTransfersResponse!!.errors!!.count() > 0)
+    }
+
+    @Test
+    fun tokenInfo() {
+        cryptoApiFramework.cryptoApiEth.getTokenInfo(
+            CONTRACT_ADDRESS,
+            { transferResp -> testEthTokenInfoFuture.setComplete(transferResp) },
+            { transferError -> testEthTokenInfoFuture.setComplete(transferError) }
+        )
+
+        testEthTokenInfoFuture.wrapResult<Exception, EthTokenInfoResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokenInfoResponse = ethInfoResponse
+            }, {
+                ethTokenInfoResponse = null
+            })
+
+        assertTrue(ethTokenInfoResponse != null)
+        assertTrue(ethTokenInfoResponse!!.address.isNotEmpty())
+    }
+
+    @Test
+    fun tokenInfoFail() {
+        cryptoApiFramework.cryptoApiEth.getTokenInfo(
+            "bad_address",
+            { transferResp -> testEthTokenInfoFuture.setComplete(transferResp) },
+            { transferError -> testEthTokenInfoFuture.setComplete(transferError) }
+        )
+
+        testEthTokenInfoFuture.wrapResult<Exception, EthTokenInfoResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokenInfoResponse = ethInfoResponse
+            }, {
+                ethTokenInfoResponse = null
+            })
+
+        assertTrue(ethTokenInfoResponse != null)
+        assertTrue(ethTokenInfoResponse!!.errors!!.isNotEmpty())
+    }
+
+    @Test
+    fun tokensSearch() {
+        cryptoApiFramework.cryptoApiEth.getTokensSearch(
+            ethTokensSearchBody,
+            { transferResp -> testEthTokenSearchFuture.setComplete(transferResp) },
+            { transferError -> testEthTokenSearchFuture.setComplete(transferError) }
+        )
+
+        testEthTokenSearchFuture.wrapResult<Exception, EthTokenSearchResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokenSearchResponse = ethInfoResponse
+            }, {
+                ethTokenSearchResponse = null
+            })
+
+        assertTrue(ethTokenSearchResponse != null)
+        assertTrue(ethTokenSearchResponse!!.items.isNotEmpty())
+    }
+
+    @Test
+    fun tokensSearchFail() {
+        cryptoApiFramework.cryptoApiEth.getTokensSearch(
+            badEthTokensSearchBody,
+            { transferResp -> testEthTokenSearchFuture.setComplete(transferResp) },
+            { transferError -> testEthTokenSearchFuture.setComplete(transferError) }
+        )
+
+        testEthTokenSearchFuture.wrapResult<Exception, EthTokenSearchResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokenSearchResponse = ethInfoResponse
+            }, {
+                ethTokenSearchResponse = null
+            })
+
+        assertTrue(ethTokenSearchResponse != null)
+        assertTrue(ethTokenSearchResponse!!.errors!!.isNotEmpty())
     }
 
     companion object {
