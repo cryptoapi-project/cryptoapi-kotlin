@@ -46,7 +46,7 @@ class EthAsyncApiTest {
 //    @Test
 //    fun estimateGas() {
 //
-//        var estimatedEthGas: EstimatedGasResponse? = null
+//        var estimatedEthGas: EthEstimatedGasResponse? = null
 //
 //        runBlocking {
 //            try {
@@ -62,7 +62,7 @@ class EthAsyncApiTest {
 //
 //    @Test
 //    fun estimateGasFail() {
-//        var estimatedEthGas: EstimatedGasResponse? = null
+//        var estimatedEthGas: EthEstimatedGasResponse? = null
 //
 //        runBlocking {
 //            try {

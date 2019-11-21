@@ -1,9 +1,8 @@
 package io.pixelplex.model.response
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class EthNetworkResponse (
+data class EthNetworkResponse(
     @SerializedName(LAST_BLOCK_KEY)
     val lastBlock: Long,
 
@@ -18,7 +17,7 @@ data class EthNetworkResponse (
 
     @SerializedName(DIFFICULTY_KEY)
     val difficulty: Long
-): CryptoApiResponse {
+) : CryptoApiResponse {
     companion object {
         const val LAST_BLOCK_KEY = "lastBlock"
         const val COUNT_TRANSACTIONS_KEY = "countTransactions"

@@ -3,33 +3,33 @@ package io.pixelplex.cryptoapi_android_framework
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.cryptoapi_android_framework.support.future.wrapResult
-import io.pixelplex.model.data.EthEstimatedGasCallBody
-import io.pixelplex.model.response.EthContractBytecodeResponse
 import io.pixelplex.model.data.EthContractCallBody
+import io.pixelplex.model.data.EthEstimatedGasCallBody
 import io.pixelplex.model.data.EthTokenBalanceCallBody
 import io.pixelplex.model.data.EthTokenSearchCallBody
+import io.pixelplex.model.data.EthTokenTransferCallBody
 import io.pixelplex.model.data.EthTransactionCallBody
+import io.pixelplex.model.data.EthTransactionExternalCallBody
 import io.pixelplex.model.data.EthTransactionRawCallBody
 import io.pixelplex.model.data.EthTransferCallBody
 import io.pixelplex.model.data.EthTypedParams
-import io.pixelplex.model.data.EthTokenTransferCallBody
-import io.pixelplex.model.data.EthTransactionExternalCallBody
 import io.pixelplex.model.response.CryptoApiResponse
 import io.pixelplex.model.response.ErrorResponse
-import io.pixelplex.model.response.EstimatedGasResponse
 import io.pixelplex.model.response.EthBalanceResponse
 import io.pixelplex.model.response.EthCallContractResponse
+import io.pixelplex.model.response.EthContractBytecodeResponse
+import io.pixelplex.model.response.EthEstimatedGasResponse
 import io.pixelplex.model.response.EthInfoResponse
 import io.pixelplex.model.response.EthNetworkResponse
+import io.pixelplex.model.response.EthTokenBalanceResponse
 import io.pixelplex.model.response.EthTokenInfoResponse
 import io.pixelplex.model.response.EthTokenSearchResponse
-import io.pixelplex.model.response.EthTokensBalancesResponse
-import io.pixelplex.model.response.EthTokensTransfersResponse
+import io.pixelplex.model.response.EthTokenTransferResponse
+import io.pixelplex.model.response.EthTransactionExternalResponse
 import io.pixelplex.model.response.EthTransactionRawDecodeResponse
 import io.pixelplex.model.response.EthTransactionResponse
 import io.pixelplex.model.response.EthTransactionsResponse
 import io.pixelplex.model.response.EthTransferResponse
-import io.pixelplex.model.response.TransactionExternalResponse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
@@ -180,7 +180,7 @@ class EthFrameworkTest {
 
         testEstimatedGasFuture.wrapResult<Exception, CryptoApiResponse>(2, TimeUnit.MINUTES)
             .fold({ resp ->
-                if (resp is EstimatedGasResponse) {
+                if (resp is EthEstimatedGasResponse) {
                     assertTrue(resp.gasPrice > 0)
                 } else {
                     fail()
@@ -341,7 +341,7 @@ class EthFrameworkTest {
 
         testEstimatedGasFuture.wrapResult<Exception, CryptoApiResponse>(2, TimeUnit.MINUTES)
             .fold({ resp ->
-                if (resp is TransactionExternalResponse) {
+                if (resp is EthTransactionExternalResponse) {
                     assertTrue(resp.items.count() > 0)
                 } else {
                     fail()
@@ -578,7 +578,7 @@ class EthFrameworkTest {
 
         testEstimatedGasFuture.wrapResult<Exception, CryptoApiResponse>(2, TimeUnit.MINUTES)
             .fold({ resp ->
-                if (resp is EthTokensBalancesResponse) {
+                if (resp is EthTokenBalanceResponse) {
                     assertTrue(resp.items.count() > 0)
                 } else {
                     fail()
@@ -614,7 +614,7 @@ class EthFrameworkTest {
 
         testEstimatedGasFuture.wrapResult<Exception, CryptoApiResponse>(2, TimeUnit.MINUTES)
             .fold({ resp ->
-                if (resp is EthTokensTransfersResponse) {
+                if (resp is EthTokenTransferResponse) {
                     assertTrue(resp.items.count() > 0)
                 } else {
                     fail()

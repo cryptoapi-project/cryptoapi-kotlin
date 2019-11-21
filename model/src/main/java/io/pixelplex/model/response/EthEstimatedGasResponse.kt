@@ -2,7 +2,7 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class EstimatedGasResponse (
+data class EthEstimatedGasResponse (
     @SerializedName(ESTIMATE_GAS_KEY)
     val estimateGas: Long,
 

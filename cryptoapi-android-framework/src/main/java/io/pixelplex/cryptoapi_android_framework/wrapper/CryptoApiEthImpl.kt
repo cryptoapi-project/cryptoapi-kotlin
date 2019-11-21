@@ -4,40 +4,40 @@ import com.google.gson.Gson
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POST
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
-import io.pixelplex.model.data.EthEstimatedGasCallBody
-import io.pixelplex.model.response.EthContractBytecodeResponse
 import io.pixelplex.model.data.EthContractCallBody
+import io.pixelplex.model.data.EthEstimatedGasCallBody
 import io.pixelplex.model.data.EthTokenBalanceCallBody
 import io.pixelplex.model.data.EthTokenSearchCallBody
+import io.pixelplex.model.data.EthTokenTransferCallBody
 import io.pixelplex.model.data.EthTransactionCallBody
+import io.pixelplex.model.data.EthTransactionExternalCallBody
 import io.pixelplex.model.data.EthTransactionRawCallBody
 import io.pixelplex.model.data.EthTransferCallBody
 import io.pixelplex.model.data.EthTypedParams
-import io.pixelplex.model.data.EthTokenTransferCallBody
-import io.pixelplex.model.data.EthTransactionExternalCallBody
 import io.pixelplex.model.response.ErrorResponse
-import io.pixelplex.model.response.EstimatedGasResponse
 import io.pixelplex.model.response.EthBalanceResponse
 import io.pixelplex.model.response.EthCallContractResponse
+import io.pixelplex.model.response.EthContractBytecodeResponse
+import io.pixelplex.model.response.EthEstimatedGasResponse
 import io.pixelplex.model.response.EthInfoResponse
 import io.pixelplex.model.response.EthNetworkResponse
+import io.pixelplex.model.response.EthTokenBalanceResponse
 import io.pixelplex.model.response.EthTokenInfoResponse
 import io.pixelplex.model.response.EthTokenSearchResponse
-import io.pixelplex.model.response.EthTokensBalancesResponse
-import io.pixelplex.model.response.EthTokensTransfersResponse
+import io.pixelplex.model.response.EthTokenTransferResponse
+import io.pixelplex.model.response.EthTransactionExternalResponse
 import io.pixelplex.model.response.EthTransactionRawDecodeResponse
 import io.pixelplex.model.response.EthTransactionRawResponse
 import io.pixelplex.model.response.EthTransactionResponse
 import io.pixelplex.model.response.EthTransactionsResponse
 import io.pixelplex.model.response.EthTransferResponse
-import io.pixelplex.model.response.TransactionExternalResponse
 
 class CryptoApiEthImpl(
     private val cryptoApiClient: CryptoApi
 ) : CryptoApiEth {
     override fun estimateGas(
         ethEstimatedGasCallBody: EthEstimatedGasCallBody,
-        onSuccess: (EstimatedGasResponse) -> Unit,
+        onSuccess: (EthEstimatedGasResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
@@ -164,7 +164,7 @@ class CryptoApiEthImpl(
 
     override fun getTransactionsExternal(
         ethEthTransactionExternalCallBody: EthTransactionExternalCallBody,
-        onSuccess: (TransactionExternalResponse) -> Unit,
+        onSuccess: (EthTransactionExternalResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
@@ -221,7 +221,7 @@ class CryptoApiEthImpl(
 
     override fun getTokensBalances(
         ethTokenBalanceCallBody: EthTokenBalanceCallBody,
-        onSuccess: (EthTokensBalancesResponse) -> Unit,
+        onSuccess: (EthTokenBalanceResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
@@ -237,7 +237,7 @@ class CryptoApiEthImpl(
 
     override fun getTokensTransfers(
         ethTokenTransferCallBody: EthTokenTransferCallBody,
-        onSuccess: (EthTokensTransfersResponse) -> Unit,
+        onSuccess: (EthTokenTransferResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     ) {
         cryptoApiClient.callApi(
@@ -280,66 +280,6 @@ class CryptoApiEthImpl(
             onError = { responseJson -> onError(fromJson(responseJson)) }
         )
     }
-
-//    private fun successEthBalances(
-//        responseJson: String,
-//        onSuccess: (EthBalanceResponse) -> Unit
-//    ) {
-//        if (responseJson.isJSONArray()) {
-//            onSuccess(
-//                EthBalanceResponse(
-//                    balances = fromJson<List<EthBalance>>(responseJson)
-//                )
-//            )
-//        } else {
-//            onSuccess(fromJson(responseJson))
-//        }
-//    }
-//
-//    private fun successEthInfo(
-//        responseJson: String,
-//        onSuccess: (EthInfoResponse) -> Unit
-//    ) {
-//        if (responseJson.isJSONArray()) {
-//            onSuccess(
-//                EthInfoResponse(
-//                    info = fromJson<List<EthInfo>>(responseJson)
-//                )
-//            )
-//        } else {
-//            onSuccess(fromJson(responseJson))
-//        }
-//    }
-//
-//    private fun successEthContractCall(
-//        responseJson: String,
-//        onSuccess: (EthCallContractResponse) -> Unit
-//    ) {
-//        if (responseJson.isNotJSON()) {
-//            onSuccess(
-//                EthCallContractResponse(
-//                    response = responseJson
-//                )
-//            )
-//        } else {
-//            onSuccess(fromJson(responseJson))
-//        }
-//    }
-//
-//    private fun successEthTransactionsRawSend(
-//        responseJson: String,
-//        onSuccess: (EthTransactionRawResponse) -> Unit
-//    ) {
-//        if (responseJson.isNotJSON()) {
-//            onSuccess(
-//                EthTransactionRawResponse(
-//                    hash = responseJson
-//                )
-//            )
-//        } else {
-//            onSuccess(fromJson(responseJson))
-//        }
-//    }
 
     companion object {
         private const val ESTIMATE_GAS_PARAM = "coins/eth/estimate-gas"

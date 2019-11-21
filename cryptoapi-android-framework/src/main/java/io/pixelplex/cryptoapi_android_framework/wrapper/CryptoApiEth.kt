@@ -16,7 +16,7 @@ import io.pixelplex.model.response.*
 interface CryptoApiEth {
     fun estimateGas(
         ethEstimatedGasCallBody: EthEstimatedGasCallBody,
-        onSuccess: (EstimatedGasResponse) -> Unit,
+        onSuccess: (EthEstimatedGasResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     )
 
@@ -64,7 +64,7 @@ interface CryptoApiEth {
 
     fun getTransactionsExternal(
         ethEthTransactionExternalCallBody: EthTransactionExternalCallBody,
-        onSuccess: (TransactionExternalResponse) -> Unit,
+        onSuccess: (EthTransactionExternalResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     )
 
@@ -88,13 +88,13 @@ interface CryptoApiEth {
 
     fun getTokensBalances(
         ethTokenBalanceCallBody: EthTokenBalanceCallBody,
-        onSuccess: (EthTokensBalancesResponse) -> Unit,
+        onSuccess: (EthTokenBalanceResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     )
 
     fun getTokensTransfers(
         ethTokenTransferCallBody: EthTokenTransferCallBody,
-        onSuccess: (EthTokensTransfersResponse) -> Unit,
+        onSuccess: (EthTokenTransferResponse) -> Unit,
         onError: (ErrorResponse) -> Unit
     )
 

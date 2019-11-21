@@ -3,7 +3,7 @@ package io.pixelplex.cryptoapi_android_framework.generated
 import io.pixelplex.cryptoapi_android_framework.CoinsFrameworkTest
 import io.pixelplex.cryptoapi_android_framework.CryptoApiFramework
 import io.pixelplex.cryptoapi_android_framework.EthFrameworkTest
-import io.pixelplex.model.response.EstimatedGasResponse
+import io.pixelplex.model.response.EthEstimatedGasResponse
 import io.pixelplex.model.response.EthNetworkResponse
 import io.pixelplex.cryptoapi_android_framework.support.fold
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
@@ -50,10 +50,10 @@ class EthApiTest {
         Assert.assertNull(error)
     }
 
-    private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
+    private val testEstimatedGasFuture = FutureTask<EthEstimatedGasResponse>()
 
-    private var estimatedEthGas: EstimatedGasResponse? = null
-    private var estimatedEthGasFail: EstimatedGasResponse? = null
+    private var ethEstimatedEthGas: EthEstimatedGasResponse? = null
+    private var ethEstimatedEthGasFail: EthEstimatedGasResponse? = null
 
     private val estimatedGas = EthEstimatedGasCallBody(
         from = EthFrameworkTest.ETH_ADDRESS_1,
@@ -71,44 +71,44 @@ class EthApiTest {
 //    fun estimateGas() {
 //        cryptoApi.estimateGas(
 //            estimatedGas,
-//            TypedCallback.withType(EstimatedGasResponse::class.java, {
+//            TypedCallback.withType(EthEstimatedGasResponse::class.java, {
 //                testEstimatedGasFuture.setComplete(it)
 //            }, {
 //                testEstimatedGasFuture.setComplete(it)
 //            })
 //        )
 //
-//        testEstimatedGasFuture.wrapResult<Exception, EstimatedGasResponse>(2, TimeUnit.MINUTES)
+//        testEstimatedGasFuture.wrapResult<Exception, EthEstimatedGasResponse>(2, TimeUnit.MINUTES)
 //            .fold({ estimatedGasResp ->
-//                estimatedEthGas = estimatedGasResp
+//                ethEstimatedEthGas = estimatedGasResp
 //            }, {
-//                estimatedEthGas = null
+//                ethEstimatedEthGas = null
 //            })
 //
-//        Assert.assertNotNull(estimatedEthGas)
-//        Assert.assertNull(estimatedEthGas!!.errors)
+//        Assert.assertNotNull(ethEstimatedEthGas)
+//        Assert.assertNull(ethEstimatedEthGas!!.errors)
 //    }
 //
 //    @Test
 //    fun estimateGasFail() {
 //        cryptoApi.estimateGas(
 //            badEstimatedGas,
-//            TypedCallback.withType(EstimatedGasResponse::class.java, {
+//            TypedCallback.withType(EthEstimatedGasResponse::class.java, {
 //                testEstimatedGasFuture.setComplete(it)
 //            }, {
 //                testEstimatedGasFuture.setComplete(it)
 //            })
 //        )
 //
-//        testEstimatedGasFuture.wrapResult<Exception, EstimatedGasResponse>(2, TimeUnit.MINUTES)
+//        testEstimatedGasFuture.wrapResult<Exception, EthEstimatedGasResponse>(2, TimeUnit.MINUTES)
 //            .fold({ estimatedGasResp ->
-//                estimatedEthGasFail = estimatedGasResp
+//                ethEstimatedEthGasFail = estimatedGasResp
 //            }, {
-//                estimatedEthGasFail = null
+//                ethEstimatedEthGasFail = null
 //            })
 //
-//        Assert.assertNotNull(estimatedEthGasFail)
-//        Assert.assertEquals(estimatedEthGasFail!!.status,
+//        Assert.assertNotNull(ethEstimatedEthGasFail)
+//        Assert.assertEquals(ethEstimatedEthGasFail!!.status,
 //            EthFrameworkTest.INVALID_ADDRESS_ERROR
 //        )
 //    }

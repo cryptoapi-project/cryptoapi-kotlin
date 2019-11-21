@@ -2,7 +2,7 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class TransactionExternalResponse (
+data class EthTransactionExternalResponse (
     @SerializedName(ADDRESSES_KEY)
     val addresses: List<String>,
 
@@ -16,13 +16,7 @@ data class TransactionExternalResponse (
     val count: Int,
 
     @SerializedName(ITEMS_KEY)
-    val items: List<EthTransactionExternal>,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val items: List<EthTransactionExternal>
 ): CryptoApiResponse {
     companion object {
         const val ADDRESSES_KEY = "typedParams"
@@ -45,54 +39,52 @@ data class TransactionExternalResponse (
         const val GAS_PRICE_KEY = "gas_price"
         const val UTC_KEY = "utc"
         const val COUNT_KEY = "count"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }
 
 data class EthTransactionExternal (
-    @SerializedName(TransactionExternalResponse.BLOCK_HASH_KEY)
+    @SerializedName(EthTransactionExternalResponse.BLOCK_HASH_KEY)
     val blockHash: String,
 
-    @SerializedName(TransactionExternalResponse.BLOCK_NUMBER_KEY)
+    @SerializedName(EthTransactionExternalResponse.BLOCK_NUMBER_KEY)
     val blockNumber: Long,
 
-    @SerializedName(TransactionExternalResponse.UTC_KEY)
+    @SerializedName(EthTransactionExternalResponse.UTC_KEY)
     val utc: String,
 
-    @SerializedName(TransactionExternalResponse.FROM_KEY)
+    @SerializedName(EthTransactionExternalResponse.FROM_KEY)
     val from: String,
 
-    @SerializedName(TransactionExternalResponse.GAS_KEY)
+    @SerializedName(EthTransactionExternalResponse.GAS_KEY)
     val gas: Long,
 
-    @SerializedName(TransactionExternalResponse.GAS_PRICE_KEY)
+    @SerializedName(EthTransactionExternalResponse.GAS_PRICE_KEY)
     val gasPrice: Long,
 
-    @SerializedName(TransactionExternalResponse.HASH_KEY)
+    @SerializedName(EthTransactionExternalResponse.HASH_KEY)
     val hash: String,
 
-    @SerializedName(TransactionExternalResponse.INPUT_KEY)
+    @SerializedName(EthTransactionExternalResponse.INPUT_KEY)
     val input: String,
 
-    @SerializedName(TransactionExternalResponse.NONCE_KEY)
+    @SerializedName(EthTransactionExternalResponse.NONCE_KEY)
     val nonce: Int,
 
-    @SerializedName(TransactionExternalResponse.TO_KEY)
+    @SerializedName(EthTransactionExternalResponse.TO_KEY)
     val to: String,
 
-    @SerializedName(TransactionExternalResponse.TRANSACTION_INDEX_KEY)
+    @SerializedName(EthTransactionExternalResponse.TRANSACTION_INDEX_KEY)
     val transactionIndex: Int,
 
-    @SerializedName(TransactionExternalResponse.VALUE_KEY)
+    @SerializedName(EthTransactionExternalResponse.VALUE_KEY)
     val value: Long,
 
-    @SerializedName(TransactionExternalResponse.V_KEY)
+    @SerializedName(EthTransactionExternalResponse.V_KEY)
     val v: String,
 
-    @SerializedName(TransactionExternalResponse.S_KEY)
+    @SerializedName(EthTransactionExternalResponse.S_KEY)
     val s: String,
 
-    @SerializedName(TransactionExternalResponse.R_KEY)
+    @SerializedName(EthTransactionExternalResponse.R_KEY)
     val r: String
 )

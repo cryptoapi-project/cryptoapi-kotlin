@@ -19,13 +19,7 @@ data class EthTokenSearchResponse (
     val types: List<String>,
 
     @SerializedName(ITEMS_KEY)
-    val items: List<EthTokenSearch>,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val items: List<EthTokenSearch>
 ): CryptoApiResponse {
     companion object {
         const val QUERY_KEY = "query"
@@ -42,7 +36,6 @@ data class EthTokenSearchResponse (
         const val TOTAL_SUPPLY_KEY = "totalSupply"
         const val SYMBOL_KEY = "symbol"
         const val NAME_KEY = "name"
-        const val ERRORS_KEY = "errors"
         const val STATUS_KEY = "status"
     }
 }

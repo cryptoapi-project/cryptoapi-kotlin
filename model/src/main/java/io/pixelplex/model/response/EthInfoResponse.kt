@@ -11,8 +11,6 @@ data class EthInfoResponse(
         const val IS_CONTRACT_KEY = "is_contract"
         const val TYPE_KEY = "type"
         const val COUNT_TRANSACTIONS_KEY = "count_transactions"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }
 
