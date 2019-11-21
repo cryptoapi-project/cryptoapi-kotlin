@@ -817,7 +817,7 @@ class EthFrameworkTest {
         assertTrue(ethTokenSearchResponse != null)
         assertTrue(ethTokenSearchResponse!!.errors!!.isNotEmpty())
     }
-    
+
     companion object {
         const val INVALID_ADDRESS_ERROR = 422
         const val ETH_ADDRESS_1 = "0x141d5937C7b0e4fB4C535c900C0964B4852007eA"
