@@ -1,16 +1,15 @@
 package io.pixelplex.model.response
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH info response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthInfoResponse(
-    val info: List<EthInfo>?,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val info: List<EthInfo>
 ) : CryptoApiResponse {
     companion object {
         const val ADDRESS_KEY = "address"
@@ -18,12 +17,15 @@ data class EthInfoResponse(
         const val IS_CONTRACT_KEY = "is_contract"
         const val TYPE_KEY = "type"
         const val COUNT_TRANSACTIONS_KEY = "count_transactions"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }
 
-data class EthInfo (
+/**
+ * Combines all fields of ETH info
+ *
+ * @author Sergey Krupenich
+ */
+data class EthInfo(
     @SerializedName(EthInfoResponse.ADDRESS_KEY)
     val address: String,
 

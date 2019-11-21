@@ -2,18 +2,18 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH transaction response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionsResponse (
     @SerializedName(ITEMS_KEY)
     val items: List<EthTransactionResponse>,
 
     @SerializedName(TOTAL_KEY)
-    val total: Int,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val total: Int
 ): CryptoApiResponse {
     companion object {
         const val ITEMS_KEY = "items"
@@ -32,8 +32,6 @@ data class EthTransactionsResponse (
         const val GAS_KEY = "gas"
         const val GAS_PRICE_KEY = "gas_price"
         const val UTC_KEY = "utc"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
         const val TOTAL_KEY = "total"
         const val INTERNAL_TRANSACTIONS_KEY = "internal_transactions"
         const val CONFIRMATIONS_KEY = "confirmations"
@@ -41,6 +39,12 @@ data class EthTransactionsResponse (
     }
 }
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines all fields of ETH transaction response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionResponse (
     @SerializedName(EthTransactionsResponse.BLOCK_HASH_KEY)
     val blockHash: String,
@@ -94,13 +98,7 @@ data class EthTransactionResponse (
     val confirmations: Int?,
 
     @SerializedName(EthTransactionsResponse.RECEIPT_KEY)
-    val receipt: Receipt?,
-
-    @SerializedName(EthTransactionsResponse.ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val receipt: Receipt?
 ): CryptoApiResponse {
     companion object {
         const val CONTRACT_ADDRESS_KEY = "contract_address"
@@ -111,6 +109,11 @@ data class EthTransactionResponse (
     }
 }
 
+/**
+ * Combines all fields of ETH receipt
+ *
+ * @author Sergey Krupenich
+ */
 data class Receipt (
     @SerializedName(EthTransactionResponse.CONTRACT_ADDRESS_KEY)
     val contractAddress: String? = null,

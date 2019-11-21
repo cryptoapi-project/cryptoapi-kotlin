@@ -11,6 +11,12 @@ import io.pixelplex.cryptoapi_android_framework.wrapper.CryptoApiEth
 import io.pixelplex.cryptoapi_android_framework.wrapper.CryptoApiEthImpl
 import io.pixelplex.cryptoapi_android_framework.wrapper.SingletonHolder
 
+/**
+ * Delegates all logic to specific wrapper services which associated
+ * Crypto API calls
+ *
+ * @author Sergey Krupenich
+ */
 class CryptoApiFramework private constructor(
     callTimeout: Long,
     connectTimeout: Long,

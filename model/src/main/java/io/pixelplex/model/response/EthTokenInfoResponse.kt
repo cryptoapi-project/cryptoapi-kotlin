@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH token info response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTokenInfoResponse (
     @SerializedName(ADDRESS_KEY)
     val address: String,
@@ -25,13 +31,7 @@ data class EthTokenInfoResponse (
     val createTransactionHash: String,
 
     @SerializedName(HOLDERS_COUNT_KEY)
-    val holdersCount: Int,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val holdersCount: Int
 ): CryptoApiResponse {
     companion object {
         const val ADDRESS_KEY = "address"
@@ -42,7 +42,5 @@ data class EthTokenInfoResponse (
         const val TOTAL_SUPPLY_KEY = "totalSupply"
         const val CREATE_TRANSACTION_HASH_KEY = "create_transaction_hash"
         const val HOLDERS_COUNT_KEY = "holders_count"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }

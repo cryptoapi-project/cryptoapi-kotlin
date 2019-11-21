@@ -1,113 +1,226 @@
 package io.pixelplex.cryptoapi_android_framework.wrapper
 
 import io.pixelplex.model.data.EthTypedParams
-import io.pixelplex.model.data.EthTransfer
-import io.pixelplex.model.exception.NetworkException
-import io.pixelplex.model.data.EthContractBytecodeResponse
+import io.pixelplex.model.data.EthTransferCallBody
+import io.pixelplex.model.response.EthContractBytecodeResponse
 import io.pixelplex.model.data.EthContractCallBody
-import io.pixelplex.model.data.EthTransaction
-import io.pixelplex.model.data.EthTransactionRawBody
-import io.pixelplex.model.data.TransactionExternal
-import io.pixelplex.model.data.EstimatedGasBody
-import io.pixelplex.model.data.EthTokensBalancesBody
-import io.pixelplex.model.data.EthTokensSearchBody
-import io.pixelplex.model.data.TokensTransfersCallBody
+import io.pixelplex.model.data.EthTransactionCallBody
+import io.pixelplex.model.data.EthTransactionRawCallBody
+import io.pixelplex.model.data.EthTransactionExternalCallBody
+import io.pixelplex.model.data.EthEstimatedGasCallBody
+import io.pixelplex.model.data.EthTokenBalanceCallBody
+import io.pixelplex.model.data.EthTokenSearchCallBody
+import io.pixelplex.model.data.EthTokenTransferCallBody
 import io.pixelplex.model.response.*
 
+/**
+ * Describes ETH library service functionality
+ *
+ * Represents ETH library service,
+ * that combines all methods which call Crypto API
+ *
+ * @author Sergey Krupenich
+ */
 interface CryptoApiEth {
+    /**
+     * Estimates ETH gas
+     * @param ethEstimatedGasCallBody Request body which is a parameters object which allows to get Eth Estimate gas
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun estimateGas(
-        estimatedGasBody: EstimatedGasBody,
-        onSuccess: (EstimatedGasResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        ethEstimatedGasCallBody: EthEstimatedGasCallBody,
+        onSuccess: (EthEstimatedGasResponse) -> Unit,
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Calls contract
+     * @param ethContractCallBody Request body which is a parameters object which allows to call
+     * an ETH contract
+     * @param contractAddress Param of an ETH contract address
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun callContract(
         ethContractCallBody: EthContractCallBody,
         contractAddress: String,
         onSuccess: (EthCallContractResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Makes a raw transaction
+     * @param ethTransactionRawCallBody Request body which is a parameters object which allows to
+     * call a raw transaction
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun transactionsRawSend(
-        ethTransactionRawBody: EthTransactionRawBody,
+        ethTransactionRawCallBody: EthTransactionRawCallBody,
         onSuccess: (EthTransactionRawResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Decodes raw transaction
+     * @param ethTransactionRawCallBody Request body which is a parameters object which allows to
+     * decode raw transaction
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun transactionsRawDecode(
-        ethTransactionRawBody: EthTransactionRawBody,
+        ethTransactionRawCallBody: EthTransactionRawCallBody,
         onSuccess: (EthTransactionRawDecodeResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets network
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getNetwork(
         onSuccess: (EthNetworkResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets balances
+     * @param typedParams Request body which is a parameters object which allows to get ETH balances
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getBalances(
         typedParams: EthTypedParams,
         onSuccess: (EthBalanceResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets ETH info
+     * @param typedParams Request body which is a parameters object which allows to get ETH info
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getEthInfo(
         typedParams: EthTypedParams,
         onSuccess: (EthInfoResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets ETH transfers
+     * @param ethTransferCallBody Request body which is a parameters object which allows to get ETH
+     * transfers
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getEthTransfers(
-        ethTransfer: EthTransfer,
+        ethTransferCallBody: EthTransferCallBody,
         onSuccess: (EthTransferResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets ETH external transaction
+     * @param ethEthTransactionExternalCallBody Request body which is a parameters object which
+     * allows to get Eth external transaction
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getTransactionsExternal(
-        ethTransactionExternal: TransactionExternal,
-        onSuccess: (TransactionExternalResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        ethEthTransactionExternalCallBody: EthTransactionExternalCallBody,
+        onSuccess: (EthTransactionExternalResponse) -> Unit,
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets ETH transactions
+     * @param ethTransactionCallBody Request body which is a parameters object which allows to get
+     * Eth transaction
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getEthTransactions(
-        ethTransaction: EthTransaction,
+        ethTransactionCallBody: EthTransactionCallBody,
         onSuccess: (EthTransactionsResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets ETH transaction by hash
+     * @param hash Request param which is a parameters object which allows to get ETH transactions by
+     * the hash
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getEthTransactionsByHash(
         hash: String,
         onSuccess: (EthTransactionResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets ETH contract info
+     * @param address Request param which is a parameters object which allows to get Eth contracts info
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getEthContractsInfo(
         address: String,
         onSuccess: (EthContractBytecodeResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets token balances
+     * @param ethTokenBalanceCallBody Request body which is a parameters object which allows to ETH
+     * tokens balances
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getTokensBalances(
-        ethTokensBalancesBody: EthTokensBalancesBody,
-        onSuccess: (EthTokensBalancesResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        ethTokenBalanceCallBody: EthTokenBalanceCallBody,
+        onSuccess: (EthTokenBalanceResponse) -> Unit,
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets token transfers
+     * @param ethTokenTransferCallBody Request body which is a parameters object which allows to get
+     * ETH tokens transfers
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getTokensTransfers(
-        tokensTransfersCallBody: TokensTransfersCallBody,
-        onSuccess: (EthTokensTransfersResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        ethTokenTransferCallBody: EthTokenTransferCallBody,
+        onSuccess: (EthTokenTransferResponse) -> Unit,
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Gets ETH token info
+     * @param tokenAddress Request body which is a parameters object which allows to get Eth token info
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getTokenInfo(
         tokenAddress: String,
         onSuccess: (EthTokenInfoResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 
+    /**
+     * Searches some specific tokens
+     * @param ethTokenSearchCallBody Request body which is a parameters object which allows to
+     * search tokens
+     * @param onSuccess Callback of success response
+     * @param onError Callback of an error response
+     */
     fun getTokensSearch(
-        ethTokensSearchBody: EthTokensSearchBody,
+        ethTokenSearchCallBody: EthTokenSearchCallBody,
         onSuccess: (EthTokenSearchResponse) -> Unit,
-        onError: (NetworkException) -> Unit
+        onError: (ErrorResponse) -> Unit
     )
 }

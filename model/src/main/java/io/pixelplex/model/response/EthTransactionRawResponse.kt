@@ -1,26 +1,28 @@
 package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
-import io.pixelplex.model.response.CryptoApiResponse
-import io.pixelplex.model.response.ErrorResponse
 
-data class EthTransactionRawResponse (
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH raw transaction response
+ *
+ * @author Sergey Krupenich
+ */
+data class EthTransactionRawResponse(
     @SerializedName(HASH_KEY)
-    val hash: String? = null,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
-): CryptoApiResponse {
+    val hash: String? = null
+) : CryptoApiResponse {
     companion object {
         const val HASH_KEY = "hash"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH raw transaction decoded response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionRawDecodeResponse(
     @SerializedName(NONCE_KEY)
     val nonce: Long? = null,
@@ -47,14 +49,8 @@ data class EthTransactionRawDecodeResponse(
     val r: String? = null,
 
     @SerializedName(S_KEY)
-    val s: String? = null,
-
-    @SerializedName(EthTransactionRawResponse.ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(EthTransactionRawResponse.STATUS_KEY)
-    val status: Int? = null
-): CryptoApiResponse {
+    val s: String? = null
+) : CryptoApiResponse {
     companion object {
         const val NONCE_KEY = "nonce"
         const val GAS_PRICE_KEY = "gasPrice"
@@ -69,7 +65,12 @@ data class EthTransactionRawDecodeResponse(
     }
 }
 
-data class EthHex (
+/**
+ * Combines all fields of ETH Hex
+ *
+ * @author Sergey Krupenich
+ */
+data class EthHex(
     @SerializedName(EthTransactionRawDecodeResponse.HEX_KEY)
     val hex: String
 )

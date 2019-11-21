@@ -2,7 +2,13 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class EthTokensTransfersResponse (
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH token transfer response
+ *
+ * @author Sergey Krupenich
+ */
+data class EthTokenTransferResponse (
     @SerializedName(ADDRESSES_KEY)
     val addresses: List<String>,
 
@@ -13,19 +19,13 @@ data class EthTokensTransfersResponse (
     val skip: Int,
 
     @SerializedName(ITEMS_KEY)
-    val items: List<EthTokensTransferResponse>,
+    val items: List<EthTokensTransfer>,
 
     @SerializedName(COUNT_KEY)
-    val count: Int,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val count: Int
 ): CryptoApiResponse {
     companion object {
-        const val ADDRESSES_KEY = "typedParams"
+        const val ADDRESSES_KEY = "addresses"
         const val COUNT_KEY = "count"
         const val LIMIT_KEY = "limit"
         const val SKIP_KEY = "skip"
@@ -40,39 +40,42 @@ data class EthTokensTransfersResponse (
         const val TRANSACTION_HASH_KEY = "transaction_hash"
         const val TRANSACTION_INDEX_KEY = "transaction_index"
         const val TIMESTAMP_KEY = "timestamp"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }
 
-data class EthTokensTransferResponse (
-    @SerializedName(EthTokensTransfersResponse.TYPE_KEY)
+/**
+ * Combines all fields of ETH token
+ *
+ * @author Sergey Krupenich
+ */
+data class EthTokensTransfer (
+    @SerializedName(EthTokenTransferResponse.TYPE_KEY)
     val type: String,
 
-    @SerializedName(EthTokensTransfersResponse.EXECUTE_ADDRESS_KEY)
+    @SerializedName(EthTokenTransferResponse.EXECUTE_ADDRESS_KEY)
     val executeAddress: String,
 
-    @SerializedName(EthTokensTransfersResponse.FROM_KEY)
+    @SerializedName(EthTokenTransferResponse.FROM_KEY)
     val from: String,
 
-    @SerializedName(EthTokensTransfersResponse.TO_KEY)
+    @SerializedName(EthTokenTransferResponse.TO_KEY)
     val to: String,
 
-    @SerializedName(EthTokensTransfersResponse.VALUE_KEY)
+    @SerializedName(EthTokenTransferResponse.VALUE_KEY)
     val value: String,
 
-    @SerializedName(EthTokensTransfersResponse.ADDRESS_KEY)
+    @SerializedName(EthTokenTransferResponse.ADDRESS_KEY)
     val address: String,
 
-    @SerializedName(EthTokensTransfersResponse.BLOCK_NUMBER_KEY)
+    @SerializedName(EthTokenTransferResponse.BLOCK_NUMBER_KEY)
     val blockNumber: Long,
 
-    @SerializedName(EthTokensTransfersResponse.TRANSACTION_HASH_KEY)
+    @SerializedName(EthTokenTransferResponse.TRANSACTION_HASH_KEY)
     val transactionHash: String,
 
-    @SerializedName(EthTokensTransfersResponse.TRANSACTION_INDEX_KEY)
+    @SerializedName(EthTokenTransferResponse.TRANSACTION_INDEX_KEY)
     val transactionIndex: Int,
 
-    @SerializedName(EthTokensTransfersResponse.TIMESTAMP_KEY)
+    @SerializedName(EthTokenTransferResponse.TIMESTAMP_KEY)
     val timestamp: String
 )

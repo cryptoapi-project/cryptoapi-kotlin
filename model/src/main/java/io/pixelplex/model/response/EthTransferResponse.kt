@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH transfer response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransferResponse (
     @SerializedName(ADDRESSES_KEY)
     val addresses: List<String>,
@@ -13,19 +19,13 @@ data class EthTransferResponse (
     val limit: Int,
 
     @SerializedName(ITEMS_KEY)
-    val items: List<EthTransferItem>,
+    val items: List<EthTransfer>,
 
     @SerializedName(COUNT_KEY)
-    val count: Int,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val count: Int
 ): CryptoApiResponse {
     companion object {
-        const val ADDRESSES_KEY = "typedParams"
+        const val ADDRESSES_KEY = "addresses"
         const val LIMIT_KEY = "limit"
         const val SKIP_KEY = "skip"
         const val ITEMS_KEY = "items"
@@ -39,12 +39,15 @@ data class EthTransferResponse (
         const val INTERNAL_KEY = "internal"
         const val UTC_KEY = "utc"
         const val COUNT_KEY = "count"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }
 
-data class EthTransferItem(
+/**
+ * Combines all fields of ETH transfer
+ *
+ * @author Sergey Krupenich
+ */
+data class EthTransfer(
     @SerializedName(EthTransferResponse.BLOCK_NUMBER_KEY)
     val blockNumber: Long,
 

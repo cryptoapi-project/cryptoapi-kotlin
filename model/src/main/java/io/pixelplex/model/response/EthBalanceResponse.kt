@@ -2,23 +2,26 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH balance response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthBalanceResponse (
-    val balances: List<EthBalance>?,
-
-    @SerializedName(ERRORS_KEY)
-    val errors: List<ErrorResponse>? = null,
-
-    @SerializedName(STATUS_KEY)
-    val status: Int? = null
+    val balances: List<EthBalance>
 ): CryptoApiResponse {
     companion object {
         const val ADDRESS_KEY = "address"
         const val BALANCE_KEY = "balance"
-        const val ERRORS_KEY = "errors"
-        const val STATUS_KEY = "status"
     }
 }
 
+/**
+ * Combines all fields of ETH balance
+ *
+ * @author Sergey Krupenich
+ */
 data class EthBalance (
     @SerializedName(EthBalanceResponse.ADDRESS_KEY)
     val address: String,
