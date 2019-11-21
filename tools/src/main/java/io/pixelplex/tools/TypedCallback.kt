@@ -18,8 +18,12 @@ class TypedCallback<T> private constructor(
     }
 
     override fun onResponse(call: Call, response: Response) {
-        val jsonString = response.body?.string()
-        onSuccess(Gson().fromJson(jsonString, klass))
+        if(response.isSuccessful) {
+            val jsonString = response.body?.string()
+            onSuccess(Gson().fromJson(jsonString, klass))
+        } else {
+            onError(ApiException(response.message))
+        }
     }
 
     companion object {
