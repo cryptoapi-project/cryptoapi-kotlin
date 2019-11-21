@@ -37,6 +37,7 @@ class EthFrameworkTest {
     private var ethRawDecodeResponse: EthTransactionRawDecodeResponse? = null
     private var ethTokensBalancesResponse: EthTokensBalancesResponse? = null
     private var ethTokensTransfersResponse: EthTokensTransfersResponse? = null
+    private var ethTokenInfoResponse: EthTokenInfoResponse? = null
 
     private val testEstimatedGasFuture = FutureTask<EstimatedGasResponse>()
     private val testEthNetworkResponseFuture = FutureTask<EthNetworkResponse>()
@@ -52,6 +53,7 @@ class EthFrameworkTest {
     private val testEthRawDecodeFuture = FutureTask<EthTransactionRawDecodeResponse>()
     private val testEthTokensBalancesFuture = FutureTask<EthTokensBalancesResponse>()
     private val testEthTokensTransfersFuture = FutureTask<EthTokensTransfersResponse>()
+    private val testEthTokenInfoFuture = FutureTask<EthTokenInfoResponse>()
 
     private val estimatedGas = EstimatedGasBody(
         from = ETH_ADDRESS_1,
@@ -707,6 +709,50 @@ class EthFrameworkTest {
 
         assertTrue(ethTokensTransfersResponse != null)
         assertTrue(ethTokensTransfersResponse!!.errors!!.count() > 0)
+    }
+
+    @Test
+    fun tokenInfo() {
+        cryptoApiFramework.cryptoApiEth.getTokenInfo(
+            CONTRACT_ADDRESS,
+            { transferResp -> testEthTokenInfoFuture.setComplete(transferResp) },
+            { transferError -> testEthTokenInfoFuture.setComplete(transferError) }
+        )
+
+        testEthTokenInfoFuture.wrapResult<Exception, EthTokenInfoResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokenInfoResponse = ethInfoResponse
+            }, {
+                ethTokenInfoResponse = null
+            })
+
+        assertTrue(ethTokenInfoResponse != null)
+        assertTrue(ethTokenInfoResponse!!.address.isNotEmpty())
+    }
+
+    @Test
+    fun tokenInfoFail() {
+        cryptoApiFramework.cryptoApiEth.getTokenInfo(
+            "bad_address",
+            { transferResp -> testEthTokenInfoFuture.setComplete(transferResp) },
+            { transferError -> testEthTokenInfoFuture.setComplete(transferError) }
+        )
+
+        testEthTokenInfoFuture.wrapResult<Exception, EthTokenInfoResponse>(
+            2,
+            TimeUnit.MINUTES
+        )
+            .fold({ ethInfoResponse ->
+                ethTokenInfoResponse = ethInfoResponse
+            }, {
+                ethTokenInfoResponse = null
+            })
+
+        assertTrue(ethTokenInfoResponse != null)
+        assertTrue(ethTokenInfoResponse!!.errors!!.isNotEmpty())
     }
 
     companion object {

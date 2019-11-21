@@ -234,6 +234,18 @@ class CryptoApiEthImpl(
         )
     }
 
+    override fun getTokenInfo(
+        tokenAddress: String,
+        onSuccess: (EthTokenInfoResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = ETH_TOKENS_INFO_PARAM.format(tokenAddress),
+            onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
+            onError = onError
+        )
+    }
+
     private fun successEthBalances(
         responseJson: String,
         onSuccess: (EthBalanceResponse) -> Unit
@@ -312,5 +324,6 @@ class CryptoApiEthImpl(
         private const val ETH_TRANSACTIONS_RAW_DECODE_PARAM = "coins/eth/transactions/raw/decode"
         private const val ETH_TOKENS_BALANCES_PARAM = "coins/eth/tokens/%s/balances?skip=%s&limit=%s"
         private const val ETH_TOKENS_TRANSFERS_PARAM = "coins/eth/tokens/%s/%s/transfers/?skip=%s&limit=%s"
+        private const val ETH_TOKENS_INFO_PARAM = "coins/eth/tokens/%s/info"
     }
 }

@@ -97,4 +97,10 @@ interface CryptoApiEth {
         onSuccess: (EthTokensTransfersResponse) -> Unit,
         onError: (NetworkException) -> Unit
     )
+
+    fun getTokenInfo(
+        tokenAddress: String,
+        onSuccess: (EthTokenInfoResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    )
 }
