@@ -25,7 +25,7 @@ data class TransactionExternalResponse (
     val status: Int? = null
 ): CryptoApiResponse {
     companion object {
-        const val ADDRESSES_KEY = "addresses"
+        const val ADDRESSES_KEY = "typedParams"
         const val LIMIT_KEY = "limit"
         const val SKIP_KEY = "skip"
         const val ITEMS_KEY = "items"

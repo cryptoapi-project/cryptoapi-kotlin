@@ -17,16 +17,16 @@ interface EthApi {
         callback: TypedCallback<EthNetworkResponse>
     )
 
-    @Get("accounts/{addresses}/balance")
+    @Get("accounts/{typedParams}/balance")
     fun getBalances(
-        @Path("addresses") addresses: String,
+        @Path("typedParams") addresses: String,
         callback: TypedCallback<EthBalanceResponse>
     )
 
-    @Get("tokens/{token}/{addresses}/transfers/")
+    @Get("tokens/{token}/{typedParams}/transfers/")
     fun getTransfers(
         @Path("token") token: String,
-        @Path("addresses") addresses: String,
+        @Path("typedParams") addresses: String,
         callback: TypedCallback<EthTransferResponse>
     )
 

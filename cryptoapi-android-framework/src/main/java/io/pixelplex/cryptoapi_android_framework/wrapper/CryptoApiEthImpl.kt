@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi.RequestMethod.POST
 
-import io.pixelplex.model.data.EthAddresses
+import io.pixelplex.model.data.EthTypedParams
 import io.pixelplex.model.data.EthTransfer
 
 import io.pixelplex.cryptoapi_android_framework.support.fromJson
@@ -19,6 +19,7 @@ import io.pixelplex.model.data.TransactionExternal
 import io.pixelplex.cryptoapi_android_framework.support.isNotJSON
 import io.pixelplex.model.data.EstimatedGasBody
 import io.pixelplex.model.data.EthTokensBalancesBody
+import io.pixelplex.model.data.EthTokensSearchBody
 import io.pixelplex.model.data.TokensTransfersCallBody
 import io.pixelplex.model.response.*
 
@@ -100,12 +101,12 @@ class CryptoApiEthImpl(
     }
 
     override fun getBalances(
-        addresses: EthAddresses,
+        typedParams: EthTypedParams,
         onSuccess: (EthBalanceResponse) -> Unit,
         onError: (NetworkException) -> Unit
     ) {
         cryptoApiClient.callApi(
-            params = ACCOUNTS_ADDRESS_BALANCE_PARAM.format(addresses.string()),
+            params = ACCOUNTS_ADDRESS_BALANCE_PARAM.format(typedParams.string()),
             onSuccess = { responseJson ->
                 successEthBalances(responseJson, onSuccess)
             },
@@ -114,12 +115,12 @@ class CryptoApiEthImpl(
     }
 
     override fun getEthInfo(
-        addresses: EthAddresses,
+        typedParams: EthTypedParams,
         onSuccess: (EthInfoResponse) -> Unit,
         onError: (NetworkException) -> Unit
     ) {
         cryptoApiClient.callApi(
-            params = ACCOUNTS_ADDRESS_INFO_PARAM.format(addresses.string()),
+            params = ACCOUNTS_ADDRESS_INFO_PARAM.format(typedParams.string()),
             onSuccess = { responseJson ->
                 successEthInfo(responseJson, onSuccess)
             },
@@ -134,7 +135,7 @@ class CryptoApiEthImpl(
     ) {
         cryptoApiClient.callApi(
             params = ETH_TRANSFERS_PARAM.format(
-                ethTransfer.addresses.string(),
+                ethTransfer.typedParams.string(),
                 ethTransfer.skip,
                 ethTransfer.limit,
                 ethTransfer.positive
@@ -151,7 +152,7 @@ class CryptoApiEthImpl(
     ) {
         cryptoApiClient.callApi(
             params = TRANSACTIONS_EXTERNAL_PARAM.format(
-                ethTransactionExternal.addresses.string(),
+                ethTransactionExternal.typedParams.string(),
                 ethTransactionExternal.skip,
                 ethTransactionExternal.limit
             ),
@@ -225,7 +226,7 @@ class CryptoApiEthImpl(
         cryptoApiClient.callApi(
             params = ETH_TOKENS_TRANSFERS_PARAM.format(
                 tokensTransfersCallBody.token,
-                tokensTransfersCallBody.addresses.string(),
+                tokensTransfersCallBody.typedParams.string(),
                 tokensTransfersCallBody.skip,
                 tokensTransfersCallBody.limit
             ),
@@ -241,6 +242,23 @@ class CryptoApiEthImpl(
     ) {
         cryptoApiClient.callApi(
             params = ETH_TOKENS_INFO_PARAM.format(tokenAddress),
+            onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
+            onError = onError
+        )
+    }
+
+    override fun getTokensSearch(
+        ethTokensSearchBody: EthTokensSearchBody,
+        onSuccess: (EthTokenSearchResponse) -> Unit,
+        onError: (NetworkException) -> Unit
+    ) {
+        cryptoApiClient.callApi(
+            params = ETH_TOKENS_SEARCH_PARAM.format(
+                ethTokensSearchBody.query,
+                ethTokensSearchBody.skip,
+                ethTokensSearchBody.limit,
+                ethTokensSearchBody.types.string()
+            ),
             onSuccess = { responseJson -> onSuccess(fromJson(responseJson)) },
             onError = onError
         )
@@ -325,5 +343,6 @@ class CryptoApiEthImpl(
         private const val ETH_TOKENS_BALANCES_PARAM = "coins/eth/tokens/%s/balances?skip=%s&limit=%s"
         private const val ETH_TOKENS_TRANSFERS_PARAM = "coins/eth/tokens/%s/%s/transfers/?skip=%s&limit=%s"
         private const val ETH_TOKENS_INFO_PARAM = "coins/eth/tokens/%s/info"
+        private const val ETH_TOKENS_SEARCH_PARAM = "coins/eth/tokens/search?query=%s&skip=%s&limit=%s&types=%s"
     }
 }
