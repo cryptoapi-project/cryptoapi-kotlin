@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH token search result response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTokenSearchResponse (
     @SerializedName(QUERY_KEY)
     val query: String,
@@ -40,6 +46,11 @@ data class EthTokenSearchResponse (
     }
 }
 
+/**
+ * Combines all fields of ETH token search result
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTokenSearch (
     @SerializedName(EthTokenSearchResponse.ADDRESS_KEY)
     val address: String,
@@ -57,6 +68,11 @@ data class EthTokenSearch (
     val type: String
 )
 
+/**
+ * Combines all fields of ETH token search result info
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTokenSearchInfo (
     @SerializedName(EthTokenSearchResponse.DECIMALS_KEY)
     val decimals: Int,

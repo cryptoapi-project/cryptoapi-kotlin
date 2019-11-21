@@ -16,13 +16,13 @@ interface EthAsyncApi {
 
     @Get("accounts/{typedParams}/balance")
     suspend fun getBalances(
-        @Path("typedParams") addresses: String
+        @Path("addresses") addresses: String
     ): EthBalanceResponse
 
     @Get("tokens/{token}/{typedParams}/transfers/")
     suspend fun getTransfers(
         @Path("token") token: String,
-        @Path("typedParams") addresses: String
+        @Path("addresses") addresses: String
     ): EthTransferResponse
 
     @Post("estimate-gas")

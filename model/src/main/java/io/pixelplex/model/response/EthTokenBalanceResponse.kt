@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH token balance response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTokenBalanceResponse (
     @SerializedName(ITEMS_KEY)
     val items: List<EthTokensBalance>,
@@ -17,6 +23,12 @@ data class EthTokenBalanceResponse (
     }
 }
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines all fields ETH token balance
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTokensBalance (
     @SerializedName(EthTokenBalanceResponse.ADDRESS_KEY)
     val address: String,

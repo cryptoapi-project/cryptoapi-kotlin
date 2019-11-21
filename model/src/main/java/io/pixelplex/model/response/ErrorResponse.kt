@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of Error response
+ *
+ * @author Sergey Krupenich
+ */
 data class ErrorResponse(
     @SerializedName(ERRORS_KEY)
     val errors: List<Error>,
@@ -17,6 +23,11 @@ data class ErrorResponse(
     }
 }
 
+/**
+ * Combines all fields of response error
+ *
+ * @author Sergey Krupenich
+ */
 data class Error (
     @SerializedName(ErrorResponse.MESSAGE_KEY)
     val message: String,

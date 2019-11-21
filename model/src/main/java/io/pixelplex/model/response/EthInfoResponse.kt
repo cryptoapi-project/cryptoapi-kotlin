@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH info response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthInfoResponse(
     val info: List<EthInfo>
 ) : CryptoApiResponse {
@@ -14,6 +20,11 @@ data class EthInfoResponse(
     }
 }
 
+/**
+ * Combines all fields of ETH info
+ *
+ * @author Sergey Krupenich
+ */
 data class EthInfo(
     @SerializedName(EthInfoResponse.ADDRESS_KEY)
     val address: String,

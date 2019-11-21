@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH transaction response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionsResponse (
     @SerializedName(ITEMS_KEY)
     val items: List<EthTransactionResponse>,
@@ -33,6 +39,12 @@ data class EthTransactionsResponse (
     }
 }
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines all fields of ETH transaction response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionResponse (
     @SerializedName(EthTransactionsResponse.BLOCK_HASH_KEY)
     val blockHash: String,
@@ -97,6 +109,11 @@ data class EthTransactionResponse (
     }
 }
 
+/**
+ * Combines all fields of ETH receipt
+ *
+ * @author Sergey Krupenich
+ */
 data class Receipt (
     @SerializedName(EthTransactionResponse.CONTRACT_ADDRESS_KEY)
     val contractAddress: String? = null,

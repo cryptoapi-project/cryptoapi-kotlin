@@ -19,14 +19,14 @@ interface EthApi {
 
     @Get("accounts/{typedParams}/balance")
     fun getBalances(
-        @Path("typedParams") addresses: String,
+        @Path("addresses") addresses: String,
         callback: TypedCallback<EthBalanceResponse>
     )
 
     @Get("tokens/{token}/{typedParams}/transfers/")
     fun getTransfers(
         @Path("token") token: String,
-        @Path("typedParams") addresses: String,
+        @Path("addresses") addresses: String,
         callback: TypedCallback<EthTransferResponse>
     )
 

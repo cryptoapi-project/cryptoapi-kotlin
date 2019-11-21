@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH external transaction response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionExternalResponse (
     @SerializedName(ADDRESSES_KEY)
     val addresses: List<String>,
@@ -19,7 +25,7 @@ data class EthTransactionExternalResponse (
     val items: List<EthTransactionExternal>
 ): CryptoApiResponse {
     companion object {
-        const val ADDRESSES_KEY = "typedParams"
+        const val ADDRESSES_KEY = "addresses"
         const val LIMIT_KEY = "limit"
         const val SKIP_KEY = "skip"
         const val ITEMS_KEY = "items"
@@ -42,6 +48,12 @@ data class EthTransactionExternalResponse (
     }
 }
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines fields of ETH external transaction
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionExternal (
     @SerializedName(EthTransactionExternalResponse.BLOCK_HASH_KEY)
     val blockHash: String,

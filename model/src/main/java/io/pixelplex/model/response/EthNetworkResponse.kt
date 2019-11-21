@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH network response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthNetworkResponse(
     @SerializedName(LAST_BLOCK_KEY)
     val lastBlock: Long,

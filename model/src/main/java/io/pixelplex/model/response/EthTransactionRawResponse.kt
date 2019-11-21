@@ -2,6 +2,12 @@ package io.pixelplex.model.response
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH raw transaction response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionRawResponse(
     @SerializedName(HASH_KEY)
     val hash: String? = null
@@ -11,6 +17,12 @@ data class EthTransactionRawResponse(
     }
 }
 
+/**
+ * Implementation of [CryptoApiResponse]
+ * Combines some specific properties of ETH raw transaction decoded response
+ *
+ * @author Sergey Krupenich
+ */
 data class EthTransactionRawDecodeResponse(
     @SerializedName(NONCE_KEY)
     val nonce: Long? = null,
@@ -53,6 +65,11 @@ data class EthTransactionRawDecodeResponse(
     }
 }
 
+/**
+ * Combines all fields of ETH Hex
+ *
+ * @author Sergey Krupenich
+ */
 data class EthHex(
     @SerializedName(EthTransactionRawDecodeResponse.HEX_KEY)
     val hex: String
