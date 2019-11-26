@@ -1,0 +1,144 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+ext {
+    bintrayRepo = 'mobile'
+    bintrayName = 'android-framework-development'
+
+    publishedGroupId = 'io.pixelplex.cryptoapi_android_framework'
+    libraryName = 'android-framework'
+    artifact = 'cryptoapiframework'
+
+    libraryDescription = 'Framework for working with Crypto API'
+
+    gitUrl = 'https://gitlab.pixelplex.by/709-crypto-api-mobile-library/android-framework'
+    siteUrl = 'https://echo.org'
+
+    libraryVersion = '1.0.0'
+
+    firstDeveloperId = 's-krupenich'
+    firstDeveloperName = 'Sergey Krupenich'
+    firstDeveloperEmail = 's.krupenich@pixelplex.io'
+
+    licenseName = 'MIT LICENSE'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+group = publishedGroupId
+version = libraryVersion
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'aar'
+            groupId publishedGroupId
+            artifactId artifact
+
+            name libraryName
+            description libraryDescription
+            url siteUrl
+
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                }
+            }
+            developers {
+                developer {
+                    id 'pixelplex'
+                    name 'pixelplex inc'
+                    email 'info@pixelplex.io'
+                }
+                developer {
+                    id firstDeveloperId
+                    name firstDeveloperName
+                    email firstDeveloperEmail
+                }
+            }
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+            }
+        }
+        pom.withXml {
+            def dependenciesNode = asNode().appendNode('dependencies')
+
+            //Iterate over the implementation dependencies (we don't want the test ones), adding a <dependency> node for each
+            configurations.implementation.allDependencies.each {
+                def dependencyNode = dependenciesNode.appendNode('dependency')
+                dependencyNode.appendNode('groupId', it.group)
+                dependencyNode.appendNode('artifactId', it.name)
+                dependencyNode.appendNode('version', it.version)
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from "$projectDir/src/main/kotlin"
+}
+
+task javadocJar(type: Jar, dependsOn: dokka) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles framework docs with Dokka"
+    classifier = "javadoc"
+    from(dokka)
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+
+// Bintray account name for library publishing
+def bintrayAccount = properties.getProperty("bintrayUser")
+if (bintrayAccount == null && project.hasProperty("bintrayUser")) {
+    bintrayAccount = project.findProperty("bintrayUser")
+}
+
+// Bintray api key for library publishing
+def bintrayKey = properties.getProperty("bintrayApiKey")
+if (bintrayKey == null && project.hasProperty("bintrayApiKey")) {
+    bintrayKey = project.findProperty("bintrayApiKey")
+}
+
+task validateBintrayCredentials() {
+    doFirst {
+        if (bintrayAccount == null || bintrayKey == null) {
+            throw new GradleException("Account name and api key required for bintray publishing")
+        }
+    }
+}
+
+bintrayUpload.dependsOn(validateBintrayCredentials)
+
+bintray {
+    user = bintrayAccount
+    key = bintrayKey
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        userOrg = 'pixelplex'
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        dryRun = false
+        publish = true
+        override = true
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+        }
+    }
+}
