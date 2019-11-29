@@ -167,6 +167,7 @@ class EthFrameworkTest {
     private val cryptoApiFramework = CryptoApiFramework.getInstance(
         CoinsFrameworkTest.CALL_TIMEOUT,
         CoinsFrameworkTest.CONNECT_TIMEOUT,
+        CoinsFrameworkTest.READ_TIMEOUT,
         CoinsFrameworkTest.TOKEN
     )
 
