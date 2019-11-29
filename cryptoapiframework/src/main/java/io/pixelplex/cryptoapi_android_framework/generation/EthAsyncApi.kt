@@ -22,7 +22,7 @@ interface EthAsyncApi {
         @Path("addresses") addresses: List<String>
     ): List<EthBalance>
 
-    @Get("tokens/accounts/{addresses}/transfers/")
+    @Get("accounts/{addresses}/transfers/")
     suspend fun getTransfers(
         @Path("addresses") addresses: List<String>,
         @Query("skip") skip: Int = 0,

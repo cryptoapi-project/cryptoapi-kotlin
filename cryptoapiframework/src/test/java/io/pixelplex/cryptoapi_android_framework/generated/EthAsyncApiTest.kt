@@ -97,7 +97,6 @@ class AsyncApiTest {
     fun getEthTransfers() = runBlocking {
         try {
             apiClient.getTransfers(
-                TestValues.CONTRACT_ADDRESS,
                 TestValues.ethTransfer.typedParams.getList()
             ).let { resp ->
                 Assert.assertTrue(resp.items.count() > 0)
@@ -111,7 +110,6 @@ class AsyncApiTest {
     fun getEthTransfersFail() = runBlocking {
         try {
             apiClient.getTransfers(
-                "bad_address",
                 TestValues.ethTransfer.typedParams.getList()
             ).let { resp ->
                 Assert.fail()
