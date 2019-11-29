@@ -41,11 +41,6 @@ dependencies {
 
     //Libraries
     implementation libraryDependencies.googleGson
-    implementation libraryDependencies.socket
-    implementation libraryDependencies.guava
-    implementation libraryDependencies.spongycastle
-    implementation libraryDependencies.eddsaIroha
-
     implementation libraryDependencies.okhttp
     implementation libraryDependencies.okHttpLogging
 
