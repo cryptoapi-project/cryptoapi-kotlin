@@ -25,11 +25,6 @@ ext {
             jUnit           : "junit:junit:$jUnitVersion",
             testRunner      : "com.android.support.test:runner:$testRunnerVersion",
             googleGson      : "com.google.code.gson:gson:$googleGsonVersion",
-            detekt          : "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion",
-            socket          : "com.neovisionaries:nv-websocket-client:$socketVersion",
-            guava           : "com.google.guava:guava:$guavaVersion",
-            spongycastle    : "com.madgag.spongycastle:core:$spongycastleVersion",
-            eddsaIroha      : "com.github.warchant:ed25519-sha3-java:$eddsaIrohaVersion",
             okhttp          : "com.squareup.okhttp3:okhttp:$okHttpVersion",
             okHttpLogging   : "com.squareup.okhttp3:logging-interceptor:$okHttpVersion",
             coroutinesCore  : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"

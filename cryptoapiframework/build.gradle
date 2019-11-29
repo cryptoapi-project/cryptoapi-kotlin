@@ -33,26 +33,12 @@ android {
 
 
 dependencies {
-    //Tests
     testImplementation libraryDependencies.jUnit
-
-    //Kotlin
     implementation libraryDependencies.kotlin
-
-    //Libraries
     implementation libraryDependencies.googleGson
-    implementation libraryDependencies.socket
-    implementation libraryDependencies.guava
-    implementation libraryDependencies.spongycastle
-    implementation libraryDependencies.eddsaIroha
-
     implementation libraryDependencies.okhttp
     implementation libraryDependencies.okHttpLogging
-
     testImplementation libraryDependencies.coroutinesCore
-
-    //Code analysis
-    detekt libraryDependencies.detekt
 
     compileOnly project(":annotation")
     kapt project(':processor')
@@ -64,24 +50,4 @@ configurations {
     detekt
 }
 
-//kapt {
-//    dokka {
-//        outputFormat = 'html'
-//        outputDirectory = "$buildDir/dokka"
-//        disableAutoconfiguration = false
-//
-//        configuration {
-//            includeNonPublic = false
-//            skipDeprecated = true
-//            reportUndocumented = false
-//            skipEmptyPackages = true
-//        }
-//    }
-//}
-
 apply from: "$rootDir/config/publish.gradle"
-
-//task copyJavaDocs(type: Copy) {
-//    from "${buildDir}/dokka"
-//    into "${rootDir}/docs"
-//}
