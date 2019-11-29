@@ -75,7 +75,7 @@ data class EthTokenSearch (
  */
 data class EthTokenSearchInfo (
     @SerializedName(EthTokenSearchResponse.DECIMALS_KEY)
-    val decimals: Int,
+    val decimals: String,
 
     @SerializedName(EthTokenSearchResponse.TOTAL_SUPPLY_KEY)
     val totalSupply: String,
