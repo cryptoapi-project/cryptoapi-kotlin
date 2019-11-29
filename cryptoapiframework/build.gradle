@@ -43,7 +43,6 @@ dependencies {
     compileOnly project(":annotation")
     kapt project(':processor')
     implementation project(":model")
-    implementation project(":tools")
 }
 
 configurations {

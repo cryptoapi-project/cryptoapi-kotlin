@@ -79,14 +79,14 @@ object TestValues {
 
     val contractCallBody = EthContractCallBody(
         sender = ETH_ADDRESS_1,
-        amount = 0,
+        amount = "0",
         bytecode = "0x899426490000000000000000000000000000000000000000000000000000000000000001"
     )
 
     val badContractCallBody =
         EthContractCallBody(
             sender = "0x141d593",
-            amount = 0,
+            amount = "0",
             bytecode = "0x899426490000000000000000000000000000000000000000000000000000000000000001"
         )
 

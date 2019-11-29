@@ -17,32 +17,25 @@ import io.pixelplex.cryptoapi_android_framework.wrapper.SingletonHolder
  *
  * @author Sergey Krupenich
  */
-class CryptoApiFramework private constructor(
+class CryptoApiFramework constructor(
     callTimeout: Long,
     connectTimeout: Long,
     readTimeout: Long,
     token: String
 ) {
-    private val cryptoApi: CryptoApi by lazy {
-        CryptoApi(callTimeout, connectTimeout, readTimeout, token)
-    }
+    private val cryptoApi: CryptoApi = CryptoApi(callTimeout, connectTimeout, readTimeout, token)
 
-    public val cryptoApiCoins: CryptoApiCoins by lazy {
-        CryptoApiCoinsImpl(cryptoApi)
-    }
+    val cryptoApiCoins: CryptoApiCoins = CryptoApiCoinsImpl(cryptoApi)
 
-    public val cryptoApiEth: CryptoApiEth by lazy {
-        CryptoApiEthImpl(cryptoApi)
-    }
+    val cryptoApiEth: CryptoApiEth = CryptoApiEthImpl(cryptoApi)
 
-    //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
-    val generatedApiEth: EthApi by lazy {
-        EthApiImpl(cryptoApi)
-    }
-    val generatedAsyncApiEth: EthAsyncApi by lazy {
-        EthAsyncApiImpl(cryptoApi)
-    }
-    //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
+    //========================== EXPERIMENTAL============================
+
+    val generatedApiEth: EthApi = EthApiImpl(cryptoApi)
+
+    val generatedAsyncApiEth: EthAsyncApi = EthAsyncApiImpl(cryptoApi)
+
+    //========================== EXPERIMENTAL============================
 
     companion object :
         SingletonHolder<CryptoApiFramework, Long, Long, Long, String>(::CryptoApiFramework)

@@ -3,10 +3,10 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 ext {
     bintrayRepo = 'mobile'
-    bintrayName = 'cryptoapi-android-framework-v2'
+    bintrayName = 'cryptoapi'
 
-    publishedGroupId = 'io.pixelplex.cryptoapi_android_framework'
-    libraryName = 'android-framework'
+    publishedGroupId = 'io.pixelplex.cryptoapiframework'
+    libraryName = 'cryptoapiframework'
     artifact = 'cryptoapiframework'
 
     libraryDescription = 'Framework for working with Crypto API'
@@ -14,7 +14,7 @@ ext {
     gitUrl = 'https://gitlab.pixelplex.by/709-crypto-api-mobile-library/android-framework'
     siteUrl = 'https://echo.org'
 
-    libraryVersion = '0.0.8'
+    libraryVersion = '0.1.0'
 
     firstDeveloperId = 's-krupenich'
     firstDeveloperName = 'Sergey Krupenich'

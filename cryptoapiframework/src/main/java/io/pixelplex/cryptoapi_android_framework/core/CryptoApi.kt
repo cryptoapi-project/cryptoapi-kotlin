@@ -23,22 +23,16 @@ class CryptoApi(
     private val readTimeout: Long,
     private val token: String
 ) {
-    private val logging by lazy {
-        HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+    private val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private val httpClient by lazy {
-        val builder = OkHttpClient.Builder().apply {
-            addInterceptor(logging)
-            callTimeout(callTimeout, TimeUnit.MILLISECONDS)
-            connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
-            readTimeout(readTimeout, TimeUnit.MILLISECONDS)
-        }
-
-        builder.build()
-    }
+    private val httpClient = OkHttpClient.Builder().apply {
+        addInterceptor(logging)
+        callTimeout(callTimeout, TimeUnit.MILLISECONDS)
+        connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
+        readTimeout(readTimeout, TimeUnit.MILLISECONDS)
+    }.build()
 
     fun callApi(
         params: String,
@@ -102,8 +96,12 @@ class CryptoApi(
         private const val MEDIA_TYPE = "application/json; charset=utf-8"
         private const val EMPTY_BODY = ""
 
-        private val PATH_REGEXP_PATTERN = Pattern.compile("[^{\\}]+(?=})")
+        private val PATH_REGEXP_PATTERN = "\\{(.*?)\\}"
     }
+
+    private val regexPatternUrl = Pattern.compile(
+        PATH_REGEXP_PATTERN
+    )
 
     //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
 
@@ -126,12 +124,12 @@ class CryptoApi(
         val paths = params.filter { it.type == QueryType.PATH }
 
         if (paths.isNotEmpty()) {
-            val matcher = PATH_REGEXP_PATTERN.matcher(requestUrl)
+            val matcher = regexPatternUrl.matcher(requestUrl)
             while (matcher.find()) {
                 val param = matcher.group(0)
                 requestUrl = requestUrl.replace(
-                    "{$param}",
-                    paths.find { it.name == param }!!.value.toQueryParameter()
+                    param,
+                    paths.find { "{${it.name}}" == param }!!.value.toQueryParameter()
                 )
             }
         }
