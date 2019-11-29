@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 ext {
     bintrayRepo = 'mobile'
-    bintrayName = 'android-framework-development'
+    bintrayName = 'cryptoapi-android-framework-v2'
 
     publishedGroupId = 'io.pixelplex.cryptoapi_android_framework'
     libraryName = 'android-framework'
@@ -14,7 +14,7 @@ ext {
     gitUrl = 'https://gitlab.pixelplex.by/709-crypto-api-mobile-library/android-framework'
     siteUrl = 'https://echo.org'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '0.0.8'
 
     firstDeveloperId = 's-krupenich'
     firstDeveloperName = 'Sergey Krupenich'
@@ -78,18 +78,18 @@ install {
 
 task sourcesJar(type: Jar) {
     classifier = 'sources'
-    from "$projectDir/src/main/kotlin"
+    from "$projectDir/src/main/java"
 }
 
-task javadocJar(type: Jar, dependsOn: dokka) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles framework docs with Dokka"
-    classifier = "javadoc"
-    from(dokka)
-}
+//task javadocJar(type: Jar, dependsOn: dokka) {
+//    group = JavaBasePlugin.DOCUMENTATION_GROUP
+//    description = "Assembles framework docs with Dokka"
+//    classifier = "javadoc"
+//    from(dokka)
+//}
 
 artifacts {
-    archives javadocJar
+//    archives javadocJar
     archives sourcesJar
 }
 

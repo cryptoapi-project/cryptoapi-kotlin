@@ -27,7 +27,7 @@ android {
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += 'src/main/java'
     }
 }
 
@@ -64,24 +64,24 @@ configurations {
     detekt
 }
 
-kapt {
-    dokka {
-        outputFormat = 'html'
-        outputDirectory = "$buildDir/dokka"
-        disableAutoconfiguration = false
-
-        configuration {
-            includeNonPublic = false
-            skipDeprecated = true
-            reportUndocumented = false
-            skipEmptyPackages = true
-        }
-    }
-}
+//kapt {
+//    dokka {
+//        outputFormat = 'html'
+//        outputDirectory = "$buildDir/dokka"
+//        disableAutoconfiguration = false
+//
+//        configuration {
+//            includeNonPublic = false
+//            skipDeprecated = true
+//            reportUndocumented = false
+//            skipEmptyPackages = true
+//        }
+//    }
+//}
 
 apply from: "$rootDir/config/publish.gradle"
 
-task copyJavaDocs(type: Copy) {
-    from "${buildDir}/dokka"
-    into "${rootDir}/docs"
-}
+//task copyJavaDocs(type: Copy) {
+//    from "${buildDir}/dokka"
+//    into "${rootDir}/docs"
+//}

@@ -21,6 +21,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+
 repositories {
     mavenCentral()
 }
@@ -34,3 +35,9 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+
+sourceSets {
+    main.java.srcDirs += 'src/main/java'
+}
+
+apply from: "$rootDir/config/publish.gradle"
