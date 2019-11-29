@@ -67,7 +67,7 @@ data class EthTransfer(
     val to: String,
 
     @SerializedName(EthTransferResponse.VALUE_KEY)
-    val value: Long,
+    val value: String,
 
     @SerializedName(EthTransferResponse.GAS_PRICE_KEY)
     val gasPrice: Long,
