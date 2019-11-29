@@ -20,10 +20,11 @@ import io.pixelplex.cryptoapi_android_framework.wrapper.SingletonHolder
 class CryptoApiFramework private constructor(
     callTimeout: Long,
     connectTimeout: Long,
+    readTimeout: Long,
     token: String
 ) {
     private val cryptoApi: CryptoApi by lazy {
-        CryptoApi(callTimeout, connectTimeout, token)
+        CryptoApi(callTimeout, connectTimeout, readTimeout, token)
     }
 
     public val cryptoApiCoins: CryptoApiCoins by lazy {
@@ -43,5 +44,6 @@ class CryptoApiFramework private constructor(
     }
     //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
 
-    companion object : SingletonHolder<CryptoApiFramework, Long, Long, String>(::CryptoApiFramework)
+    companion object :
+        SingletonHolder<CryptoApiFramework, Long, Long, Long, String>(::CryptoApiFramework)
 }

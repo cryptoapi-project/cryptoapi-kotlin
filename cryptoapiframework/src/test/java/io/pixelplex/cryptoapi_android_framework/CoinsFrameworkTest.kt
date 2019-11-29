@@ -17,11 +17,11 @@ class CoinsFrameworkTest {
         val testFuture = FutureTask<CryptoApiResponse>()
 
         CryptoApiFramework
-            .getInstance(CALL_TIMEOUT, CONNECT_TIMEOUT, TOKEN)
+            .getInstance(CALL_TIMEOUT, CONNECT_TIMEOUT, READ_TIMEOUT, TOKEN)
             .cryptoApiCoins.getCoins(
-                { coins -> testFuture.setComplete(coins) },
-                { error -> testFuture.setComplete(error) }
-            )
+            { coins -> testFuture.setComplete(coins) },
+            { error -> testFuture.setComplete(error) }
+        )
 
         testFuture.wrapResult<Exception, CryptoApiResponse>(2, TimeUnit.MINUTES)
             .fold({ coinsResponse ->
@@ -36,8 +36,9 @@ class CoinsFrameworkTest {
     }
 
     companion object {
-        const val CALL_TIMEOUT = 15000L
-        const val CONNECT_TIMEOUT = 900L
+        const val CALL_TIMEOUT = 30000L
+        const val READ_TIMEOUT = 30000L
+        const val CONNECT_TIMEOUT = 15000L
         const val TOKEN = ""
     }
 }

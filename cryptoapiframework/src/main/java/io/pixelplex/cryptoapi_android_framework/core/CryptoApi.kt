@@ -1,7 +1,9 @@
 package io.pixelplex.cryptoapi_android_framework.core
 
+import io.pixelplex.cryptoapi_android_framework.BuildConfig
 import io.pixelplex.model.QueryParameter
 import io.pixelplex.model.QueryType
+import io.pixelplex.model.RequestParameter
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -18,6 +20,7 @@ import java.util.regex.Pattern
 class CryptoApi(
     private val callTimeout: Long,
     private val connectTimeout: Long,
+    private val readTimeout: Long,
     private val token: String
 ) {
     private val logging by lazy {
@@ -31,6 +34,7 @@ class CryptoApi(
             addInterceptor(logging)
             callTimeout(callTimeout, TimeUnit.MILLISECONDS)
             connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
+            readTimeout(readTimeout, TimeUnit.MILLISECONDS)
         }
 
         builder.build()
@@ -117,34 +121,56 @@ class CryptoApi(
         responseCallback: Callback
     ) {
 
-        var path = url
-
-        val httpBuilder = path.toHttpUrlOrNull()!!.newBuilder()
-
-        params.filter { it.type == QueryType.QUERY }.forEach { param ->
-            httpBuilder.addQueryParameter(param.name, param.value.toString())
-        }
+        var requestUrl = url
 
         val paths = params.filter { it.type == QueryType.PATH }
 
         if (paths.isNotEmpty()) {
-            val matcher = PATH_REGEXP_PATTERN.matcher(path)
+            val matcher = PATH_REGEXP_PATTERN.matcher(requestUrl)
             while (matcher.find()) {
                 val param = matcher.group(0)
-                path = path.replace("{$param}", paths.find { it.name == param }!!.value.toString())
+                requestUrl = requestUrl.replace(
+                    "{$param}",
+                    paths.find { it.name == param }!!.value.toQueryParameter()
+                )
             }
         }
 
-        val request =
-            Request.Builder().url(httpBuilder.build())
-                .addHeader(AUTH_HEADER_KEY, String.format(BEARER_FORMAT, token))
-                .url(path)
+        val httpBuilder = requestUrl.toHttpUrlOrNull()!!.newBuilder()
 
-        params.filter { it.type == QueryType.BODY }.forEach { param ->
-            request.post(getRequestBody(param.value.toGson()))
+        params.filter { it.type == QueryType.QUERY }.forEach { param ->
+            httpBuilder.addQueryParameter(param.name, param.value.toQueryParameter())
         }
 
-        httpClient.newCall(request.build()).enqueue(responseCallback)
+        val requestBuilder =
+            Request.Builder().url(httpBuilder.build())
+                .addHeader(AUTH_HEADER_KEY, String.format(BEARER_FORMAT, token))
+
+        params.filter { it.type == QueryType.BODY }.forEach { param ->
+            requestBuilder.post(getRequestBody(param.value.toGson()))
+        }
+
+        val request = requestBuilder.build()
+        httpClient.newCall(request).enqueue(responseCallback)
+
+        if (BuildConfig.DEBUG) {
+            println("================REQUEST ${requestUrl}=====================")
+            println("PARAMETERS:")
+            params.forEach {
+                println("[${it.type.name}] ${it.name}: ${it.value}")
+            }
+            println("FULL REQUEST:")
+            println(request.toString())
+            println("================END REQUEST=========================")
+        }
+    }
+
+    private fun RequestParameter<*>.toQueryParameter(): String {
+        return if (this.value is List<*>) {
+            (this.value!! as List<*>).joinToString(",")
+        } else {
+            this.value.toString()
+        }
     }
 
 

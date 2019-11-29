@@ -22,6 +22,8 @@ class EthTypedParams(vararg params: String) {
     fun string() =
         paramsStrings.joinToString(separator = SEPARATOR)
 
+    fun getList() = paramsStrings
+
     private companion object {
         const val SEPARATOR = ","
     }

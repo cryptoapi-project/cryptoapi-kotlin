@@ -30,7 +30,7 @@ interface Callback<T> {
 fun <T> Callback<T>.processResult(block: () -> T) {
     Result { block() }
         .value { result -> this.onSuccess(result) }
-        .error { error -> this.onError(ApiException(error)) }
+        .error { error -> this.onError(ApiException.create(error)) }
 }
 
 /**
@@ -39,5 +39,5 @@ fun <T> Callback<T>.processResult(block: () -> T) {
 fun <E : Exception, T> Callback<T>.processResult(targetResult: Result<E, T>) {
     targetResult
         .value { result -> this.onSuccess(result) }
-        .error { error -> this.onError(ApiException(error)) }
+        .error { error -> this.onError(ApiException.create(error)) }
 }

@@ -91,7 +91,7 @@ class FutureTask<T> : CancellableTask,
 
     private fun getResultOrThrow(): T? {
         if (exception != null)
-            throw ApiException(exception)
+            throw ApiException.create(exception!!)
         return result
     }
 
