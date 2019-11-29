@@ -22,10 +22,11 @@ interface EthAsyncApi {
         @Path("addresses") addresses: List<String>
     ): List<EthBalance>
 
-    @Get("tokens/{token}/{addresses}/transfers/")
+    @Get("tokens/accounts/{addresses}/transfers/")
     suspend fun getTransfers(
-        @Path("token") token: String,
-        @Path("addresses") addresses: List<String>
+        @Path("addresses") addresses: List<String>,
+        @Query("skip") skip: Int = 0,
+        @Query("limit") limit: Int = DEFAULT_PAGE_SIZE
     ): EthTransferResponse
 
     @Post("estimate-gas")
