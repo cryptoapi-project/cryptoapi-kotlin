@@ -1,4 +1,4 @@
-package io.pixelplex.cryptoapi_android_framework.generated
+package io.pixelplex.cryptoapiframework.coins
 
 import io.pixelplex.cryptoapi_android_framework.support.future.FutureTask
 import io.pixelplex.model.data.*

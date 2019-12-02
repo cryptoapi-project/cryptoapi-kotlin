@@ -66,7 +66,9 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
             val typeSpec = TypeSpec.classBuilder(className)
 
-            val coinUrl = String.format(COINS_URL_FORMAT, getClassAnnotationKey(elements.first()))
+            val coinUrl = getClassAnnotationKey(elements.first())?.let {
+                String.format(COINS_URL_FORMAT, it)
+            } ?: ""
 
             val ctor = FunSpec.constructorBuilder().addParameter(
                 API_CLIENT_PARAM_NAME,
@@ -323,10 +325,14 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         return null
     }
 
-    private fun getClassAnnotationKey(element: ExecutableElement): String {
+    private fun getClassAnnotationKey(element: ExecutableElement): String? {
         val declaringClass = element.enclosingElement as TypeElement
         val annotation = declaringClass.getAnnotation(Coin::class.java)
-        return annotation.name
+        if (annotation != null) {
+            return annotation.name
+        } else {
+            return null
+        }
     }
 
     private fun getClassName(element: ExecutableElement): String {

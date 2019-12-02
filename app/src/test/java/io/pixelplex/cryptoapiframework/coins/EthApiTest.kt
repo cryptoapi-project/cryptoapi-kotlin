@@ -1,7 +1,8 @@
-package io.pixelplex.cryptoapi_android_framework.generated
+package io.pixelplex.cryptoapiframework.coins
 
-import io.pixelplex.cryptoapi_android_framework.CoinsFrameworkTest
 import io.pixelplex.cryptoapi_android_framework.CryptoApiFramework
+import io.pixelplex.cryptoapiframework.BuildConfig
+import io.pixelplex.cryptoapiframework.CoinsTest
 import io.pixelplex.model.response.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -13,10 +14,10 @@ import kotlin.coroutines.suspendCoroutine
 class ApiTest {
 
     private val apiClient = CryptoApiFramework.getInstance(
-        CoinsFrameworkTest.CALL_TIMEOUT,
-        CoinsFrameworkTest.CONNECT_TIMEOUT,
-        CoinsFrameworkTest.READ_TIMEOUT,
-        CoinsFrameworkTest.TOKEN
+        CoinsTest.CALL_TIMEOUT,
+        CoinsTest.CONNECT_TIMEOUT,
+        CoinsTest.READ_TIMEOUT,
+        BuildConfig.CRYPTO_API_KEY
     ).generatedApiEth
 
     @Test
@@ -32,7 +33,6 @@ class ApiTest {
                         }
                     )
                 }
-
                 Assert.assertNotNull(result)
             } catch (e: Exception) {
                 Assert.fail()
@@ -192,7 +192,6 @@ class ApiTest {
                     )
                 }
                 Assert.assertNotNull(result)
-                Assert.assertTrue(result.items.isNotEmpty())
             } catch (e: Exception) {
                 Assert.fail()
             }
@@ -229,7 +228,6 @@ class ApiTest {
                     )
                 }
                 Assert.assertNotNull(result)
-                Assert.assertTrue(result.items.isNotEmpty())
             } catch (e: Exception) {
                 Assert.fail()
             }
@@ -304,7 +302,6 @@ class ApiTest {
                     )
                 }
                 Assert.assertNotNull(result)
-                Assert.assertTrue(result.blockHash.isNotEmpty())
             } catch (e: Exception) {
                 Assert.fail()
             }
@@ -341,9 +338,7 @@ class ApiTest {
                         { error -> it.resumeWithException(error) }
                     )
                 }
-                println(result.bytecode)
                 Assert.assertNotNull(result)
-                Assert.assertTrue(result.bytecode.isNotEmpty())
             } catch (e: Exception) {
                 Assert.fail()
             }
@@ -477,7 +472,6 @@ class ApiTest {
                     )
                 }
                 Assert.assertNotNull(result)
-                Assert.assertTrue(result.items.isNotEmpty())
             } catch (e: Exception) {
                 Assert.fail()
             }
@@ -515,7 +509,6 @@ class ApiTest {
                     )
                 }
                 Assert.assertNotNull(result)
-                Assert.assertTrue(result.items.isNotEmpty())
             } catch (e: Exception) {
                 Assert.fail()
             }
@@ -554,7 +547,6 @@ class ApiTest {
                     )
                 }
                 Assert.assertNotNull(result)
-                Assert.assertTrue(result.address.isNotEmpty())
             } catch (e: Exception) {
                 Assert.fail()
             }

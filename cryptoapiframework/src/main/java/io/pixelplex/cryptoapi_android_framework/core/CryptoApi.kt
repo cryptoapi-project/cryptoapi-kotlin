@@ -69,7 +69,7 @@ class CryptoApi(
         body: String?
     ): Request {
         val requestBuilder = Request.Builder()
-            .header(AUTH_HEADER_KEY, BEARER_FORMAT.format(token))
+            //  .header(AUTH_HEADER_KEY, BEARER_FORMAT.format(token))
             .url(url)
 
         if (method == RequestMethod.POST) {
@@ -90,11 +90,13 @@ class CryptoApi(
         } ?: EMPTY_BODY.toRequestBody(MEDIA_TYPE.toMediaTypeOrNull())
 
     companion object {
-        private const val AUTH_HEADER_KEY = "Authorization"
-        private const val BEARER_FORMAT = "Bearer %s"
-        private const val CRYPTO_API_URL = "https://697-crypto-api.pixelplexlabs.com/api/v1/"
+        //    private const val AUTH_HEADER_KEY = "Authorization"
+        //    private const val BEARER_FORMAT = "Bearer %s"
+        private const val CRYPTO_API_URL = "https://697-crypto-api.pixelplex-test.by/api/v1/"
         private const val MEDIA_TYPE = "application/json; charset=utf-8"
         private const val EMPTY_BODY = ""
+
+        private const val TOKEN = "token"
 
         private val PATH_REGEXP_PATTERN = "\\{(.*?)\\}"
     }
@@ -140,9 +142,11 @@ class CryptoApi(
             httpBuilder.addQueryParameter(param.name, param.value.toQueryParameter())
         }
 
+        httpBuilder.addQueryParameter(TOKEN, token)
+
         val requestBuilder =
             Request.Builder().url(httpBuilder.build())
-                .addHeader(AUTH_HEADER_KEY, String.format(BEARER_FORMAT, token))
+        //  .addHeader(AUTH_HEADER_KEY, String.format(BEARER_FORMAT, token))
 
         params.filter { it.type == QueryType.BODY }.forEach { param ->
             requestBuilder.post(getRequestBody(param.value.toGson()))

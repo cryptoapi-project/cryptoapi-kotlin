@@ -6,7 +6,12 @@ open class SingletonHolder<out T : Any, in CAT, in CNT, in RDT, in TKN>(creator:
     @Volatile
     private var instance: T? = null
 
-    fun getInstance(callTimeout: CAT, connectTimeout: CNT, readTimeOut: RDT, token: TKN): T {
+    fun getInstance(
+        callTimeout: CAT,
+        connectTimeout: CNT,
+        readTimeOut: RDT,
+        token: TKN
+    ): T {
         val checkInstance = instance
         if (checkInstance != null) {
             return checkInstance

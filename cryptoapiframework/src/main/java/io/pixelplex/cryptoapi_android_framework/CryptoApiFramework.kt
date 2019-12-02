@@ -1,14 +1,7 @@
 package io.pixelplex.cryptoapi_android_framework
 
 import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
-import io.pixelplex.cryptoapi_android_framework.generation.EthApi
-import io.pixelplex.cryptoapi_android_framework.generation.EthApiImpl
-import io.pixelplex.cryptoapi_android_framework.generation.EthAsyncApi
-import io.pixelplex.cryptoapi_android_framework.generation.EthAsyncApiImpl
-import io.pixelplex.cryptoapi_android_framework.wrapper.CryptoApiCoins
-import io.pixelplex.cryptoapi_android_framework.wrapper.CryptoApiCoinsImpl
-import io.pixelplex.cryptoapi_android_framework.wrapper.CryptoApiEth
-import io.pixelplex.cryptoapi_android_framework.wrapper.CryptoApiEthImpl
+import io.pixelplex.cryptoapi_android_framework.generation.*
 import io.pixelplex.cryptoapi_android_framework.wrapper.SingletonHolder
 
 /**
@@ -25,17 +18,13 @@ class CryptoApiFramework constructor(
 ) {
     private val cryptoApi: CryptoApi = CryptoApi(callTimeout, connectTimeout, readTimeout, token)
 
-    val cryptoApiCoins: CryptoApiCoins = CryptoApiCoinsImpl(cryptoApi)
+    val coinsApi: CoinApi = CoinApiImpl(cryptoApi)
 
-    val cryptoApiEth: CryptoApiEth = CryptoApiEthImpl(cryptoApi)
-
-    //========================== EXPERIMENTAL============================
+    val coinsAsyncApi: CoinAsyncApi = CoinAsyncApiImpl(cryptoApi)
 
     val generatedApiEth: EthApi = EthApiImpl(cryptoApi)
 
     val generatedAsyncApiEth: EthAsyncApi = EthAsyncApiImpl(cryptoApi)
-
-    //========================== EXPERIMENTAL============================
 
     companion object :
         SingletonHolder<CryptoApiFramework, Long, Long, Long, String>(::CryptoApiFramework)
