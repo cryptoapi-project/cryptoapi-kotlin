@@ -157,7 +157,11 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                     }
                     override fun onResponse(call: Call, response: Response) {
                     if (response.isSuccessful) {
-                        ${successCalback.simpleName}(fromJson(response.body?.string()!!))
+                         try {
+                            ${successCalback.simpleName}(fromJson(response.body?.string()!!))
+                         } catch (e: Exception){
+                            ${errorCalback.simpleName}(ApiException.create(e))
+                         }
                     } else {
                         ${errorCalback.simpleName}(ApiException.create(fromJson<ErrorResponse>(response.body?.string()!!)))
                     }
@@ -250,7 +254,11 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                     override fun onResponse(call: Call, response: Response) {
                     
                         if(response.isSuccessful){
-                            it.resumeWith(Result.success(fromJson(response.body?.string()!!)))
+                            try{
+                                it.resumeWith(Result.success(fromJson(response.body?.string()!!)))
+                            } catch(e: Exception) {
+                                it.resumeWithException(ApiException.create(e))
+                            }
                         } else {
                             it.resumeWithException(ApiException.create(fromJson<ErrorResponse>(response.body?.string()!!)))
                         }

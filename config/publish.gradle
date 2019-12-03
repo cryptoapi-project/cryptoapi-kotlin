@@ -14,7 +14,7 @@ ext {
     gitUrl = 'https://gitlab.pixelplex.by/709-crypto-api-mobile-library/android-framework'
     siteUrl = 'https://echo.org'
 
-    libraryVersion = '0.2.0'
+    libraryVersion = '0.2.2'
 
     firstDeveloperId = 's-krupenich'
     firstDeveloperName = 'Sergey Krupenich'

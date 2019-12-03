@@ -247,19 +247,6 @@ class AsyncApiTest {
         }
     }
 
-//    @Test
-//    fun transactionsRawSend() = runBlocking {
-//        try {
-//            apiClient.sendRawTransaction(
-//                TestValues.ethTransactionRawBody
-//            ).let { resp ->
-//                Assert.assertTrue(resp.hash != null)
-//            }
-//        } catch (e: Exception) {
-//            Assert.fail()
-//        }
-//    }
-
     @Test
     fun transactionsRawSendFail() = runBlocking {
         try {

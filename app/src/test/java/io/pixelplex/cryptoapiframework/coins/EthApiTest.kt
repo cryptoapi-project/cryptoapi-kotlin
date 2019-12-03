@@ -408,7 +408,7 @@ class ApiTest {
 
         runBlocking {
             try {
-                val result = suspendCoroutine<EthTransactionRawResponse> {
+                val result = suspendCoroutine<String> {
                     apiClient.sendRawTransaction(
                         TestValues.ethTransactionRawBody,
                         { response -> it.resume(response) },

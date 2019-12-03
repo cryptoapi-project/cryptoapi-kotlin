@@ -43,7 +43,7 @@ interface EthAsyncApi {
     @Post("transactions/raw/send")
     suspend fun sendRawTransaction(
         @Body body: EthTransactionRawCallBody
-    ): EthTransactionRawResponse
+    ): String
 
     @Post("transactions/raw/decode")
     suspend fun decodeRawTransaction(

@@ -54,7 +54,7 @@ interface EthApi {
     @Post("transactions/raw/send")
     fun sendRawTransaction(
         @Body body: EthTransactionRawCallBody,
-        @CallbackSuccess onSuccess: (EthTransactionRawResponse) -> Unit,
+        @CallbackSuccess onSuccess: (String) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
