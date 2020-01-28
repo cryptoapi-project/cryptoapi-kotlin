@@ -1,7 +1,7 @@
 package io.pixelplex.model.exception
 
-import io.pixelplex.model.response.Error
-import io.pixelplex.model.response.ErrorResponse
+import io.pixelplex.model.common.Error
+import io.pixelplex.model.common.ErrorResponse
 import java.io.IOException
 
 open class ApiException private constructor(val errors: List<Error>, val status: Int) :
@@ -18,7 +18,11 @@ open class ApiException private constructor(val errors: List<Error>, val status:
 
         fun create(exception: Exception): ApiException {
             return ApiException(
-                listOf(Error(exception.message ?: "")),
+                listOf(
+                    Error(
+                        exception.message ?: ""
+                    )
+                ),
                 0
             )
         }

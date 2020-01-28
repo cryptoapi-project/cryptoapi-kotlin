@@ -1,9 +1,9 @@
 package io.pixelplex.cryptoapi_android_framework.core
 
 import io.pixelplex.cryptoapi_android_framework.BuildConfig
-import io.pixelplex.model.QueryParameter
-import io.pixelplex.model.QueryType
-import io.pixelplex.model.RequestParameter
+import io.pixelplex.model.generation.QueryParameter
+import io.pixelplex.model.generation.QueryType
+import io.pixelplex.model.generation.RequestParameter
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -92,7 +92,7 @@ class CryptoApi(
     companion object {
         //    private const val AUTH_HEADER_KEY = "Authorization"
         //    private const val BEARER_FORMAT = "Bearer %s"
-        private const val CRYPTO_API_URL = "https://697-crypto-api.pixelplex-test.by/api/v1/"
+        private const val CRYPTO_API_URL = "https://697-crypto-api-api.pixelplexlabs.com/api/v1/"
         private const val MEDIA_TYPE = "application/json; charset=utf-8"
         private const val EMPTY_BODY = ""
 

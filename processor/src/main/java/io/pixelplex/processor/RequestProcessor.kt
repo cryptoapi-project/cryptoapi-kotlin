@@ -4,7 +4,7 @@ import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.pixelplex.annotation.*
-import io.pixelplex.model.QueryType
+import io.pixelplex.model.generation.QueryType
 import me.eugeniomarletti.kotlin.metadata.KotlinMetadataUtils
 import me.eugeniomarletti.kotlin.metadata.shadow.name.FqName
 import me.eugeniomarletti.kotlin.metadata.shadow.platform.JavaToKotlinClassMap
@@ -105,7 +105,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
             val fileSpec = FileSpec.builder(pack, className)
                 .addImport(CORE_PACKAGE, API_CLIENT_NAME)
-                .addImport("io.pixelplex.model", "QueryParameter", "QueryType", "RequestParameter")
+                .addImport("io.pixelplex.model.generation", "QueryParameter", "QueryType", "RequestParameter")
                 .addType(typeSpec.build())
 
             if (hasSuspend) {
@@ -116,7 +116,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
             fileSpec.addImport("java.io", "IOException")
             fileSpec.addImport("io.pixelplex.cryptoapi_android_framework.support", "fromJson")
             fileSpec.addImport("io.pixelplex.model.exception", "ApiException")
-            fileSpec.addImport("io.pixelplex.model.response", "ErrorResponse")
+            fileSpec.addImport("io.pixelplex.model.common", "ErrorResponse")
 
             val sourceFile = fileSpec.build()
 
@@ -335,12 +335,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
     private fun getClassAnnotationKey(element: ExecutableElement): String? {
         val declaringClass = element.enclosingElement as TypeElement
-        val annotation = declaringClass.getAnnotation(Coin::class.java)
-        if (annotation != null) {
-            return annotation.name
-        } else {
-            return null
-        }
+        return declaringClass.getAnnotation(Coin::class.java)?.name
     }
 
     private fun getClassName(element: ExecutableElement): String {

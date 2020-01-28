@@ -22,9 +22,17 @@ class CryptoApiFramework constructor(
 
     val coinsAsyncApi: CoinAsyncApi = CoinAsyncApiImpl(cryptoApi)
 
-    val generatedApiEth: EthApi = EthApiImpl(cryptoApi)
+    val ethereumApi: EthApi = EthApiImpl(cryptoApi)
 
-    val generatedAsyncApiEth: EthAsyncApi = EthAsyncApiImpl(cryptoApi)
+    val ethereumAsyncApi: EthAsyncApi = EthAsyncApiImpl(cryptoApi)
+
+    val bitcoinApi: BtcApi = BtcApiImpl(cryptoApi)
+
+    val bitcoinAsyncApi: BtcAsyncApi = BtcAsyncApiImpl(cryptoApi)
+
+    val bitcoinCacheApi: BchApi = BchApiImpl(cryptoApi)
+
+    val bitcoinCacheAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
 
     companion object :
         SingletonHolder<CryptoApiFramework, Long, Long, Long, String>(::CryptoApiFramework)

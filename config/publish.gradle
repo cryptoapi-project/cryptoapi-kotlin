@@ -14,7 +14,7 @@ ext {
     gitUrl = 'https://gitlab.pixelplex.by/709-crypto-api-mobile-library/android-framework'
     siteUrl = 'https://echo.org'
 
-    libraryVersion = '0.2.2'
+    libraryVersion = '0.2.4'
 
     firstDeveloperId = 's-krupenich'
     firstDeveloperName = 'Sergey Krupenich'
@@ -31,7 +31,7 @@ version = libraryVersion
 install {
     repositories.mavenInstaller {
         pom.project {
-            packaging 'aar'
+            packaging 'jar'
             groupId publishedGroupId
             artifactId artifact
 
