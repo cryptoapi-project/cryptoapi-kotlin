@@ -60,7 +60,7 @@ data class EthTokenSearchInfo(
     @SerializedName("decimals")
     val decimals: String,
 
-    @SerializedName("totalSupply")
+    @SerializedName("total_supply")
     val totalSupply: String,
 
     @SerializedName("symbol")
