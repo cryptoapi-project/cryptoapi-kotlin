@@ -14,9 +14,11 @@ class CryptoApiFramework constructor(
     callTimeout: Long,
     connectTimeout: Long,
     readTimeout: Long,
-    token: String
+    token: String,
+    url: CryptoApi.URL
 ) {
-    private val cryptoApi: CryptoApi = CryptoApi(callTimeout, connectTimeout, readTimeout, token)
+    private val cryptoApi: CryptoApi =
+        CryptoApi(callTimeout, connectTimeout, readTimeout, token, url)
 
     val coinsApi: CoinApi = CoinApiImpl(cryptoApi)
 
@@ -35,5 +37,5 @@ class CryptoApiFramework constructor(
     val bitcoinCacheAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
 
     companion object :
-        SingletonHolder<CryptoApiFramework, Long, Long, Long, String>(::CryptoApiFramework)
+        SingletonHolder<CryptoApiFramework, Long, Long, Long, String, CryptoApi.URL>(::CryptoApiFramework)
 }

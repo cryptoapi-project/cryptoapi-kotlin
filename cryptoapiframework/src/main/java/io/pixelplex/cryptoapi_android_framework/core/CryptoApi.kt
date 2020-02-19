@@ -21,7 +21,8 @@ class CryptoApi(
     private val callTimeout: Long,
     private val connectTimeout: Long,
     private val readTimeout: Long,
-    private val token: String
+    private val token: String,
+    private val url: URL
 ) {
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -43,7 +44,7 @@ class CryptoApi(
     ) {
         httpClient.newCall(
             makeRequest(
-                CRYPTO_API_URL.urlWithPath(params),
+                url.path.urlWithPath(params),
                 method,
                 body
             )
@@ -92,7 +93,7 @@ class CryptoApi(
     companion object {
         //    private const val AUTH_HEADER_KEY = "Authorization"
         //    private const val BEARER_FORMAT = "Bearer %s"
-        private const val CRYPTO_API_URL = "https://697-crypto-api-api.pixelplexlabs.com/api/v1/"
+
         private const val MEDIA_TYPE = "application/json; charset=utf-8"
         private const val EMPTY_BODY = ""
 
@@ -101,18 +102,23 @@ class CryptoApi(
         private val PATH_REGEXP_PATTERN = "\\{(.*?)\\}"
     }
 
+    enum class URL(val path: String) {
+        STAGE("https://697-crypto-api-api.pixelplexlabs.com/api/v1/"),
+        DEV("https://697-crypto-api-api.pixelplex-test.by/api/v1/"),
+        MAINNET("https://api.apikey.io/api/v1/"),
+        TESTNET("https://testnet-api.apikey.io/api/v1/")
+    }
+
     private val regexPatternUrl = Pattern.compile(
         PATH_REGEXP_PATTERN
     )
-
-    //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
 
     fun callApi(
         path: String,
         callback: Callback,
         params: List<QueryParameter<*>> = emptyList()
     ) {
-        get(CRYPTO_API_URL.urlWithPath(path), params = params, responseCallback = callback)
+        get(url.path.urlWithPath(path), params = params, responseCallback = callback)
     }
 
     operator fun get(
@@ -175,12 +181,10 @@ class CryptoApi(
         }
     }
 
-
-    //========================== EXPERIMENTAL============================ НЕ ЧАПАЦЬ
-
     enum class RequestMethod {
         POST,
         GET
     }
 }
+
 

@@ -18,7 +18,7 @@ data class BtcOutput(
     val script: String,
 
     @SerializedName("value")
-    val valur: BigInteger,
+    val value: BigInteger,
 
     @SerializedName("mint_index")
     val mintIndex: BigInteger,

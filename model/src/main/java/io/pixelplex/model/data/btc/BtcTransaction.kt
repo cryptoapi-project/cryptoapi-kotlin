@@ -21,7 +21,7 @@ data class BtcTransaction(
     val fee: BigInteger,
 
     @SerializedName("size")
-    val sixe: BigInteger,
+    val size: BigInteger,
 
     @SerializedName("transaction_index")
     val txIndex: BigInteger,

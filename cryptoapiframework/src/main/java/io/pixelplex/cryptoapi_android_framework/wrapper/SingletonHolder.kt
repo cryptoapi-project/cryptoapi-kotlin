@@ -1,7 +1,9 @@
 package io.pixelplex.cryptoapi_android_framework.wrapper
 
-open class SingletonHolder<out T : Any, in CAT, in CNT, in RDT, in TKN>(creator: (CAT, CNT, RDT, TKN) -> T) {
-    private var creator: ((CAT, CNT, RDT, TKN) -> T)? = creator
+import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
+
+open class SingletonHolder<out T : Any, in CAT, in CNT, in RDT, in TKN, in URL>(creator: (CAT, CNT, RDT, TKN, URL) -> T) {
+    private var creator: ((CAT, CNT, RDT, TKN, URL) -> T)? = creator
 
     @Volatile
     private var instance: T? = null
@@ -10,7 +12,8 @@ open class SingletonHolder<out T : Any, in CAT, in CNT, in RDT, in TKN>(creator:
         callTimeout: CAT,
         connectTimeout: CNT,
         readTimeOut: RDT,
-        token: TKN
+        token: TKN,
+        url: URL = CryptoApi.URL.MAINNET as URL
     ): T {
         val checkInstance = instance
         if (checkInstance != null) {
@@ -22,7 +25,7 @@ open class SingletonHolder<out T : Any, in CAT, in CNT, in RDT, in TKN>(creator:
             return if (checkInstanceAgain != null) {
                 checkInstanceAgain
             } else {
-                val created = creator!!(callTimeout, connectTimeout, readTimeOut, token)
+                val created = creator!!(callTimeout, connectTimeout, readTimeOut, token, url)
                 instance = created
                 creator = null
                 created
