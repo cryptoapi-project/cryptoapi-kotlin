@@ -17,7 +17,7 @@ This framework can be obtained through Maven (https://dl.bintray.com/pixelplex/m
 
 or Gradle:
 ```
-implementation 'io.pixelplex.cryptoapiframework:cryptoapiframework:0.2.7.4'
+implementation 'io.pixelplex.cryptoapiframework:cryptoapiframework:0.3.2'
 ```
 ## Setup
 
