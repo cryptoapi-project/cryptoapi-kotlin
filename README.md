@@ -10,7 +10,7 @@ This framework can be obtained through Maven (https://dl.bintray.com/pixelplex/m
 <dependency>
 	<groupId>io.pixelplex.cryptoapiframework</groupId>
 	<artifactId>cryptoapiframework</artifactId>
-	<version>0.2.7.4</version>
+	<version>0.3.2</version>
 	<type>pom</type>
 </dependency>
 ```
