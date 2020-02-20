@@ -32,6 +32,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+
 repositories {
     mavenCentral()
 }
@@ -64,3 +65,9 @@ kapt {
         }
     }
 }
+
+sourceSets {
+    main.java.srcDirs += 'src/main/java'
+}
+
+apply from: "$rootDir/config/publish.gradle"

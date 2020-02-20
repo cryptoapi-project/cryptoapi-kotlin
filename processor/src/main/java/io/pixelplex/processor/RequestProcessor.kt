@@ -4,21 +4,19 @@ import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.pixelplex.annotation.*
-import io.pixelplex.model.QueryType
+import io.pixelplex.model.generation.QueryType
 import me.eugeniomarletti.kotlin.metadata.KotlinMetadataUtils
-import me.eugeniomarletti.kotlin.metadata.kotlinMetadata
 import me.eugeniomarletti.kotlin.metadata.shadow.name.FqName
 import me.eugeniomarletti.kotlin.metadata.shadow.platform.JavaToKotlinClassMap
 import me.eugeniomarletti.kotlin.processing.KotlinAbstractProcessor
 import java.io.File
-import java.lang.IllegalArgumentException
-import java.util.regex.Pattern
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.*
 import javax.tools.Diagnostic
+
 
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -35,7 +33,6 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
             return false
         }
 
-
         val elements = getExecutableElements(
             roundEnv.getElementsAnnotatedWith(Get::class.java)
                     + roundEnv.getElementsAnnotatedWith(Post::class.java)
@@ -46,6 +43,13 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         }
 
         return true
+    }
+
+    private fun diagnostic(s: String) {
+        messager.printMessage(
+            Diagnostic.Kind.WARNING,
+            s
+        )
     }
 
     private fun getExecutableElements(elements: Set<Element>): Map<String, List<ExecutableElement>> {
@@ -62,7 +66,9 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
             val typeSpec = TypeSpec.classBuilder(className)
 
-            val coinUrl = String.format(COINS_URL_FORMAT, getClassAnnotationKey(elements.first()))
+            val coinUrl = getClassAnnotationKey(elements.first())?.let {
+                String.format(COINS_URL_FORMAT, it)
+            } ?: ""
 
             val ctor = FunSpec.constructorBuilder().addParameter(
                 API_CLIENT_PARAM_NAME,
@@ -88,10 +94,6 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
             typeSpec.addProperty(idProperty)
 
             elements.forEach { element ->
-                messager.printMessage(
-                    Diagnostic.Kind.WARNING,
-                    element.parameters.map { getParamType(it) }.toString()
-                )
                 if (element.parameters.map { getParamType(it) }.any { it.contains("kotlin.coroutines.Continuation") }) {
                     hasSuspend = true
                     generateSuspendMethod(element, coinUrl, typeSpec)
@@ -101,22 +103,26 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                 }
             }
 
-            val file = FileSpec.builder(pack, className)
+            val fileSpec = FileSpec.builder(pack, className)
                 .addImport(CORE_PACKAGE, API_CLIENT_NAME)
-                .addImport("io.pixelplex.model", "QueryParameter", "QueryType", "RequestParameter")
+                .addImport("io.pixelplex.model.generation", "QueryParameter", "QueryType", "RequestParameter")
                 .addType(typeSpec.build())
 
             if (hasSuspend) {
-                file.addImport("kotlin.coroutines", "resumeWithException", "suspendCoroutine")
-                file.addImport("io.pixelplex.tools", "TypedCallback")
+                fileSpec.addImport("kotlin.coroutines", "resumeWithException", "suspendCoroutine")
             }
 
-            val sourceFile = file.build()
+            fileSpec.addImport("okhttp3", "Callback", "Call", "Response")
+            fileSpec.addImport("java.io", "IOException")
+            fileSpec.addImport("io.pixelplex.cryptoapi_android_framework.support", "fromJson")
+            fileSpec.addImport("io.pixelplex.model.exception", "ApiException")
+            fileSpec.addImport("io.pixelplex.model.common", "ErrorResponse")
+
+            val sourceFile = fileSpec.build()
 
             val kaptKotlinGeneratedDir = options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
 
             val output = File(kaptKotlinGeneratedDir)
-
             sourceFile.writeTo(output)
         }
     }
@@ -126,75 +132,42 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         coinUrl: String,
         typeSpec: TypeSpec.Builder
     ) {
+
         val funcBuilder = FunSpec.builder(element.simpleName.toString())
             .addModifiers(KModifier.PUBLIC, KModifier.OVERRIDE)
             .addParameters(element.parameters.map {
                 ParameterSpec(
                     it.simpleName.toString(),
                     it.asType().asTypeName().javaToKotlinType(),
-                    it.modifiers as Iterable<KModifier>
+                    emptyList<KModifier>()
                 )
             })
-        if (element.parameters.mapNotNull { getQueryType(it) }.any()) {
-            funcBuilder.addCode(
-                codeSnippetLine("val queryParams = ArrayList<QueryParameter<*>>()")
-            )
 
-            element.parameters.filter { getParamName(it) != null && getQueryType(it) != null }
-                .forEach {
-                    funcBuilder.addCode(
-                        codeSnippetLine(
-                            "queryParams.add(QueryParameter<${getParamType(it)}>(\"${getParamName(
-                                it
-                            )}\", RequestParameter<${getParamType(it)}>(${it.simpleName}), QueryType.${getQueryType(
-                                it
-                            )!!.name}))"
-                        )
-                    )
-                }
-            funcBuilder.addCode(
-                codeSnippetLine(
-                    "${API_CLIENT_PARAM_NAME}.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, params = queryParams)"
-                )
-            )
-        } else {
-            funcBuilder.addCode(
-                codeSnippetLine(
-                    "${API_CLIENT_PARAM_NAME}.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback)"
-                )
-            )
+        val errorCalback: VariableElement? = findErrorCallback(element)
+        val successCalback: VariableElement? = findSuccessCallback(element)
+
+        if (errorCalback == null || successCalback == null) {
+            throw java.lang.IllegalStateException("Method should be contain Annotated Error and Success Callbacks")
         }
 
-        typeSpec.addFunction(funcBuilder.build())
-    }
-
-    private fun generateSuspendMethod(
-        element: ExecutableElement,
-        coinUrl: String,
-        typeSpec: TypeSpec.Builder
-    ) {
-
-        val funcBuilder = FunSpec.builder(element.simpleName.toString())
-            .addModifiers(KModifier.PRIVATE)
-            .addParameters(element.parameters
-                .map {
-                    ParameterSpec(
-                        it.simpleName.toString(),
-                        it.asType().asTypeName().javaToKotlinType(),
-                        it.modifiers as Iterable<KModifier>
-                    )
-                })
-
-
         funcBuilder.addCode(
-            """val callback = TypedCallback.withType(${getSuspendReturnType(element)}::class.java,
-                { result->
-                    ${element.parameters.last().simpleName}.resumeWith(Result.success(result))
-                },
-                { error->
-                    ${element.parameters.last().simpleName}.resumeWithException(error)
-                })
-            
+            """val callback = object: Callback {
+                   override fun onFailure(call: Call, e: IOException) {
+                       ${errorCalback.simpleName}(ApiException.create(e))
+                    }
+                    override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                         try {
+                            ${successCalback.simpleName}(fromJson(response.body?.string()!!))
+                         } catch (e: Exception){
+                            ${errorCalback.simpleName}(ApiException.create(e))
+                         }
+                    } else {
+                        ${errorCalback.simpleName}(ApiException.create(fromJson<ErrorResponse>(response.body?.string()!!)))
+                    }
+                    }
+                }
+                        
         """.trimIndent()
         )
 
@@ -229,58 +202,111 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         }
 
         typeSpec.addFunction(funcBuilder.build())
-
-        generateSuspendWrapper(element, typeSpec)
     }
 
-    private fun generateSuspendWrapper(
+    private fun findErrorCallback(element: ExecutableElement): VariableElement? {
+        return element.parameters.first { it.getAnnotation(CallbackError::class.java) != null }
+    }
+
+    private fun findSuccessCallback(element: ExecutableElement): VariableElement? {
+        return element.parameters.first { it.getAnnotation(CallbackSuccess::class.java) != null }
+    }
+
+    private fun generateSuspendMethod(
         element: ExecutableElement,
+        coinUrl: String,
         typeSpec: TypeSpec.Builder
     ) {
+
         val funcBuilder = FunSpec.builder(element.simpleName.toString())
-            .addModifiers(KModifier.PUBLIC, KModifier.OVERRIDE, KModifier.SUSPEND)
+            .addModifiers(KModifier.SUSPEND, KModifier.OVERRIDE)
             .addParameters(element.parameters.filter { !getParamType(it).contains("kotlin.coroutines.Continuation") }
                 .map {
+
                     ParameterSpec(
                         it.simpleName.toString(),
                         it.asType().asTypeName().javaToKotlinType(),
-                        it.modifiers as Iterable<KModifier>
+                        emptyList<KModifier>()
                     )
                 })
-            .returns(getSuspendReturnType(element).toClassName())
 
         if (funcBuilder.parameters.isNotEmpty()) {
             funcBuilder.addCode(
-                """return suspendCoroutine {
-                    ${element.simpleName}(${funcBuilder.parameters.map { it.name }.joinToString(", ")}, it)
-                }
+                """return suspendCoroutine<${getSuspendReturnType(element)}> {
+
                 """
             )
         } else {
             funcBuilder.addCode(
-                """return suspendCoroutine {
-                    ${element.simpleName}(it)
-                }
+                """return suspendCoroutine<${getSuspendReturnType(element)}> {
+                
                 """
             )
         }
 
+
+        funcBuilder.addCode(
+            """val callback = object: Callback {
+                   override fun onFailure(call: Call, e: IOException) {
+                       it.resumeWithException(ApiException.create(e))
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                    
+                        if(response.isSuccessful){
+                            try{
+                                it.resumeWith(Result.success(fromJson(response.body?.string()!!)))
+                            } catch(e: Exception) {
+                                it.resumeWithException(ApiException.create(e))
+                            }
+                        } else {
+                            it.resumeWithException(ApiException.create(fromJson<ErrorResponse>(response.body?.string()!!)))
+                        }
+                    }
+                }
+                        
+        """.trimIndent()
+        )
+
+        if (element.parameters.mapNotNull { getQueryType(it) }.any()) {
+            funcBuilder.addCode(
+                codeSnippetLine("val queryParams = ArrayList<QueryParameter<*>>()")
+            )
+
+            element.parameters.filter { getParamName(it) != null && getQueryType(it) != null }
+                .forEach {
+                    funcBuilder.addCode(
+                        codeSnippetLine(
+                            "queryParams.add(QueryParameter<${getParamType(it)}>(\"${getParamName(
+                                it
+                            )}\", RequestParameter<${getParamType(it)}>(${it.simpleName}), QueryType.${getQueryType(
+                                it
+                            )!!.name}))"
+                        )
+                    )
+                }
+            funcBuilder.addCode(
+                codeSnippetLine(
+                    "${API_CLIENT_PARAM_NAME}.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, params = queryParams)"
+                )
+            )
+        } else {
+            funcBuilder.addCode(
+                codeSnippetLine(
+                    "${API_CLIENT_PARAM_NAME}.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback)"
+                )
+            )
+        }
+
+        funcBuilder.addCode(codeSnippetLine("}"))
         typeSpec.addFunction(funcBuilder.build())
     }
 
-    private fun String.toClassName(): ClassName {
-        val pointIndex = this.lastIndexOf('.')
-        return ClassName(this.substring(0, pointIndex), this.substring(pointIndex))
-    }
-
-
     private fun getSuspendReturnType(element: ExecutableElement): String {
-        val p = element.parameters.last().asType().asTypeName().toString()
-        Pattern.compile("Continuation<in (.*?)>").matcher(p).let {
-            if (it.find())
-                return it.group(1)
+        with(element.parameters.last().asType().asTypeName().javaToKotlinType() as ParameterizedTypeName) {
+            return (this.typeArguments[0].javaToKotlinType() as WildcardTypeName).inTypes[0].javaToKotlinType()
+                .toString()
         }
-        throw IllegalStateException("Unknown suspend return type ${p}")
     }
 
     private fun codeSnippetLine(code: String): String {
@@ -307,10 +333,9 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         return null
     }
 
-    private fun getClassAnnotationKey(element: ExecutableElement): String {
+    private fun getClassAnnotationKey(element: ExecutableElement): String? {
         val declaringClass = element.enclosingElement as TypeElement
-        val annotation = declaringClass.getAnnotation(Coin::class.java)
-        return annotation.name
+        return declaringClass.getAnnotation(Coin::class.java)?.name
     }
 
     private fun getClassName(element: ExecutableElement): String {
@@ -342,15 +367,33 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         private const val COINS_URL_FORMAT = "coins/%s/"
         private const val API_CLIENT_PARAM_NAME = "apiClient"
     }
-}
 
-private fun TypeName.javaToKotlinType(): TypeName = if (this is ParameterizedTypeName) {
-    (rawType.javaToKotlinType() as ClassName).parameterizedBy(
-        *typeArguments.map { it.javaToKotlinType() }.toTypedArray()
-    )
-} else {
-    val className = JavaToKotlinClassMap
-        .mapJavaToKotlin(FqName(toString()))?.asSingleFqName()?.asString()
-    if (className == null) this
-    else ClassName.bestGuess(className)
+    private fun TypeName.javaToKotlinType(): TypeName {
+
+        return when (this) {
+            is ParameterizedTypeName -> {
+                (rawType.javaToKotlinType() as ClassName).parameterizedBy(
+                    *typeArguments.map {
+                        it.javaToKotlinType()
+                    }.toTypedArray()
+                )
+            }
+            is WildcardTypeName -> {
+                val type =
+                    if (inTypes.isNotEmpty()) WildcardTypeName.consumerOf(inTypes[0].javaToKotlinType())
+                    else WildcardTypeName.producerOf(outTypes[0].javaToKotlinType())
+                type
+            }
+
+            else -> {
+                val className = JavaToKotlinClassMap
+                    .mapJavaToKotlin(FqName(toString()))?.asSingleFqName()?.asString()
+                if (className == null) {
+                    this
+                } else {
+                    ClassName.bestGuess(className)
+                }
+            }
+        }
+    }
 }
