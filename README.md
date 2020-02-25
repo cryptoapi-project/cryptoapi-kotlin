@@ -25,7 +25,7 @@ add file cryptoapi.properties into /app project folder.
 
 cryptoapi.properties:
 ```java
-CRYPTO_API_KEY="5de552d7efc6ff2edfv1b09d946cc5263e346003a93ab28bf2ffeb24979da85a1f5"
+CRYPTO_API_KEY="5de552d7efc6ff2e1b09d946cc5263e346003a93ab28bf2ffeb24979da85a1f5"
 ```
 For setup framework use this simple code:
 ```java

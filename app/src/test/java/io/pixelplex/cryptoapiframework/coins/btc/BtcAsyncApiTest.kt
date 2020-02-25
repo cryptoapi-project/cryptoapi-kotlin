@@ -79,7 +79,6 @@ class BtcAsyncApiTest {
 
     @Test
     fun getTransactionsByAddresses() = runBlocking {
-        //TODO чекнуь skip
         try {
             val resp = apiClient.getTransactions(
                 listOf(TestValues.BTC_FROM, TestValues.BTC_TO)
@@ -92,7 +91,6 @@ class BtcAsyncApiTest {
 
     @Test
     fun sendRawTransaction() = runBlocking {
-        //TODO ignore
         try {
             val resp = apiClient.sendRawTransaction(
                 BtcRawTransaction(
@@ -147,4 +145,13 @@ class BtcAsyncApiTest {
         }
     }
 
+    @Test
+    fun estimateFee() = runBlocking {
+        try {
+            val resp = apiClient.estimateFee()
+            Assert.assertTrue(resp.isNotEmpty())
+        } catch (e: Exception) {
+            Assert.fail()
+        }
+    }
 }
