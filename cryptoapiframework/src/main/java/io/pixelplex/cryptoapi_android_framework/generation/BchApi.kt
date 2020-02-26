@@ -13,20 +13,20 @@ interface BchApi {
     }
 
     @Get("network")
-    suspend fun getNetwork(
+    fun getNetwork(
         @CallbackSuccess onSuccess: (BtcNetwork) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
     @Get("blocks/{block_height_or_hash}")
-    suspend fun getBlock(
+    fun getBlock(
         @Path("block_height_or_hash") blockHeightOrHash: String,
         @CallbackSuccess onSuccess: (BtcBlock) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
     @Get("blocks")
-    suspend fun getBlocks(
+    fun getBlocks(
         @Query("skip") skip: Int = 0,
         @Query("limit") limit: Int = DEFAULT_PAGE_SIZE,
         @CallbackSuccess onSuccess: (BtcBlocks) -> Unit,
@@ -34,14 +34,14 @@ interface BchApi {
     )
 
     @Get("transactions/{hash}")
-    suspend fun getTransaction(
+    fun getTransaction(
         @Path("hash") transactionHash: String,
         @CallbackSuccess onSuccess: (BtcTransaction) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
     @Get("transactions")
-    suspend fun getTransactions(
+    fun getTransactions(
         @Query("block_height_or_hash") blockHeightOrHash: String,
         @Query("from") from: String,
         @Query("to") to: String,
@@ -52,7 +52,7 @@ interface BchApi {
     )
 
     @Get("addresses/{addresses}/transactions")
-    suspend fun getTransactions(
+    fun getTransactions(
         @Path("addresses") addresses: List<String>,
         @Query("skip") skip: Int = 0,
         @Query("limit") limit: Int = DEFAULT_PAGE_SIZE,
@@ -61,21 +61,21 @@ interface BchApi {
     )
 
     @Post("transactions/raw/send")
-    suspend fun sendRawTransaction(
+    fun sendRawTransaction(
         @Body body: BtcRawTransaction,
         @CallbackSuccess onSuccess: (ApiResult<String>) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
     @Post("transactions/raw/decode")
-    suspend fun decodeRawTransaction(
+    fun decodeRawTransaction(
         @Body body: BtcRawTransaction,
         @CallbackSuccess onSuccess: (BtcDecodedRawTransaction) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
     @Get("addresses/{addresses}/outputs")
-    suspend fun getOutputs(
+    fun getOutputs(
         @Query("status") status: String,
         @Path("addresses") addresses: List<String>,
         @Query("skip") skip: Int = 0,
@@ -85,10 +85,15 @@ interface BchApi {
     )
 
     @Get("addresses/{addresses}")
-    suspend fun getAddressesWithBalances(
+    fun getAddressesWithBalances(
         @Path("addresses") addresses: List<String>,
         @CallbackSuccess onSuccess: (List<AddressWithBalance>) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
+    @Get("estimate-fee")
+    fun estimateFee(
+        @CallbackSuccess onSuccess: (String) -> Unit,
+        @CallbackError onError: (ApiException) -> Unit
+    )
 }

@@ -1,6 +1,7 @@
 package io.pixelplex.cryptoapiframework.coins.bch
 
 import io.pixelplex.cryptoapi_android_framework.CryptoApiFramework
+import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapiframework.BuildConfig
 import io.pixelplex.cryptoapiframework.CoinsTest
 import io.pixelplex.model.data.btc.BtcOutputStatus
@@ -16,7 +17,8 @@ class BchAsyncApiTest {
         CoinsTest.CALL_TIMEOUT,
         CoinsTest.CONNECT_TIMEOUT,
         CoinsTest.READ_TIMEOUT,
-        BuildConfig.CRYPTO_API_KEY
+        BuildConfig.CRYPTO_API_KEY,
+        CryptoApi.URL.TESTNET
     ).bitcoinCacheAsyncApi
 
     @Test
@@ -75,7 +77,6 @@ class BchAsyncApiTest {
         }
     }
 
-
     @Test
     fun getTransactionsByAddresses() = runBlocking {
         try {
@@ -88,19 +89,20 @@ class BchAsyncApiTest {
         }
     }
 
-    @Test
-    fun sendRawTransaction() = runBlocking {
-        try {
-            val resp = apiClient.sendRawTransaction(
-                BtcRawTransaction(
-                    TestValues.TRANSACTION_RAW_HASH
-                )
-            )
-            Assert.assertTrue(resp.result.isNotEmpty())
-        } catch (e: Exception) {
-            Assert.fail()
-        }
-    }
+// TODO: uncomment to test just once
+//    @Test
+//    fun sendRawTransaction() = runBlocking {
+//        try {
+//            val resp = apiClient.sendRawTransaction(
+//                BtcRawTransaction(
+//                    TestValues.TRANSACTION_RAW_HASH
+//                )
+//            )
+//            Assert.assertTrue(resp.result.isNotEmpty())
+//        } catch (e: Exception) {
+//            Assert.fail()
+//        }
+//    }
 
     @Test
     fun decodeRawTransaction() = runBlocking {
@@ -143,4 +145,13 @@ class BchAsyncApiTest {
         }
     }
 
+    @Test
+    fun estimateFee() = runBlocking {
+        try {
+            val resp = apiClient.estimateFee()
+            Assert.assertTrue(resp.isNotEmpty())
+        } catch (e: Exception) {
+            Assert.fail()
+        }
+    }
 }

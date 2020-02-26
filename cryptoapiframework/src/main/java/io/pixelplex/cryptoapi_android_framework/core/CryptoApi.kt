@@ -162,14 +162,14 @@ class CryptoApi(
         httpClient.newCall(request).enqueue(responseCallback)
 
         if (BuildConfig.DEBUG) {
-            println("================REQUEST ${requestUrl}=====================")
+            println("================ REQUEST ${requestUrl} =====================")
             println("PARAMETERS:")
             params.forEach {
                 println("[${it.type.name}] ${it.name}: ${it.value}")
             }
             println("FULL REQUEST:")
             println(request.toString())
-            println("================END REQUEST=========================")
+            println("================ END REQUEST =========================")
         }
     }
 
