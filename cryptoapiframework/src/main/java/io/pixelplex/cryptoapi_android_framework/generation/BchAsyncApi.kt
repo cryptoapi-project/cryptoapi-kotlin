@@ -68,4 +68,7 @@ interface BchAsyncApi {
     suspend fun getAddressesWithBalances(
         @Path("addresses") addresses: List<String>
     ): List<AddressWithBalance>
+
+    @Get("estimate-fee")
+    suspend fun estimateFee(): String
 }

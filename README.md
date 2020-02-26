@@ -10,25 +10,25 @@ This framework can be obtained through Maven (https://dl.bintray.com/pixelplex/m
 <dependency>
 	<groupId>io.pixelplex.cryptoapiframework</groupId>
 	<artifactId>cryptoapiframework</artifactId>
-	<version>0.3.2</version>
+	<version>0.3.3.17</version>
 	<type>pom</type>
 </dependency>
 ```
 
 or Gradle:
 ```
-implementation 'io.pixelplex.cryptoapiframework:cryptoapiframework:0.3.2'
+implementation 'io.pixelplex.cryptoapiframework:cryptoapiframework:0.3.3.17'
 ```
 ## Setup
 
 add file cryptoapi.properties into /app project folder.
 
 cryptoapi.properties:
-```java
+```kotlin
 CRYPTO_API_KEY="5de552d7efc6ff2e1b09d946cc5263e346003a93ab28bf2ffeb24979da85a1f5"
 ```
 For setup framework use this simple code:
-```java
+```kotlin
 private val apiClient = CryptoApiFramework.getInstance(
         CALL_TIMEOUT,
         CONNECT_TIMEOUT,
@@ -42,7 +42,7 @@ private val apiClient = CryptoApiFramework.getInstance(
 ### Networks
 
 CryptoAPI supports `MAINNET` and `TESTNET` chains. You can select chain type by `URL` field when setup framework (Mainnet by default)
-```java
+```kotlin
 private val apiClient = CryptoApiFramework.getInstance(
         CALL_TIMEOUT,
         CONNECT_TIMEOUT,
@@ -55,7 +55,7 @@ private val apiClient = CryptoApiFramework.getInstance(
 ### Servicies
 
 CryptoAPI contains 4 main api's for usage.
-```java
+```kotlin
 BTC (sync/async)
 BCH (sync/async)
 ETH (sync/async)

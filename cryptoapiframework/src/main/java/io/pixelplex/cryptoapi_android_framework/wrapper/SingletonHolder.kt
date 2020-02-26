@@ -13,7 +13,7 @@ open class SingletonHolder<out T : Any, in CAT, in CNT, in RDT, in TKN, in URL>(
         connectTimeout: CNT,
         readTimeOut: RDT,
         token: TKN,
-        url: URL = CryptoApi.URL.TESTNET as URL
+        url: URL = CryptoApi.URL.MAINNET as URL
     ): T {
         val checkInstance = instance
         if (checkInstance != null) {

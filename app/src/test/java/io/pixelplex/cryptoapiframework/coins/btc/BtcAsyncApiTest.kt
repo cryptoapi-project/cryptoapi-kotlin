@@ -1,6 +1,7 @@
 package io.pixelplex.cryptoapiframework.coins.btc
 
 import io.pixelplex.cryptoapi_android_framework.CryptoApiFramework
+import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapiframework.BuildConfig
 import io.pixelplex.cryptoapiframework.CoinsTest
 import io.pixelplex.model.data.btc.BtcOutputStatus
@@ -16,7 +17,8 @@ class BtcAsyncApiTest {
         CoinsTest.CALL_TIMEOUT,
         CoinsTest.CONNECT_TIMEOUT,
         CoinsTest.READ_TIMEOUT,
-        BuildConfig.CRYPTO_API_KEY
+        BuildConfig.CRYPTO_API_KEY,
+        CryptoApi.URL.TESTNET
     ).bitcoinAsyncApi
 
     @Test
@@ -89,19 +91,20 @@ class BtcAsyncApiTest {
         }
     }
 
-    @Test
-    fun sendRawTransaction() = runBlocking {
-        try {
-            val resp = apiClient.sendRawTransaction(
-                BtcRawTransaction(
-                    TestValues.TRANSACTION_RAW_HASH
-                )
-            )
-            Assert.assertTrue(resp.result.isNotEmpty())
-        } catch (e: Exception) {
-            Assert.fail()
-        }
-    }
+// TODO: uncomment to test just once
+//    @Test
+//    fun sendRawTransaction() = runBlocking {
+//        try {
+//            val resp = apiClient.sendRawTransaction(
+//                BtcRawTransaction(
+//                    TestValues.TRANSACTION_RAW_HASH
+//                )
+//            )
+//            Assert.assertTrue(resp.result.isNotEmpty())
+//        } catch (e: Exception) {
+//            Assert.fail()
+//        }
+//    }
 
     @Test
     fun decodeRawTransaction() = runBlocking {
@@ -119,7 +122,6 @@ class BtcAsyncApiTest {
 
     @Test
     fun getOutputs() = runBlocking {
-        //TODO чекнуь skip
         try {
             val resp =
                 apiClient.getOutputs(

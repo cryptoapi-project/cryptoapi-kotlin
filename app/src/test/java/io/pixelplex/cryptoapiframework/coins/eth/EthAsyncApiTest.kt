@@ -2,6 +2,7 @@ package io.pixelplex.cryptoapiframework.coins.eth
 
 
 import io.pixelplex.cryptoapi_android_framework.CryptoApiFramework
+import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
 import io.pixelplex.cryptoapiframework.BuildConfig
 import io.pixelplex.cryptoapiframework.CoinsTest
 import kotlinx.coroutines.runBlocking
@@ -14,7 +15,8 @@ class AsyncApiTest {
         CoinsTest.CALL_TIMEOUT,
         CoinsTest.CONNECT_TIMEOUT,
         CoinsTest.READ_TIMEOUT,
-        BuildConfig.CRYPTO_API_KEY
+        BuildConfig.CRYPTO_API_KEY,
+        CryptoApi.URL.TESTNET
     ).ethereumAsyncApi
 
     @Test
