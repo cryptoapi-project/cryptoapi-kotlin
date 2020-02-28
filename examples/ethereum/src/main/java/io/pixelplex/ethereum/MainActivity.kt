@@ -2,8 +2,10 @@ package io.pixelplex.ethereum
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import io.pixelplex.mobile.CryptoApiFramework
-import io.pixelplex.mobile.core.CryptoApi
+import io.pixelplex.cryptoapi_android_framework.CryptoApiFramework
+import io.pixelplex.cryptoapi_android_framework.core.CryptoApi
+import io.pixelplex.model.data.eth.EthEstimatedGasCall
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,11 +19,19 @@ class MainActivity : AppCompatActivity() {
         ).ethereumAsyncApi
     }
 
+    private val estimatedGas = EthEstimatedGasCall(
+        from = ETH_ADDRESS_1,
+        to = ETH_ADDRESS_2,
+        value = "10"
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        
+        runBlocking {
+            apiClient.estimateGas(estimatedGas)
+        }
     }
 
     companion object {
