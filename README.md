@@ -8,7 +8,7 @@ CryptoAPI is Kotlin API Wrapper framework. Designed to receive information about
 
 ```
 <dependency>
-	<groupId>io.pixelplex.cryptoapiframework</groupId>
+	<groupId>io.pixelplex.mobile</groupId>
 	<artifactId>cryptoapiframework</artifactId>
 	<version>0.3.4</version>
 	<type>pom</type>
