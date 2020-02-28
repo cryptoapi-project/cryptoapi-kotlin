@@ -1,31 +1,31 @@
+[ ![Download](https://api.bintray.com/packages/pixelplex/mobile/cryptoapi/images/download.svg) ](https://bintray.com/pixelplex/mobile/cryptoapi/_latestVersion)
+
 # CryptoAPI-android-framework
 
 CryptoAPI is Kotlin API Wrapper framework. Designed to receive information about transactions, balances and send transactions.
 
 ## Install
 
-This framework can be obtained through Maven (https://dl.bintray.com/pixelplex/mobile):
-
 ```
 <dependency>
 	<groupId>io.pixelplex.cryptoapiframework</groupId>
 	<artifactId>cryptoapiframework</artifactId>
-	<version>0.3.3.17</version>
+	<version>0.3.4</version>
 	<type>pom</type>
 </dependency>
 ```
 
 or Gradle:
 ```
-implementation 'io.pixelplex.cryptoapiframework:cryptoapiframework:0.3.3.17'
+implementation 'io.pixelplex.mobile:cryptoapiframework:0.3.4'
 ```
 ## Setup
 
-add file cryptoapi.properties into /app project folder.
+Add file cryptoapi.properties into /app project folder.
 
 cryptoapi.properties:
 ```kotlin
-CRYPTO_API_KEY="5de552d7efc6ff2e1b09d946cc5263e346003a93ab28bf2ffeb24979da85a1f5"
+CRYPTO_API_KEY="YOUR_TOKEN"
 ```
 For setup framework use this simple code:
 ```kotlin
@@ -54,7 +54,7 @@ private val apiClient = CryptoApiFramework.getInstance(
 
 ### Servicies
 
-CryptoAPI contains 4 main api's for usage.
+CryptoAPI contains 3 main api's for usage.
 ```kotlin
 BTC (sync/async)
 BCH (sync/async)

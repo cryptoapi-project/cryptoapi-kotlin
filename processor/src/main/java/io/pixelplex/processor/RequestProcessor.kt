@@ -114,7 +114,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
             fileSpec.addImport("okhttp3", "Callback", "Call", "Response")
             fileSpec.addImport("java.io", "IOException")
-            fileSpec.addImport("io.pixelplex.cryptoapi_android_framework.support", "fromJson")
+            fileSpec.addImport("io.pixelplex.mobile.support", "fromJson")
             fileSpec.addImport("io.pixelplex.model.exception", "ApiException")
             fileSpec.addImport("io.pixelplex.model.common", "ErrorResponse")
 
@@ -362,7 +362,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
     companion object {
         const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
-        private const val CORE_PACKAGE = "io.pixelplex.cryptoapi_android_framework.core"
+        private const val CORE_PACKAGE = "io.pixelplex.mobile.core"
         private const val API_CLIENT_NAME = "CryptoApi"
         private const val COINS_URL_FORMAT = "coins/%s/"
         private const val API_CLIENT_PARAM_NAME = "apiClient"
