@@ -6,7 +6,7 @@ ext {
     bintrayName = 'cryptoapi'
 
     publishedGroupId = 'io.pixelplex.mobile'
-    libraryName = 'mobile'
+    libraryName = 'android-framework'
     artifact = 'cryptoapiframework'
 
     libraryDescription = 'Framework for working with Crypto API'
