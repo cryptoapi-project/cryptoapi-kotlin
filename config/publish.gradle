@@ -6,7 +6,7 @@ ext {
     bintrayName = 'cryptoapi'
 
     publishedGroupId = 'io.pixelplex.mobile'
-    libraryName = 'android-framework'
+    libraryName = 'androidframework'
     artifact = 'cryptoapiframework'
 
     libraryDescription = 'Framework for working with Crypto API'
@@ -14,7 +14,7 @@ ext {
     gitUrl = 'https://gitlab.pixelplex.by/709-crypto-api-mobile-library/android-framework'
     siteUrl = 'https://echo.org'
 
-    libraryVersion = '0.3.4'
+    libraryVersion = '0.3.3.18'
 
     firstDeveloperId = 's-krupenich'
     firstDeveloperName = 'Sergey Krupenich'
