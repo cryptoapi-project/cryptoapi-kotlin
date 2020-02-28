@@ -1,8 +1,8 @@
 [ ![Download](https://api.bintray.com/packages/pixelplex/mobile/cryptoapi/images/download.svg) ](https://bintray.com/pixelplex/mobile/cryptoapi/_latestVersion)
 
-# CryptoAPI-android-framework
+# CryptoApiFramework
 
-CryptoAPI is Kotlin API Wrapper framework. Designed to receive information about transactions, balances and send transactions.
+CryptoApiFramework is Kotlin API Wrapper framework. Designed to receive information about transactions, balances and send transactions.
 
 ## Install
 
