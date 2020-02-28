@@ -1,2 +1,2 @@
-include ':app', ':cryptoapiframework', ':processor', ':annotation', ':model'
+include ':app', ':cryptoapiframework', ':processor', ':annotation', ':model', ':examples:ethereum'
 rootProject.name='CryptoApiFramework'
