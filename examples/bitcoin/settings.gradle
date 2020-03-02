@@ -1,2 +1,0 @@
-include ':btc-cryptoapi'
-rootProject.name='cryptoapi'
