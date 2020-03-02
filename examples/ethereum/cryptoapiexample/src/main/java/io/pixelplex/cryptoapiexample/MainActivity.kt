@@ -12,8 +12,16 @@ import io.pixelplex.model.exception.ApiException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+/**
+ * Contains functionality associated with Crypto API Library using
+ *
+ * @author Sergey Krupenich
+ */
 class MainActivity : AppCompatActivity() {
 
+    /**
+     * Crypto API libarary initializing
+     */
     private val apiClient by lazy {
         CryptoApiFramework.getInstance(
             CALL_TIMEOUT,
@@ -24,17 +32,26 @@ class MainActivity : AppCompatActivity() {
         ).ethereumAsyncApi
     }
 
+    /**
+     * Estimation gas object initializing
+     */
     private val estimatedGas = EthEstimatedGasCall(
         from = ETH_ADDRESS_1,
         to = ETH_ADDRESS_2,
         value = "10"
     )
 
+    /**
+     * Eth transaction Raw body object initializing
+     */
     private val ethTransactionRawBody =
         EthTransactionRawCall(
             tx = TX
         )
 
+    /**
+     * Addresses object initializing
+     */
     private val ethAddresses = EthTypedParams(
         ETH_ADDRESS_1,
         ETH_ADDRESS_2
@@ -65,10 +82,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Prints a value with the tag
+     */
     private fun logD(value: String) {
         Log.d(CRYPTO_API_ETH_EXAMPLE_KEY, value)
     }
 
+    /**
+     * Prints a value with the tag
+     */
     companion object {
         private const val CRYPTO_API_ETH_EXAMPLE_KEY = "ETH_LOG"
 
@@ -77,9 +100,8 @@ class MainActivity : AppCompatActivity() {
         private const val CONNECT_TIMEOUT = 15000L
 
         private const val CRYPTO_API_KEY = "YOUR_TOKEN"
-
-        private const val ETH_ADDRESS_1 = "0x141d5937C7b0e4fB4C535c900C0964B4852007eA"
-        private const val ETH_ADDRESS_2 = "0xb0202eBbF797Dd61A3b28d5E82fbA2523edc1a9B"
+        private const val ETH_ADDRESS_1 = "SENDER_ADDRESS"
+        private const val ETH_ADDRESS_2 = "RECIPIENT_ADDRESS"
 
         private const val TX =
             "0xf86e8386ca038602bba7f5220083632ea0941de29f644d555fe9cc3241e1083de0868f959bfa8545d964b800801ca04ef1f13c58af9a9ac4be66b838a238b24db798d585d882865637fdc35bdc49c4a04b7d1dfc3d9672080347a0d3559628f5f757bd6f6a005d1c4f7cdccce020ea02"
