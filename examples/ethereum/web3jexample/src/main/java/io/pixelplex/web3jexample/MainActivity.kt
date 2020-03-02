@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Prints a value with the tag
+     * Constant test values
      */
     companion object {
         private const val CRYPTO_API_KEY = "YOUR_CRYPTO_API_KEY"
