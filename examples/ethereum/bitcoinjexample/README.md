@@ -1,4 +1,4 @@
-# Using CryptoApiLib library with with [Web3j](https://github.com/web3j/web3j)
+# Using CryptoApiLib library with with [Bitcoinj](https://bitcoinj.github.io)
 
 ## Get started
 Сonfigure and return the object of the CryptoAPI class, which will allow to perform all the operations provided by the CryptoApiLib library.
@@ -75,7 +75,6 @@ private val estimatedGas = EthEstimatedGasCall(
 GlobalScope.launch {
     val estimationGas = apiClient.estimateGas(estimatedGas)
     logD(estimationGas.estimateGas.toString())
-    
     ...
 }
 ```
@@ -85,8 +84,8 @@ CryptoAPI allows you to send raw transactions, but before that you need to prepa
 Creating and sending a transaction is as follows:
 ```kotlin
 GlobalScope.launch {
+    
     ...
-
     val addressWithoutPrefix = ETH_ADDRESS_2.removePrefix(PREFIX)
     val addressBytes = Hex.decode(addressWithoutPrefix)
 

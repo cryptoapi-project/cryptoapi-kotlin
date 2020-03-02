@@ -59,7 +59,6 @@ private val estimatedGas = EthEstimatedGasCall(
 GlobalScope.launch {
     val estimationGas = apiClient.estimateGas(estimatedGas)
     logD(estimationGas.estimateGas.toString())
-    
     ...
 }
 ```
@@ -69,8 +68,8 @@ CryptoAPI allows you to send raw transactions, but before that you need to prepa
 Creating and sending a transaction is as follows:
 ```kotlin
 GlobalScope.launch {
-    ...
 
+    ...
     val rawTransaction = RawTransaction.createEtherTransaction(
         BigInteger.valueOf(estimationGas.nonce.toLong()),
         BigInteger.valueOf(estimationGas.gasPrice),
