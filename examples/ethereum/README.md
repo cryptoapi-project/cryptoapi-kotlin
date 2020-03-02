@@ -1,10 +1,10 @@
-[ ![Download](https://api.bintray.com/packages/pixelplex/mobile/cryptoapi/images/download.svg) ](https://bintray.com/pixelplex/mobile/cryptoapi/_latestVersion)
+# CryptoApiLib with popular Ethereum libraries
 
-# CryptoAPI-android-framework
+CryptoApiLib has the ability to be used in conjunction with many popular ethereum libraries. Here you can find links to examples of use with some libraries.
 
-Test ethereum
-
-
+[Example project](www.google.com) with [Test lib 1](www.google.com)
+[Example project](www.google.com) with [Test lib 2](www.google.com)
+[Example project](www.google.com) with [Test lib 3](www.google.com)
 
 ## License
 
