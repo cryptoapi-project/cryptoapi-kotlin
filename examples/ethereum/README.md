@@ -2,9 +2,9 @@
 
 CryptoApiLib has the ability to be used in conjunction with many popular ethereum libraries. Here you can find links to examples of use with some libraries.
 
-[Example project](./web3jexample) with [Web3j](https://github.com/web3j/web3j)
-[Example project](www.google.com) with [Test lib 2](www.google.com)
-[Example project](www.google.com) with [Test lib 3](www.google.com)
+[Example project](./web3jexample) with [Web3j](https://github.com/web3j/web3j).**
+[Example project](www.google.com) with [Test lib 2](www.google.com).**
+[Example project](www.google.com) with [Test lib 3](www.google.com).**
 
 ## License
 
