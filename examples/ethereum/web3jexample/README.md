@@ -1,6 +1,92 @@
-# CryptoApiLib with popular Ethereum libraries
+# Using CryptoApiLib library with with [Web3j](https://github.com/web3j/web3j)
 
-Test Web3j readme
+## Get started
+Сonfigure and return the object of the CryptoAPI class, which will allow to perform all the operations provided by the CryptoApiLib library.
+Further, we can use the obtained method to get the CryptoAPI object anywhere in the program.
+```kotlin
+private val apiClient by lazy {
+    CryptoApiFramework.getInstance(
+        CALL_TIMEOUT,
+        CONNECT_TIMEOUT,
+        READ_TIMEOUT,
+        CRYPTO_API_KEY,
+        CryptoApi.URL.TESTNET
+    ).ethereumAsyncApi
+}
+```
+
+## Constant
+There is a companion object that contains some constants.
+```kotlin
+companion object {
+    private const val CRYPTO_API_KEY = "YOUR_CRYPTO_API_KEY"
+    private const val PRIVATE_KEY = "YOUR_PRIVATE_KEY"
+
+    private const val ETH_ADDRESS_1 = "SENDER_ADDRESS"
+    private const val ETH_ADDRESS_2 = "RECIPIENT_ADDRESS"
+
+    private const val CALL_TIMEOUT = 30000L
+    private const val READ_TIMEOUT = 30000L
+    private const val CONNECT_TIMEOUT = 15000L
+
+    private const val SEND_AMOUNT = 10000000000
+
+    private const val WEB3J_ETH_EXAMPLE_KEY = "ETH_LOG"
+}
+```
+
+## Getting a balance
+The following code demonstrates how to obtain a balance using CryptoApiLib.
+```kotlin
+private val ethAddresses = EthTypedParams(
+    ETH_ADDRESS_1,
+    ETH_ADDRESS_2
+)
+
+val balances = apiClient.getBalances(ethAddresses.getList())
+balances.forEach {
+    logD(it.balance)
+}
+```
+
+## Estimating a gas
+Now, before creating a transaction, you need to get a `gas estimate`.
+```kotlin
+private val estimatedGas = EthEstimatedGasCall(
+    from = ETH_ADDRESS_1,
+    to = ETH_ADDRESS_2,
+    value = "10"
+)
+
+GlobalScope.launch {
+    val estimationGas = apiClient.estimateGas(estimatedGas)
+    logD(estimationGas.estimateGas.toString())
+}
+```
+
+## Create and send a transaction
+CryptoAPI allows you to send raw transactions, but before that you need to prepare it.
+Creating and sending a transaction is as follows:
+```kotlin
+GlobalScope.launch {
+    val estimationGas = apiClient.estimateGas(estimatedGas)
+
+    val rawTransaction = RawTransaction.createEtherTransaction(
+        BigInteger.valueOf(estimationGas.nonce.toLong()),
+        BigInteger.valueOf(estimationGas.gasPrice),
+        BigInteger.valueOf(estimationGas.estimateGas),
+        ETH_ADDRESS_2,
+        sendAmountBigInt
+    )
+
+    val signedMessage =
+        TransactionEncoder.signMessage(rawTransaction, Credentials.create(PRIVATE_KEY))
+    val hexValue = Numeric.toHexString(signedMessage)
+
+    val result = apiClient.sendRawTransaction(EthTransactionRawCall(hexValue))
+    logD(result)
+}
+```
 
 ## License
 

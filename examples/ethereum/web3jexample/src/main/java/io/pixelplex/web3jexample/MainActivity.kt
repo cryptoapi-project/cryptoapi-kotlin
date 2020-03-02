@@ -66,8 +66,8 @@ class MainActivity : AppCompatActivity() {
         private const val CRYPTO_API_KEY = "YOUR_CRYPTO_API_KEY"
         private const val PRIVATE_KEY = "YOUR_PRIVATE_KEY"
 
-        private const val ETH_ADDRESS_1 = "ADDRESS_FROM"
-        private const val ETH_ADDRESS_2 = "ADDRESS_TO"
+        private const val ETH_ADDRESS_1 = "SENDER_ADDRESS"
+        private const val ETH_ADDRESS_2 = "RECIPIENT_ADDRESS"
 
         private const val CALL_TIMEOUT = 30000L
         private const val READ_TIMEOUT = 30000L
