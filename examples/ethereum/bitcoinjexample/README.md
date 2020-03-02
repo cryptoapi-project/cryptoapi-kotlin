@@ -19,18 +19,34 @@ private val apiClient by lazy {
 There is a companion object that contains some constants.
 ```kotlin
 companion object {
+    private const val PREFIX = "0x"
+
     private const val CRYPTO_API_KEY = "YOUR_CRYPTO_API_KEY"
-    private const val PRIVATE_KEY = "YOUR_PRIVATE_KEY"
     private const val ETH_ADDRESS_1 = "SENDER_ADDRESS"
     private const val ETH_ADDRESS_2 = "RECIPIENT_ADDRESS"
 
     private const val CALL_TIMEOUT = 30000L
     private const val READ_TIMEOUT = 30000L
     private const val CONNECT_TIMEOUT = 15000L
-    private const val SEND_AMOUNT = 10000000000
+    private const val SEND_AMOUNT = 10000000L
 
     private const val WEB3J_ETH_EXAMPLE_KEY = "ETH_LOG"
 }
+```
+
+## Additional properties
+There are some additional properties which presented below.
+```kotlin
+/**
+ * Send amount Big integer object initializing
+ */
+private val sendAmountBigInt =
+    BigInteger.valueOf(SEND_AMOUNT)
+
+/**
+ * Your private key byte array
+ */
+private val privateKey = ByteArray(0)
 ```
 
 ## Getting a balance
@@ -71,19 +87,24 @@ Creating and sending a transaction is as follows:
 GlobalScope.launch {
     ...
 
-    val rawTransaction = RawTransaction.createEtherTransaction(
-        BigInteger.valueOf(estimationGas.nonce.toLong()),
-        BigInteger.valueOf(estimationGas.gasPrice),
-        BigInteger.valueOf(estimationGas.estimateGas),
-        ETH_ADDRESS_2,
-        sendAmountBigInt
-    )
+    val addressWithoutPrefix = ETH_ADDRESS_2.removePrefix(PREFIX)
+    val addressBytes = Hex.decode(addressWithoutPrefix)
 
-    val signedMessage =
-        TransactionEncoder.signMessage(rawTransaction, Credentials.create(PRIVATE_KEY))
-    val hexValue = Numeric.toHexString(signedMessage)
+    val transaction =
+        EthTransaction(
+            BigInteger.valueOf(estimationGas.nonce.toLong()).toBytes(),
+            BigInteger.valueOf(estimationGas.gasPrice).toBytes(),
+            BigInteger.valueOf(estimationGas.estimateGas).toBytes(),
+            addressBytes,
+            sendAmountBigInt.toBytes(),
+            null
+        )
 
-    val result = apiClient.sendRawTransaction(EthTransactionRawCall(hexValue))
+    val senderKey = EthECKey.fromPrivate(privateKey)
+    transaction.sign(senderKey)
+    val tx = getTx(Hex.toHexString(transaction.encoded))
+
+    val result = apiClient.sendRawTransaction(EthTransactionRawCall(tx))
     logD(result)
 }
 ```
