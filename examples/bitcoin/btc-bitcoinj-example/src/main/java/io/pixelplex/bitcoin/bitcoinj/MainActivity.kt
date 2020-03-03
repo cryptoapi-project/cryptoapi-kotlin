@@ -41,8 +41,34 @@ class MainActivity : AppCompatActivity() {
         ).bitcoinAsyncApi
     }
 
+    /**
+     * Represents BTC network
+     */
     private val networkParams by lazy {
         TestNet3Params.get()
+    }
+
+    /**
+     * Key for address, private or public key generation
+     */
+    private val deterministicKey by lazy {
+        val seed = DeterministicSeed(
+            BTC_MNEMONIC,
+            null,
+            "",
+            DeterministicHierarchy.BIP32_STANDARDISATION_TIME_SECS.toLong()
+        )
+        val pathParent = arrayListOf<ChildNumber>().apply {
+            add(ChildNumber(44, true))
+            add(ChildNumber(TESTNET_DERIVATION_PART, true))
+            add(ChildNumber(0, true))
+            add(ChildNumber(0, false))
+            add(ChildNumber(0, false))
+        }
+
+        val wallet = Wallet.fromSeed(networkParams, seed, Script.ScriptType.P2PKH)
+
+        wallet.activeKeyChain!!.getKeyByPath(pathParent, true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,9 +79,18 @@ class MainActivity : AppCompatActivity() {
             //init bitcoinJ
             Context.getOrCreate(networkParams)
 
+            val ecKey = ECKey.fromPrivate(deterministicKey.privKeyBytes)
+            val address = Address.fromKey(networkParams, ecKey, Script.ScriptType.P2PKH).toString()
+            //val privateKey = Hex.toHexString(deterministicKey.privKeyBytes)
+
             // MARK: Get outputs
-            // get address unspent outputs to calculate balance or build the transaction
-            val outputs = apiClient.getOutputs(BtcOutputStatus.unspent, listOf(FROM_ADDRESS))
+            // get unspent outputs to calculate balance or build the transaction
+            val outputs = try {
+                apiClient.getOutputs(BtcOutputStatus.unspent, listOf(address))
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                emptyList<BtcOutput>()
+            }
             printLog(outputs.toString())
 
             // MARK: Build transaction
@@ -64,7 +99,7 @@ class MainActivity : AppCompatActivity() {
             val toAddress = TO_ADDRESS
             val amountWithWei = AMOUNT.toBigInteger()
             val fee = 1000.toBigInteger()
-            val privateKey = getPrivateKey(BTC_MNEMONIC)
+            val privateKey = Hex.toHexString(deterministicKey.privKeyBytes)
 
             //create signed transaction
             val signedTransaction = createSignedTransaction(
@@ -81,9 +116,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             // MARK: Fee estimating
+            // first of all, you need to get fee rate for kilobyte
             // response has result like "0.00001". Convert it to satoshi if necessary.
             val estimatedFeeResponse = apiClient.estimateFee()
-            //firs of all, you need to get fee rate for kilobyte
             val feePerKb = estimatedFeeResponse.toBigDecimal().multiply(1000000.toBigDecimal()).toBigInteger()
 
             // we need to calculate how much the transaction weighs and how many outs we need to take in transaction
@@ -97,29 +132,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             // estimatedFee is the result of estimation of fee
-            printLog("estimated fee = $fee")
+            printLog("estimated fee = $estimatedFee")
         }
-    }
-
-    private fun getPrivateKey(mnemonic: String): String {
-        val seed = DeterministicSeed(
-            mnemonic,
-            null,
-            "",
-            DeterministicHierarchy.BIP32_STANDARDISATION_TIME_SECS.toLong()
-        )
-        val pathParent = arrayListOf<ChildNumber>().apply {
-            add(ChildNumber(44, true))
-            add(ChildNumber(TESTNET_DERIVATION_PART, true))
-            add(ChildNumber(0, true))
-            add(ChildNumber(0, false))
-            add(ChildNumber(0, false))
-        }
-
-        val wallet = Wallet.fromSeed(networkParams, seed, Script.ScriptType.P2PKH)
-
-        val key = wallet.activeKeyChain!!.getKeyByPath(pathParent, true)
-        return Hex.toHexString(key.privKeyBytes)
     }
 
     private fun createSignedTransaction(
