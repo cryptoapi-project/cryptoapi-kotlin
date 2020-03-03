@@ -231,23 +231,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val CRYPTO_API_BTC_LOG_KEY = "BTC_CRYPTO_API_LOG"
+        private const val CRYPTO_API_KEY = "YOUR_CRYPTO_API_KEY"
+
+        private const val BTC_MNEMONIC = "YOUR_BTC_MNEMONIC"
+        private const val FROM_ADDRESS = "SENDER_ADDRESS"
+        private const val TO_ADDRESS = "RECIPIENT_ADDRESS"
 
         private const val CALL_TIMEOUT = 30000L
         private const val READ_TIMEOUT = 30000L
         private const val CONNECT_TIMEOUT = 15000L
-        private const val CRYPTO_API_KEY = "your api key"
-
-        private const val BTC_MNEMONIC = "your btc mnemonic"
-
-        private const val FROM_ADDRESS = "moy1v5Xp2BN8rMqCAeXB6kQK2E3ArxgyuZ"
-        private const val TO_ADDRESS = "mhqAmxkzxpjkz2Te2V1LmD6ETKoBXkz3eW"
-
-        private const val AMOUNT = 1000
 
         private const val MAINNET_DERIVATION_PART = 0
         private const val TESTNET_DERIVATION_PART = 1
 
+        private const val AMOUNT = 1000
         private const val KB_VALUE = 1000
+
+        private const val CRYPTO_API_BTC_LOG_KEY = "BTC_CRYPTO_API_LOG"
     }
 }
