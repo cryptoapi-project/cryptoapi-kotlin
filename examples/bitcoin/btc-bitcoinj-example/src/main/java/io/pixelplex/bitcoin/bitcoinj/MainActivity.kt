@@ -1,4 +1,4 @@
-package io.pixelplex.bitcoin.cryptoapi
+package io.pixelplex.bitcoin.bitcoinj
 
 import android.os.Bundle
 import android.util.Log

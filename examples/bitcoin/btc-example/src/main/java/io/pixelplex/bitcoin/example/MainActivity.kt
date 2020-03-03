@@ -1,4 +1,4 @@
-package io.pixelplex.bitcoin.bitcoinj
+package io.pixelplex.bitcoin.example
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
