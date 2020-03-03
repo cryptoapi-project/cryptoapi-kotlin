@@ -1,2 +1,2 @@
-include ':app', ':cryptoapiframework', ':processor', ':annotation', ':model', ':examples:ethereum', ':examples:bitcoin:btc-bitcoinj-example', ':examples:bitcoin:btc-example'
+include ':app', ':cryptoapiframework', ':processor', ':annotation', ':model', ':examples:ethereum', ':examples:bitcoin:btc-bitcoinj-example'
 rootProject.name='CryptoApiFramework'

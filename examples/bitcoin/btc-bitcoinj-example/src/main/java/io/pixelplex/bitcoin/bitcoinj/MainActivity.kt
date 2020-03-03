@@ -250,5 +250,4 @@ class MainActivity : AppCompatActivity() {
 
         private const val KB_VALUE = 1000
     }
-
 }
