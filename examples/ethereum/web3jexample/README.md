@@ -1,4 +1,4 @@
-# Using CryptoApiLib library with with [Web3j](https://github.com/web3j/web3j)
+# Using CryptoApiLib library with [Web3j](https://github.com/web3j/web3j)
 
 ## Get started
 Сonfigure and return the object of the CryptoAPI class, which will allow to perform all the operations provided by the CryptoApiLib library.
