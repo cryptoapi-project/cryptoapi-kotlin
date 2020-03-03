@@ -1,4 +1,4 @@
-# Using CryptoApiLib library with with [Bitcoinj](https://bitcoinj.github.io)
+# Using CryptoApiLib library with [Bitcoinj](https://bitcoinj.github.io)
 
 ## Get started
 Сonfigure and return the object of the CryptoAPI class, which will allow to perform all the operations provided by the CryptoApiLib library.
