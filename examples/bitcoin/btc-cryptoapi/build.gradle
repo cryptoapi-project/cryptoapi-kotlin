@@ -50,5 +50,8 @@ dependencies {
     implementation 'io.pixelplex.cryptoapiframework:cryptoapiframework:0.3.3.17'
 
     // Bitcoinj
-    api "com.github.designsters:android-fork-bitcoinj:1.0.12"
+    implementation 'org.bitcoinj:bitcoinj-core:0.15.6'
+
+    // Bitcoinj
+    implementation 'com.madgag.spongycastle:core:1.58.0.0'
 }

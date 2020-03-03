@@ -19,14 +19,13 @@ import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionConfidence
 import org.bitcoinj.core.TransactionOutPoint
-import org.bitcoinj.core.Utils
 import org.bitcoinj.crypto.ChildNumber
 import org.bitcoinj.crypto.DeterministicHierarchy
 import org.bitcoinj.crypto.DeterministicKey
 import org.bitcoinj.params.TestNet3Params
 import org.bitcoinj.script.Script
 import org.bitcoinj.wallet.DeterministicSeed
-import org.bitcoinj.wallet.KeyChainGroup
+import org.bitcoinj.wallet.Wallet
 import org.spongycastle.util.encoders.Hex
 import java.math.BigInteger
 
@@ -117,9 +116,9 @@ class MainActivity : AppCompatActivity() {
             add(ChildNumber(0, false))
         }
 
-        val keyChainGroup = KeyChainGroup(networkParams, seed)
+        val wallet = Wallet.fromSeed(networkParams, seed, Script.ScriptType.P2PKH)
 
-        val key = keyChainGroup.activeKeyChain!!.getKeyByPath(pathParent, true)
+        val key = wallet.activeKeyChain!!.getKeyByPath(pathParent, true)
         return Hex.toHexString(key.privKeyBytes)
     }
 
@@ -132,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         unspent: List<BtcOutput>
     ): Transaction {
         val transaction = Transaction(networkParams)
-        val to = Address.fromBase58(networkParams, toAddress)
+        val to = Address.fromString(networkParams, toAddress)
 
         transaction.addOutput(Coin.valueOf(amount.toLong()), to)
 
@@ -149,7 +148,7 @@ class MainActivity : AppCompatActivity() {
         if (change.toLong() != 0L) {
             transaction.addOutput(
                 Coin.valueOf(change.toLong()),
-                Address.fromBase58(networkParams, fromAddress)
+                Address.fromString(networkParams, fromAddress)
             )
         }
 
@@ -204,7 +203,7 @@ class MainActivity : AppCompatActivity() {
         amountFromOutput: BigInteger?
     ): BigInteger? {
         if (unspentOutput.value.toLong() != 0L) {
-            val sha256Hash = Sha256Hash.wrap(Utils.parseAsHexOrBase58(unspentOutput.mintTansactionHash))
+            val sha256Hash = Sha256Hash.wrap(Hex.decode(unspentOutput.mintTansactionHash))
 
             if (unspentOutput.script.isNotBlank()) {
                 val outPoint = TransactionOutPoint(
@@ -212,7 +211,7 @@ class MainActivity : AppCompatActivity() {
                     unspentOutput.mintIndex.toLong(),
                     sha256Hash
                 )
-                val script = Script(Utils.parseAsHexOrBase58(unspentOutput.script))
+                val script = Script(Hex.decode(unspentOutput.script))
                 transaction.addSignedInput(
                     outPoint,
                     script,
@@ -237,9 +236,9 @@ class MainActivity : AppCompatActivity() {
         private const val CALL_TIMEOUT = 30000L
         private const val READ_TIMEOUT = 30000L
         private const val CONNECT_TIMEOUT = 15000L
-        private const val CRYPTO_API_KEY = "5de552d7efc6ff2e1b09d946cc5263e346003a93ab28bf2ffeb24979da85a1f5"
+        private const val CRYPTO_API_KEY = "your api key"
 
-        private const val BTC_MNEMONIC = "eight dish palace wrist place spatial assault hello inhale bridge hundred twelve"
+        private const val BTC_MNEMONIC = "your btc mnemonic"
 
         private const val FROM_ADDRESS = "moy1v5Xp2BN8rMqCAeXB6kQK2E3ArxgyuZ"
         private const val TO_ADDRESS = "mhqAmxkzxpjkz2Te2V1LmD6ETKoBXkz3eW"
