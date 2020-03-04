@@ -1,0 +1,71 @@
+before_script:
+  - chmod +x ./gradlew
+
+stages:
+  - build
+  - test
+  - checkstyle
+  - docgen
+  - publish
+
+.build_template: &build_template_def
+  stage: build
+  artifacts:
+    expire_in: 4 hours
+    paths:
+      - cryptoapiframework/build/outputs
+
+build_debug:
+  <<: *build_template_def
+  only:
+    - develop
+  script:
+    - ./gradlew :cryptoapiframework:assembleDebug --stacktrace
+
+build_release:
+  <<: *build_template_def
+  only:
+    - release
+    - master
+  script:
+    - ./gradlew :cryptoapiframework:assembleRelease --stacktrace
+
+unit_test:
+  stage: test
+  only:
+    - release
+    - master
+  script:
+    - ./gradlew :cryptoapiframework:testReleaseUnitTest --stacktrace
+  artifacts:
+    expire_in: 4 hours
+    paths:
+      - cryptoapiframework/build/reports/tests
+
+code_analysis:
+  stage: checkstyle
+  script:
+    - ./gradlew :cryptoapiframework:lint :cryptoapiframework:analyzeCode --stacktrace
+  artifacts:
+    expire_in: 4 hours
+    paths:
+      - cryptoapiframework/build/reports/detekt
+
+pages:
+  stage: docgen
+  only:
+    - release
+  script:
+    - ./gradlew :cryptoapiframework:clean :echoframework:dokkaJavadoc --stacktrace
+    - mkdir public
+    - mv echoframework/build/javadoc/* public
+  artifacts:
+    paths:
+      - public
+
+maven_publishing:
+  stage: publish
+  only:
+    - release
+  script:
+    - ./gradlew :cryptoapiframework:clean :cryptoapiframework:install :cryptoapiframework:bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar

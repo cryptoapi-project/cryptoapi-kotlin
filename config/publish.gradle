@@ -3,22 +3,18 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 ext {
     bintrayRepo = 'mobile'
-    bintrayName = 'cryptoapi'
+    bintrayName = 'CryptoApiLibrary'
 
-    publishedGroupId = 'io.pixelplex.mobile'
-    libraryName = 'android-framework'
-    artifact = 'cryptoapiframework'
+    publishedGroupId = 'io.pixelplex.mobile.cryptoapi'
+    libraryName = 'cryptoapi'
+    artifact = 'cryptoapi'
 
-    libraryDescription = 'Framework for working with Crypto API'
+    libraryDescription = 'Framework for working with CryptoAPI'
 
-    gitUrl = 'https://gitlab.pixelplex.by/709-crypto-api-mobile-library/android-framework'
-    siteUrl = 'https://echo.org'
+    gitUrl = 'https://github.com/cryptoapi-project/cryptoapi-kotlin'
+    siteUrl = 'https://pixelplex.io'
 
-    libraryVersion = '0.3.4'
-
-    firstDeveloperId = 's-krupenich'
-    firstDeveloperName = 'Sergey Krupenich'
-    firstDeveloperEmail = 's.krupenich@pixelplex.io'
+    libraryVersion = '0.0.14'
 
     licenseName = 'MIT LICENSE'
     licenseUrl = 'https://opensource.org/licenses/MIT'
@@ -51,11 +47,6 @@ install {
                     name 'pixelplex inc'
                     email 'info@pixelplex.io'
                 }
-                developer {
-                    id firstDeveloperId
-                    name firstDeveloperName
-                    email firstDeveloperEmail
-                }
             }
             scm {
                 connection gitUrl
@@ -81,15 +72,15 @@ task sourcesJar(type: Jar) {
     from "$projectDir/src/main/java"
 }
 
-//task javadocJar(type: Jar, dependsOn: dokka) {
-//    group = JavaBasePlugin.DOCUMENTATION_GROUP
-//    description = "Assembles framework docs with Dokka"
-//    classifier = "javadoc"
-//    from(dokka)
-//}
+task javadocJar(type: Jar, dependsOn: dokka) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles framework docs with Dokka"
+    classifier = "javadoc"
+    from(dokka)
+}
 
 artifacts {
-//    archives javadocJar
+    archives javadocJar
     archives sourcesJar
 }
 
