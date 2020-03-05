@@ -1,2 +1,2 @@
 include ':app', ':cryptoapi', ':processor', ':annotation', ':model'
-rootProject.name='CryptoApi'
+rootProject.name='cryptoapilib'

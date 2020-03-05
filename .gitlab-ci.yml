@@ -4,7 +4,6 @@ before_script:
 stages:
   - build
   - test
-  - checkstyle
   - docgen
   - publish
 
@@ -13,59 +12,37 @@ stages:
   artifacts:
     expire_in: 4 hours
     paths:
-      - cryptoapiframework/build/outputs
-
-build_debug:
-  <<: *build_template_def
-  only:
-    - develop
-  script:
-    - ./gradlew :cryptoapiframework:assembleDebug --stacktrace
+      - cryptoapi/build/outputs
 
 build_release:
   <<: *build_template_def
-  only:
-    - release
-    - master
   script:
-    - ./gradlew :cryptoapiframework:assembleRelease --stacktrace
+    - ./gradlew :cryptoapi:assembleRelease --stacktrace
 
 unit_test:
   stage: test
-  only:
-    - release
-    - master
   script:
-    - ./gradlew :cryptoapiframework:testReleaseUnitTest --stacktrace
+    - ./gradlew :app:testReleaseUnitTest --stacktrace  -PcryptoApiKey=\"$cryptoApiKey\"
   artifacts:
     expire_in: 4 hours
     paths:
-      - cryptoapiframework/build/reports/tests
-
-code_analysis:
-  stage: checkstyle
-  script:
-    - ./gradlew :cryptoapiframework:lint :cryptoapiframework:analyzeCode --stacktrace
-  artifacts:
-    expire_in: 4 hours
-    paths:
-      - cryptoapiframework/build/reports/detekt
+      - app/build/reports/tests
 
 pages:
   stage: docgen
   only:
     - release
   script:
-    - ./gradlew :cryptoapiframework:clean :echoframework:dokkaJavadoc --stacktrace
-    - mkdir public
-    - mv echoframework/build/javadoc/* public
+    - ./gradlew :cryptoapi:clean :cryptoapi:jvadoc --stacktrace
+    - mkdir docs
+    - mv cryptoapi/build/javadoc/* docs
   artifacts:
     paths:
       - public
 
 maven_publishing:
   stage: publish
-  only:
-    - release
   script:
-    - ./gradlew :cryptoapiframework:clean :cryptoapiframework:install :cryptoapiframework:bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar
+    - ./gradlew clean bundle -PcryptoApiKey=\"$cryptoApiKey\"
+    - ./gradlew bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar -PlibraryVersion=$libraryVersion
+  when: manual

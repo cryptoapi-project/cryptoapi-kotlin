@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.10.0"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.10.1"
     }
 }
 repositories {
@@ -53,7 +53,8 @@ kapt {
         outputDirectory = "$buildDir/javadoc"
 
         configuration {
-            skipDeprecated = false
+
+            skipDeprecated = true
             reportUndocumented = true
             skipEmptyPackages = true
 
@@ -61,6 +62,12 @@ kapt {
                 skipDeprecated = false
                 reportUndocumented = true
                 includeNonPublic = false
+            }
+            externalDocumentationLink {
+                noJdkLink = true
+                noStdlibLink = true
+                noAndroidSdkLink = false
+                url = new URL("https://apikey.io/")
             }
         }
     }

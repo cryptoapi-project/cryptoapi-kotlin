@@ -22,18 +22,28 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        if (properties['CRYPTO_API_KEY'] != null) {
-            buildConfigField 'String', 'CRYPTO_API_KEY', properties['CRYPTO_API_KEY']
-        } else {
-            throw new GradleException("You need to place CRYPTO_API_KEY into local.properties file ")
-        }
+        buildConfigField 'String', 'CRYPTO_API_KEY', cryptoApiKey(properties['CRYPTO_API_KEY'])
     }
     buildTypes {
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+def cryptoApiKey(value){
+
+    def newValue = project.getProperties().get("cryptoApiKey")
+
+    if (newValue != null) {
+        value = newValue
+    } else if (value == null){
+        value = ""
+    }
+
+    return value
+
 }
 
 dependencies {
