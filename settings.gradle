@@ -1,4 +1,2 @@
-include ':app', ':cryptoapi', ':processor', ':annotation', ':model',
-        ':examples:ethereum:web3jexample', ':examples:ethereum:bitcoinjexample',
-        ':examples:bitcoin:btc-bitcoinj-example'
+include ':app', ':cryptoapi', ':processor', ':annotation', ':model'
 rootProject.name='cryptoapilib'

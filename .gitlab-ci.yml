@@ -17,7 +17,7 @@ stages:
 build_release:
   <<: *build_template_def
   script:
-    - ./gradlew :cryptoapi:assembleRelease --stacktrace
+    - ./gradlew :cryptoapi:assembleRelease --stacktrace -PcryptoApiKey=\"$cryptoApiKey\"
 
 unit_test:
   stage: test

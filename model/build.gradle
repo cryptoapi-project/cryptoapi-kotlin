@@ -63,12 +63,6 @@ kapt {
                 reportUndocumented = true
                 includeNonPublic = false
             }
-            externalDocumentationLink {
-                noJdkLink = true
-                noStdlibLink = true
-                noAndroidSdkLink = false
-                url = new URL("https://apikey.io/")
-            }
         }
     }
 }
