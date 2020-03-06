@@ -18,7 +18,10 @@ dependencies {
     // Library to extract meta-data from Kotlin classes such as class name and parameter name.
     implementation "me.eugeniomarletti.kotlin.metadata:kotlin-metadata:1.4.0"
 
-    compileOnly project(':annotation')
+//    compileOnly project(':annotation')
+
+    implementation project(path: ':annotation',configuration: 'default')
+
     implementation project(":model")
 }
 

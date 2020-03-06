@@ -3,30 +3,48 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 ext {
     bintrayRepo = 'mobile'
-    bintrayName = 'cryptoapi'
+    bintrayName = 'cryptoapi-stable'
 
-    publishedGroupId = 'io.pixelplex.mobile'
-    libraryName = 'androidframework'
-    artifact = 'cryptoapiframework'
+    publishedGroupId = 'io.pixelplex.mobile.cryptoapi'
+    libraryName = 'cryptoapi'
+    artifact = 'cryptoapi'
 
-    libraryDescription = 'Framework for working with Crypto API'
+    libraryDescription = 'Framework for working with CryptoAPI'
 
-    gitUrl = 'https://gitlab.pixelplex.by/709-crypto-api-mobile-library/android-framework'
-    siteUrl = 'https://echo.org'
-
-    libraryVersion = '0.3.3.18'
-
-    firstDeveloperId = 's-krupenich'
-    firstDeveloperName = 'Sergey Krupenich'
-    firstDeveloperEmail = 's.krupenich@pixelplex.io'
+    gitUrl = 'https://github.com/cryptoapi-project/cryptoapi-kotlin'
+    siteUrl = 'https://apikey.io'
 
     licenseName = 'MIT LICENSE'
     licenseUrl = 'https://opensource.org/licenses/MIT'
     allLicenses = ["MIT"]
 }
 
+Properties properties = new Properties()
+
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+
+// Bintray account name for library publishing
+def bintrayAccount = properties.getProperty("bintrayUser")
+if (bintrayAccount == null && project.hasProperty("bintrayUser")) {
+    bintrayAccount = project.findProperty("bintrayUser")
+}
+
+// Bintray api key for library publishing
+def bintrayKey = properties.getProperty("bintrayApiKey")
+if (bintrayKey == null && project.hasProperty("bintrayApiKey")) {
+    bintrayKey = project.findProperty("bintrayApiKey")
+}
+
+// Library version
+def libraryVersion = properties.getProperty("libraryVersion")
+if (libraryVersion == null && project.hasProperty("libraryVersion")) {
+    libraryVersion = project.findProperty("libraryVersion")
+}
+
+version = "3.4.0"
 group = publishedGroupId
-version = libraryVersion
 
 install {
     repositories.mavenInstaller {
@@ -51,11 +69,6 @@ install {
                     name 'pixelplex inc'
                     email 'info@pixelplex.io'
                 }
-                developer {
-                    id firstDeveloperId
-                    name firstDeveloperName
-                    email firstDeveloperEmail
-                }
             }
             scm {
                 connection gitUrl
@@ -63,14 +76,16 @@ install {
             }
         }
         pom.withXml {
-            def dependenciesNode = asNode().appendNode('dependencies')
-
-            //Iterate over the implementation dependencies (we don't want the test ones), adding a <dependency> node for each
+            def dependenciesNode = asNode().getAt('dependencies')[0] ?: asNode().appendNode('dependencies')
+            // Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
             configurations.implementation.allDependencies.each {
-                def dependencyNode = dependenciesNode.appendNode('dependency')
-                dependencyNode.appendNode('groupId', it.group)
-                dependencyNode.appendNode('artifactId', it.name)
-                dependencyNode.appendNode('version', it.version)
+                // Ensure dependencies such as fileTree are not included.
+                if (it.name != 'unspecified') {
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                }
             }
         }
     }
@@ -81,34 +96,18 @@ task sourcesJar(type: Jar) {
     from "$projectDir/src/main/java"
 }
 
-//task javadocJar(type: Jar, dependsOn: dokka) {
-//    group = JavaBasePlugin.DOCUMENTATION_GROUP
-//    description = "Assembles framework docs with Dokka"
-//    classifier = "javadoc"
-//    from(dokka)
-//}
+task javadocJar(type: Jar, dependsOn: dokka) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles framework docs with Dokka"
+    classifier = "javadoc"
+    from(dokka)
+}
 
 artifacts {
-//    archives javadocJar
+    archives javadocJar
     archives sourcesJar
 }
 
-Properties properties = new Properties()
-if (project.rootProject.file('local.properties').exists()) {
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-}
-
-// Bintray account name for library publishing
-def bintrayAccount = properties.getProperty("bintrayUser")
-if (bintrayAccount == null && project.hasProperty("bintrayUser")) {
-    bintrayAccount = project.findProperty("bintrayUser")
-}
-
-// Bintray api key for library publishing
-def bintrayKey = properties.getProperty("bintrayApiKey")
-if (bintrayKey == null && project.hasProperty("bintrayApiKey")) {
-    bintrayKey = project.findProperty("bintrayApiKey")
-}
 
 task validateBintrayCredentials() {
     doFirst {

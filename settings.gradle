@@ -1,4 +1,4 @@
-include ':app', ':cryptoapiframework', ':processor', ':annotation', ':model',
+include ':app', ':cryptoapi', ':processor', ':annotation', ':model',
         ':examples:ethereum:web3jexample', ':examples:ethereum:bitcoinjexample',
         ':examples:bitcoin:btc-bitcoinj-example'
-rootProject.name = 'CryptoApiFramework'
+rootProject.name='cryptoapilib'

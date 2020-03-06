@@ -6,10 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-kapt {
-    generateStubs = true
-}
-
 Properties properties = new Properties()
 if (project.rootProject.file('local.properties').exists()) {
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -19,25 +15,35 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "io.pixelplex.cryptoapiframework"
+        applicationId "io.pixelplex.mobile.cryptoapi.app"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        if (properties['CRYPTO_API_KEY'] != null) {
-            buildConfigField 'String', 'CRYPTO_API_KEY', properties['CRYPTO_API_KEY']
-        } else {
-            throw new GradleException("You need to place CRYPTO_API_KEY into local.properties file ")
-        }
+        buildConfigField 'String', 'CRYPTO_API_KEY', cryptoApiKey(properties['CRYPTO_API_KEY'])
     }
     buildTypes {
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+def cryptoApiKey(value){
+
+    def newValue = project.getProperties().get("cryptoApiKey")
+
+    if (newValue != null) {
+        value = newValue
+    } else if (value == null){
+        value = ""
+    }
+
+    return value
+
 }
 
 dependencies {
@@ -50,10 +56,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation project(":cryptoapiframework")
+    implementation project(':cryptoapi')
     implementation project(":model")
 
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.1'
-
-    implementation 'io.pixelplex.mobile:cryptoapiframework:0.3.3.17'
 }
