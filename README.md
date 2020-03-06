@@ -7,16 +7,16 @@ CryptoApiLibrary is Kotlin API Wrapper framework. Designed to receive informatio
 
 ```
 <dependency>
-	<groupId>io.pixelplex.mobile</groupId>
-	<artifactId>cryptoapiframework</artifactId>
-	<version>0.3.4</version>
+	<groupId>io.pixelplex.mobile.cryptoapi</groupId>
+	<artifactId>cryptoapi</artifactId>
+	<version>3.4.1</version>
 	<type>pom</type>
 </dependency>
 ```
 
 or Gradle:
 ```
-implementation 'io.pixelplex.mobile:cryptoapiframework:0.3.4'
+implementation 'io.pixelplex.mobile.cryptoapi:cryptoapi:3.4.1'
 ```
 ## Setup
 

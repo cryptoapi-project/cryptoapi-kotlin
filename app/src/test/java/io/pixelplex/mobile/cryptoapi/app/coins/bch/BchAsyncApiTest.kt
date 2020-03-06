@@ -19,7 +19,7 @@ class BchAsyncApiTest {
         CoinsTest.READ_TIMEOUT,
         BuildConfig.CRYPTO_API_KEY,
         CryptoApi.URL.TESTNET
-    ).bitcoinCacheAsyncApi
+    ).bitcoinCashAsyncApi
 
     @Test
     fun getNetwork() = runBlocking {

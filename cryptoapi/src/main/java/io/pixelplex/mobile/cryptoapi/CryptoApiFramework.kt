@@ -30,6 +30,10 @@ class CryptoApiFramework constructor(
 
     val coinsAsyncApi: CoinAsyncApi = CoinAsyncApiImpl(cryptoApi)
 
+    val ratesApi: RatesApi = RatesApiImpl(cryptoApi)
+
+    val ratesAsyncApi: RatesAsyncApi = RatesAsyncApiImpl(cryptoApi)
+
     val ethereumApi: EthApi = EthApiImpl(cryptoApi)
 
     val ethereumAsyncApi: EthAsyncApi = EthAsyncApiImpl(cryptoApi)
@@ -38,9 +42,9 @@ class CryptoApiFramework constructor(
 
     val bitcoinAsyncApi: BtcAsyncApi = BtcAsyncApiImpl(cryptoApi)
 
-    val bitcoinCacheApi: BchApi = BchApiImpl(cryptoApi)
+    val bitcoinCashApi: BchApi = BchApiImpl(cryptoApi)
 
-    val bitcoinCacheAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
+    val bitcoinCashAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
 
     companion object :
         SingletonHolder<CryptoApiFramework, Long, Long, Long, String, CryptoApi.URL>(::CryptoApiFramework)
