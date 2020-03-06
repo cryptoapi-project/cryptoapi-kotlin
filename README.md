@@ -9,7 +9,7 @@ CryptoApiLibrary is Kotlin API Wrapper framework. Designed to receive informatio
 <dependency>
 	<groupId>io.pixelplex.mobile</groupId>
 	<artifactId>cryptoapiframework</artifactId>
-	<version>0.3.4</version>
+	<version>0.3.4.1</version>
 	<type>pom</type>
 </dependency>
 ```
