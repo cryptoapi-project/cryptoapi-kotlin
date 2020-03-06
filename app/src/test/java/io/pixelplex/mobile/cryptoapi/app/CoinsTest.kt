@@ -14,11 +14,8 @@ class CoinsTest {
     fun coinsNotNull() {
 
         runBlocking {
-
             try {
-
                 val result = suspendCoroutine<List<String>> {
-
                     CryptoApiFramework
                         .getInstance(
                             CALL_TIMEOUT,
@@ -35,7 +32,6 @@ class CoinsTest {
 
                 Assert.assertNotNull(result)
                 Assert.assertTrue(result.isNotEmpty())
-
             } catch (e: Exception) {
                 Assert.fail()
             }
@@ -44,11 +40,8 @@ class CoinsTest {
 
     @Test
     fun coinsNotNullAsync() {
-
         runBlocking {
-
             try {
-
                 val result = CryptoApiFramework
                     .getInstance(
                         CALL_TIMEOUT,
@@ -61,7 +54,6 @@ class CoinsTest {
 
                 Assert.assertNotNull(result)
                 Assert.assertTrue(result.isNotEmpty())
-
             } catch (e: Exception) {
                 Assert.fail()
             }

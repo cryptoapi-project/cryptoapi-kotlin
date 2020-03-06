@@ -30,6 +30,10 @@ class CryptoApiFramework constructor(
 
     val coinsAsyncApi: CoinAsyncApi = CoinAsyncApiImpl(cryptoApi)
 
+    val ratesApi: RatesApi = RatesApiImpl(cryptoApi)
+
+    val ratesAsyncApi: RatesAsyncApi = RatesAsyncApiImpl(cryptoApi)
+
     val ethereumApi: EthApi = EthApiImpl(cryptoApi)
 
     val ethereumAsyncApi: EthAsyncApi = EthAsyncApiImpl(cryptoApi)
