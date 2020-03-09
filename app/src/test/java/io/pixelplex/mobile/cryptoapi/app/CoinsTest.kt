@@ -12,7 +12,6 @@ import kotlin.coroutines.suspendCoroutine
 class CoinsTest {
     @Test
     fun coinsNotNull() {
-
         runBlocking {
             try {
                 val result = suspendCoroutine<List<String>> {

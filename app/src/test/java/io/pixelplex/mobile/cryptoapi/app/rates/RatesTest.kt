@@ -15,6 +15,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class RatesTest {
+
     val ratesApi = CryptoApiFramework
         .getInstance(
             CALL_TIMEOUT,

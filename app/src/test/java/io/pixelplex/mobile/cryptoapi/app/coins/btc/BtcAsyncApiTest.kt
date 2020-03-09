@@ -21,13 +21,20 @@ class BtcAsyncApiTest {
         CryptoApi.URL.TESTNET
     ).bitcoinAsyncApi
 
+    private val apiBchCashClient = CryptoApiFramework.getInstance(
+        CoinsTest.CALL_TIMEOUT,
+        CoinsTest.CONNECT_TIMEOUT,
+        CoinsTest.READ_TIMEOUT,
+        BuildConfig.CRYPTO_API_KEY,
+        CryptoApi.URL.TESTNET
+    ).bitcoinCashAsyncApi
+
     @Test
     fun getNetwork() = runBlocking {
         try {
             apiClient.getNetwork().let { resp ->
                 Assert.assertTrue(resp.lastBlock > BigInteger.ZERO)
             }
-
         } catch (e: Exception) {
             Assert.fail()
         }
