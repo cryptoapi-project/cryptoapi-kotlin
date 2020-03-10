@@ -2,7 +2,7 @@ package io.pixelplex.mobile.cryptoapi.wrapper
 
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 
-open class SingletonHolder<out T : Any, in CAT, in CNT, in RDT, in TKN, in URL>(
+open class InstanceHolder<out T : Any, in CAT, in CNT, in RDT, in TKN, in URL>(
     private val creator: (CAT, CNT, RDT, TKN, URL) -> T
 ) {
     fun getInstance(

@@ -2,7 +2,7 @@ package io.pixelplex.mobile.cryptoapi
 
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.generation.*
-import io.pixelplex.mobile.cryptoapi.wrapper.SingletonHolder
+import io.pixelplex.mobile.cryptoapi.wrapper.InstanceHolder
 
 /**
  * Delegates all logic to specific wrapper services which associated
@@ -47,5 +47,5 @@ class CryptoApiFramework constructor(
     val bitcoinCashAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
 
     companion object :
-        SingletonHolder<CryptoApiFramework, Long, Long, Long, String, CryptoApi.URL>(::CryptoApiFramework)
+        InstanceHolder<CryptoApiFramework, Long, Long, Long, String, CryptoApi.URL>(::CryptoApiFramework)
 }
