@@ -18,11 +18,11 @@ import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 class CryptoApi(
+    private val token: String,
+    private val url: URL,
     private val callTimeout: Long,
     private val connectTimeout: Long,
-    private val readTimeout: Long,
-    private val token: String,
-    private val url: URL
+    private val readTimeout: Long
 ) {
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

@@ -3,17 +3,12 @@ package io.pixelplex.mobile.cryptoapi.app.coins.eth
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
 import io.pixelplex.mobile.cryptoapi.app.BuildConfig
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
-import io.pixelplex.mobile.cryptoapi.app.CoinsTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
 
 class AsyncApiTest {
-
     private val apiClient = CryptoApiFramework.getInstance(
-        CoinsTest.CALL_TIMEOUT,
-        CoinsTest.CONNECT_TIMEOUT,
-        CoinsTest.READ_TIMEOUT,
         BuildConfig.CRYPTO_API_KEY,
         CryptoApi.URL.TESTNET
     ).ethereumAsyncApi

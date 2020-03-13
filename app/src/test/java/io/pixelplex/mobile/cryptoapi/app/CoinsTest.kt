@@ -17,9 +17,6 @@ class CoinsTest {
                 val result = suspendCoroutine<List<String>> {
                     CryptoApiFramework
                         .getInstance(
-                            CALL_TIMEOUT,
-                            CONNECT_TIMEOUT,
-                            READ_TIMEOUT,
                             BuildConfig.CRYPTO_API_KEY,
                             CryptoApi.URL.TESTNET
                         )
@@ -43,9 +40,6 @@ class CoinsTest {
             try {
                 val result = CryptoApiFramework
                     .getInstance(
-                        CALL_TIMEOUT,
-                        CONNECT_TIMEOUT,
-                        READ_TIMEOUT,
                         BuildConfig.CRYPTO_API_KEY,
                         CryptoApi.URL.TESTNET
                     )
@@ -57,11 +51,5 @@ class CoinsTest {
                 Assert.fail()
             }
         }
-    }
-
-    companion object {
-        const val CALL_TIMEOUT = 30000L
-        const val READ_TIMEOUT = 30000L
-        const val CONNECT_TIMEOUT = 15000L
     }
 }

@@ -11,19 +11,19 @@ import io.pixelplex.mobile.cryptoapi.wrapper.InstanceHolder
  * @author Sergey Krupenich
  */
 class CryptoApiFramework constructor(
+    token: String,
+    url: CryptoApi.URL,
     callTimeout: Long,
     connectTimeout: Long,
-    readTimeout: Long,
-    token: String,
-    url: CryptoApi.URL
+    readTimeout: Long
 ) {
     private val cryptoApi: CryptoApi =
         CryptoApi(
+            token,
+            url,
             callTimeout,
             connectTimeout,
-            readTimeout,
-            token,
-            url
+            readTimeout
         )
 
     val coinsApi: CoinApi = CoinApiImpl(cryptoApi)
@@ -47,5 +47,5 @@ class CryptoApiFramework constructor(
     val bitcoinCashAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
 
     companion object :
-        InstanceHolder<CryptoApiFramework, Long, Long, Long, String, CryptoApi.URL>(::CryptoApiFramework)
+        InstanceHolder<CryptoApiFramework, String, CryptoApi.URL, Long, Long, Long>(::CryptoApiFramework)
 }

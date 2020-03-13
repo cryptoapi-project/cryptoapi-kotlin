@@ -2,18 +2,29 @@ package io.pixelplex.mobile.cryptoapi.wrapper
 
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 
-open class InstanceHolder<out T : Any, in CAT, in CNT, in RDT, in TKN, in URL>(
-    private val creator: (CAT, CNT, RDT, TKN, URL) -> T
+/**
+ * Delegates [CryptoApiFramework] instance creating
+ *
+ * @author Sergey Krupenich
+ */
+open class InstanceHolder<out T : Any, in TKN, in URL,  in CAT, in CNT, in RDT>(
+    private val creator: (TKN, URL, CAT, CNT, RDT) -> T
 ) {
     fun getInstance(
-        callTimeout: CAT,
-        connectTimeout: CNT,
-        readTimeOut: RDT,
         token: TKN,
-        url: URL = CryptoApi.URL.MAINNET as URL
+        url: URL = CryptoApi.URL.MAINNET as URL,
+        callTimeout: CAT = DefaultInstanceParams.CALL_TIMEOUT as CAT,
+        connectTimeout: CNT = DefaultInstanceParams.CONNECT_TIMEOUT as CNT,
+        readTimeOut: RDT = DefaultInstanceParams.READ_TIMEOUT as RDT
     ): T {
         synchronized(this) {
-            return creator(callTimeout, connectTimeout, readTimeOut, token, url)
+            return creator(token, url, callTimeout, connectTimeout, readTimeOut)
         }
     }
+}
+
+object DefaultInstanceParams {
+    const val CALL_TIMEOUT = 30000L
+    const val READ_TIMEOUT = 30000L
+    const val CONNECT_TIMEOUT = 15000L
 }
