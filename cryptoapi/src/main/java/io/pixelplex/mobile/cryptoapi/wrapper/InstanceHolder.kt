@@ -7,18 +7,17 @@ import io.pixelplex.mobile.cryptoapi.core.CryptoApi
  *
  * @author Sergey Krupenich
  */
-open class InstanceHolder<out T : Any, in TKN, in URL,  in CAT, in CNT, in RDT>(
-    private val creator: (TKN, URL, CAT, CNT, RDT) -> T
+open class InstanceHolder<out T : Any, in URL, in CAT, in CNT, in RDT>(
+    private val creator: (URL, CAT, CNT, RDT) -> T
 ) {
     fun getInstance(
-        token: TKN,
         url: URL = CryptoApi.URL.MAINNET as URL,
         callTimeout: CAT = DefaultInstanceParams.CALL_TIMEOUT as CAT,
         connectTimeout: CNT = DefaultInstanceParams.CONNECT_TIMEOUT as CNT,
         readTimeOut: RDT = DefaultInstanceParams.READ_TIMEOUT as RDT
     ): T {
         synchronized(this) {
-            return creator(token, url, callTimeout, connectTimeout, readTimeOut)
+            return creator(url, callTimeout, connectTimeout, readTimeOut)
         }
     }
 }

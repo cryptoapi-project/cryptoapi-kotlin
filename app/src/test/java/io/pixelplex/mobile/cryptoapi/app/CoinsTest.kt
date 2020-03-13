@@ -17,8 +17,7 @@ class CoinsTest {
                 val result = suspendCoroutine<List<String>> {
                     CryptoApiFramework
                         .getInstance(
-                            BuildConfig.CRYPTO_API_KEY,
-                            CryptoApi.URL.TESTNET
+                            url = CryptoApi.URL.TESTNET
                         )
                         .coinsApi.getCoins(
                         { coins -> it.resume(coins) },
@@ -40,8 +39,7 @@ class CoinsTest {
             try {
                 val result = CryptoApiFramework
                     .getInstance(
-                        BuildConfig.CRYPTO_API_KEY,
-                        CryptoApi.URL.TESTNET
+                        url = CryptoApi.URL.TESTNET
                     )
                     .coinsAsyncApi.getCoins()
 

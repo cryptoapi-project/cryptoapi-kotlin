@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 class CryptoApi(
-    private val token: String,
     private val url: URL,
     private val callTimeout: Long,
     private val connectTimeout: Long,
@@ -149,7 +148,7 @@ class CryptoApi(
             httpBuilder.addQueryParameter(param.name, param.value.toQueryParameter())
         }
 
-        httpBuilder.addQueryParameter(TOKEN, token)
+        httpBuilder.addQueryParameter(TOKEN, BuildConfig.CRYPTO_API_KEY)
 
         val requestBuilder =
             Request.Builder().url(httpBuilder.build())

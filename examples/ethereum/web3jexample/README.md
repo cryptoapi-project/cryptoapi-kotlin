@@ -5,13 +5,11 @@
 Further, we can use the obtained method to get the CryptoAPI object anywhere in the program.
 ```kotlin
 private val apiClient by lazy {
-    CryptoApiFramework.getInstance(
-        CALL_TIMEOUT,
-        CONNECT_TIMEOUT,
-        READ_TIMEOUT,
-        CRYPTO_API_KEY,
-        CryptoApi.URL.TESTNET
-    ).ethereumAsyncApi
+    private val apiClient = CryptoApiFramework.getInstance(
+            callTimeout = CALL_TIMEOUT,
+            connectTimeout = CONNECT_TIMEOUT,
+            readTimeOut = READ_TIMEOUT
+        ).ethereumAsyncApi
 }
 ```
 
@@ -19,8 +17,6 @@ private val apiClient by lazy {
 There is a companion object that contains some constants.
 ```kotlin
 companion object {
-    private const val CRYPTO_API_KEY = "YOUR_CRYPTO_API_KEY"
-    private const val PRIVATE_KEY = "YOUR_PRIVATE_KEY"
     private const val ETH_ADDRESS_1 = "SENDER_ADDRESS"
     private const val ETH_ADDRESS_2 = "RECIPIENT_ADDRESS"
 
