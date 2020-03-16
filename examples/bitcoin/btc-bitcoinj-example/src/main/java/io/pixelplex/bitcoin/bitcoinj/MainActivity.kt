@@ -32,14 +32,14 @@ import java.math.BigInteger
 class MainActivity : AppCompatActivity() {
 
     private val apiClient by lazy {
-        CryptoApiFramework.getInstance(
-            CryptoApiConfiguration(
-                callTimeout = CALL_TIMEOUT,
-                connectTimeout = CONNECT_TIMEOUT,
-                readTimeOut = READ_TIMEOUT,
-                url = CryptoApi.URL.TESTNET
-            )
-        ).bitcoinAsyncApi
+        val configuration = CryptoApiConfiguration(
+            callTimeout = CALL_TIMEOUT,
+            connectTimeout = CONNECT_TIMEOUT,
+            readTimeOut = READ_TIMEOUT,
+            url = CryptoApi.URL.TESTNET
+        )
+
+        CryptoApiFramework.getInstance(configuration).ethereumAsyncApi
     }
 
     /**

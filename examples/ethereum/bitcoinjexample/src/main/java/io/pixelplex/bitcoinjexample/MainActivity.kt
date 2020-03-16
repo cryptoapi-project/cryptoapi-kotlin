@@ -25,14 +25,14 @@ class MainActivity : AppCompatActivity() {
      * Crypto API libarary initializing
      */
     private val apiClient by lazy {
-        CryptoApiFramework.getInstance(
-            CryptoApiConfiguration(
-                callTimeout = CALL_TIMEOUT,
-                connectTimeout = CONNECT_TIMEOUT,
-                readTimeOut = READ_TIMEOUT,
-                url = CryptoApi.URL.TESTNET
-            )
-        ).ethereumAsyncApi
+        val configuration = CryptoApiConfiguration(
+            callTimeout = CALL_TIMEOUT,
+            connectTimeout = CONNECT_TIMEOUT,
+            readTimeOut = READ_TIMEOUT,
+            url = CryptoApi.URL.TESTNET
+        )
+
+        CryptoApiFramework.getInstance(configuration).ethereumAsyncApi
     }
 
     /**

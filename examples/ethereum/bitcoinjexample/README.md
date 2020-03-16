@@ -5,13 +5,14 @@
 Further, we can use the obtained method to get the CryptoAPI object anywhere in the program.
 ```kotlin
 private val apiClient by lazy {
-    CryptoApiFramework.getInstance(
-            CryptoApiConfiguration(
-                callTimeout = CALL_TIMEOUT,
-                connectTimeout = CONNECT_TIMEOUT,
-                readTimeOut = READ_TIMEOUT
-            )
-        ).ethereumAsyncApi
+    val configuration = CryptoApiConfiguration(
+            callTimeout = CALL_TIMEOUT,
+            connectTimeout = CONNECT_TIMEOUT,
+            readTimeOut = READ_TIMEOUT
+        )
+
+    private val apiClient =
+        CryptoApiFramework.getInstance(configuration).ethereumAsyncApi
 }
 ```
 
