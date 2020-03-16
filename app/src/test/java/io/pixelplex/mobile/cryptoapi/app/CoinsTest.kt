@@ -2,7 +2,7 @@ package io.pixelplex.mobile.cryptoapi.app
 
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
-import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiParamWrapper
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -18,7 +18,7 @@ class CoinsTest {
                 val result = suspendCoroutine<List<String>> {
                     CryptoApiFramework
                         .getInstance(
-                            CryptoApiParamWrapper(
+                            CryptoApiConfiguration(
                                 url = CryptoApi.URL.TESTNET
                             )
                         )
@@ -42,7 +42,7 @@ class CoinsTest {
             try {
                 val result = CryptoApiFramework
                     .getInstance(
-                        CryptoApiParamWrapper(
+                        CryptoApiConfiguration(
                             url = CryptoApi.URL.TESTNET
                         )
                     )

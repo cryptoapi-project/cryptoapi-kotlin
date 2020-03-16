@@ -2,14 +2,14 @@ package io.pixelplex.mobile.cryptoapi.app.coins.eth
 
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
-import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiParamWrapper
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
 
 class AsyncApiTest {
     private val apiClient = CryptoApiFramework.getInstance(
-        CryptoApiParamWrapper(
+        CryptoApiConfiguration(
             url = CryptoApi.URL.TESTNET
         )
     ).ethereumAsyncApi

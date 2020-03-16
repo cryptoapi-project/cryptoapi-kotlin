@@ -2,7 +2,7 @@ package io.pixelplex.mobile.cryptoapi
 
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.generation.*
-import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiParamWrapper
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import io.pixelplex.mobile.cryptoapi.wrapper.InstanceHolder
 
 /**
@@ -12,7 +12,7 @@ import io.pixelplex.mobile.cryptoapi.wrapper.InstanceHolder
  * @author Sergey Krupenich
  */
 class CryptoApiFramework constructor(
-    cryptoApiParams: CryptoApiParamWrapper
+    cryptoApiParams: CryptoApiConfiguration
 ) {
     private val cryptoApi: CryptoApi =
         CryptoApi(
@@ -40,5 +40,5 @@ class CryptoApiFramework constructor(
     val bitcoinCashAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
 
     companion object :
-        InstanceHolder<CryptoApiFramework, CryptoApiParamWrapper>(::CryptoApiFramework)
+        InstanceHolder<CryptoApiFramework, CryptoApiConfiguration>(::CryptoApiFramework)
 }

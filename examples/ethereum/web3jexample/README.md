@@ -6,7 +6,7 @@ Further, we can use the obtained method to get the CryptoAPI object anywhere in 
 ```kotlin
 private val apiClient by lazy {
     private val apiClient = CryptoApiFramework.getInstance(
-            CryptoApiParamWrapper(
+            CryptoApiConfiguration(
                 callTimeout = CALL_TIMEOUT,
                 connectTimeout = CONNECT_TIMEOUT,
                 readTimeOut = READ_TIMEOUT

@@ -4,7 +4,7 @@ import io.pixelplex.mobile.cryptoapi.BuildConfig
 import io.pixelplex.mobile.cryptoapi.model.generation.QueryParameter
 import io.pixelplex.mobile.cryptoapi.model.generation.QueryType
 import io.pixelplex.mobile.cryptoapi.model.generation.RequestParameter
-import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiParamWrapper
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 class CryptoApi(
-    private val cryptoApiParams: CryptoApiParamWrapper
+    private val cryptoApiParams: CryptoApiConfiguration
 ) {
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

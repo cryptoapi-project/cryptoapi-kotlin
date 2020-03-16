@@ -9,7 +9,7 @@ open class InstanceHolder<out T : Any, in WR>(
     private val creator: (WR) -> T
 ) {
     fun getInstance(
-        paramWrapper: WR = CryptoApiParamWrapper() as WR
+        paramWrapper: WR = CryptoApiConfiguration() as WR
     ): T {
         synchronized(this) {
             return creator(paramWrapper)

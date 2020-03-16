@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private val apiClient by lazy {
         CryptoApiFramework.getInstance(
-            CryptoApiParamWrapper(
+            CryptoApiConfiguration(
                 callTimeout = CALL_TIMEOUT,
                 connectTimeout = CONNECT_TIMEOUT,
                 readTimeOut = READ_TIMEOUT,
