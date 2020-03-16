@@ -6,9 +6,11 @@ Further, we can use the obtained method to get the CryptoAPI object anywhere in 
 ```kotlin
 private val apiClient by lazy {
     CryptoApiFramework.getInstance(
-        callTimeout = CALL_TIMEOUT,
-        connectTimeout = CONNECT_TIMEOUT,
-        readTimeOut = READ_TIMEOUT
+        CryptoApiParamWrapper(
+            callTimeout = CALL_TIMEOUT,
+            connectTimeout = CONNECT_TIMEOUT,
+            readTimeOut = READ_TIMEOUT
+        )
     ).bitcoinAsyncApi
 }
 ```

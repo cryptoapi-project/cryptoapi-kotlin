@@ -3,6 +3,7 @@ package io.pixelplex.mobile.cryptoapi.app.rates
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.model.common.RateModel
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiParamWrapper
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -13,13 +14,17 @@ import kotlin.coroutines.suspendCoroutine
 class RatesTest {
     val ratesApi = CryptoApiFramework
         .getInstance(
-            url = CryptoApi.URL.TESTNET
+            CryptoApiParamWrapper(
+                url = CryptoApi.URL.TESTNET
+            )
         )
         .ratesApi
 
     val ratesAsyncApi = CryptoApiFramework
         .getInstance(
-            url = CryptoApi.URL.TESTNET
+            CryptoApiParamWrapper(
+                url = CryptoApi.URL.TESTNET
+            )
         )
         .ratesAsyncApi
 

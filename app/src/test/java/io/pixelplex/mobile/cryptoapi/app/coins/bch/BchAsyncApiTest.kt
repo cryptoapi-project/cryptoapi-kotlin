@@ -4,6 +4,7 @@ import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.model.data.btc.BtcOutputStatus
 import io.pixelplex.mobile.cryptoapi.model.data.btc.BtcRawTransaction
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiParamWrapper
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -11,7 +12,9 @@ import java.math.BigInteger
 
 class BchAsyncApiTest {
     private val apiClient = CryptoApiFramework.getInstance(
-        url = CryptoApi.URL.TESTNET
+        CryptoApiParamWrapper(
+            url = CryptoApi.URL.TESTNET
+        )
     ).bitcoinCashAsyncApi
 
     @Test

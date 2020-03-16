@@ -33,11 +33,12 @@ class MainActivity : AppCompatActivity() {
 
     private val apiClient by lazy {
         CryptoApiFramework.getInstance(
-            CALL_TIMEOUT,
-            CONNECT_TIMEOUT,
-            READ_TIMEOUT,
-            CRYPTO_API_KEY,
-            CryptoApi.URL.TESTNET
+            CryptoApiParamWrapper(
+                callTimeout = CALL_TIMEOUT,
+                connectTimeout = CONNECT_TIMEOUT,
+                readTimeOut = READ_TIMEOUT,
+                url = CryptoApi.URL.TESTNET
+            )
         ).bitcoinAsyncApi
     }
 
@@ -245,8 +246,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val CRYPTO_API_KEY = "YOUR_CRYPTO_API_KEY"
-
         private const val BTC_MNEMONIC = "YOUR_BTC_MNEMONIC"
         private const val FROM_ADDRESS = "SENDER_ADDRESS"
         private const val TO_ADDRESS = "RECIPIENT_ADDRESS"
