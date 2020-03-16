@@ -36,6 +36,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         val elements = getExecutableElements(
             roundEnv.getElementsAnnotatedWith(Get::class.java)
                     + roundEnv.getElementsAnnotatedWith(Post::class.java)
+                    + roundEnv.getElementsAnnotatedWith(Delete::class.java)
         )
 
         elements.forEach { (className, elements) ->
@@ -351,11 +352,16 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
     private fun getPath(element: ExecutableElement): String {
         element.getAnnotation(Get::class.java)?.path?.let { return it }
         element.getAnnotation(Post::class.java)?.path?.let { return it }
-        throw IllegalArgumentException("method ${element.simpleName} must be annotated by GET or POST")
+        element.getAnnotation(Delete::class.java)?.path?.let { return it }
+        throw IllegalArgumentException("method ${element.simpleName} must be annotated by Get, Post, Delete")
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(Get::class.java.canonicalName, Post::class.java.canonicalName)
+        return setOf(
+            Get::class.java.canonicalName,
+            Post::class.java.canonicalName,
+            Delete::class.java.canonicalName
+        )
     }
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
