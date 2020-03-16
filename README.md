@@ -29,9 +29,11 @@ CRYPTO_API_KEY="YOUR_TOKEN"
 For setup framework use simple code as below. All parameters are optional.
 ```kotlin
 private val apiClient = CryptoApiFramework.getInstance(
-        callTimeout = CALL_TIMEOUT,
-        connectTimeout = CONNECT_TIMEOUT,
-        readTimeOut = READ_TIMEOUT
+        CryptoApiConfiguration(
+            callTimeout = CALL_TIMEOUT,
+            connectTimeout = CONNECT_TIMEOUT,
+            readTimeOut = READ_TIMEOUT
+        )
     )
 ```
 
@@ -42,10 +44,12 @@ private val apiClient = CryptoApiFramework.getInstance(
 CryptoAPI supports `MAINNET` and `TESTNET` chains. You can select chain type by `URL` field when setup framework (Mainnet by default).
 ```kotlin
 private val apiClient = CryptoApiFramework.getInstance(
-        url = CryptoApi.URL.TESTNET
-        callTimeout = CALL_TIMEOUT,
-        connectTimeout = CONNECT_TIMEOUT,
-        readTimeOut = READ_TIMEOUT
+        CryptoApiConfiguration(
+            url = CryptoApi.URL.TESTNET
+            callTimeout = CALL_TIMEOUT,
+            connectTimeout = CONNECT_TIMEOUT,
+            readTimeOut = READ_TIMEOUT
+        )
     )
 ```
 
