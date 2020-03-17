@@ -10,4 +10,9 @@ object TestValues {
 
     const val BTC_FROM = "qq7usd7fjggasckpe8zxjf3adg0s04nz9vjpd8aays"
     const val BTC_TO = "qz5f7vk7q6kzv8dwecs42zketye5ntk3sv97xjprka"
+
+    const val BCH_TEST_ADDRESS = "bchtest:qz8lmadf52wfw6c0d9lkvsh0qyhvxcclnurydkmz4y"
+
+    // TODO: may be expired
+    const val FIREBASE_TOKEN = "eNC9lpjcxQM:APA91bHVC4o-vN_G_sO70Fdag0APLKwNWcAj-geZ3lBquAYjGwdhmm6swDTNbwU8tOJjdBdJSXHWAx-6pIMA5apoJViywG_LhbxQSVXUI7ZVT3CKs6UWg-k-65LNOSk-gEa3QjTswHjf"
 }

@@ -9,6 +9,10 @@ annotation class Get(val path: String)
 annotation class Post(val path: String)
 
 @Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.FUNCTION)
+annotation class Delete(val path: String)
+
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 annotation class Coin(val name: String)
 

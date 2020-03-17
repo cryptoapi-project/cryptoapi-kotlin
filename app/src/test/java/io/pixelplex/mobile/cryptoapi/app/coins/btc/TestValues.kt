@@ -10,4 +10,7 @@ object TestValues {
 
     const val BTC_FROM = "2N6z6fSZRQifyC8irzFrJrxJg1nbwh2PDB3"
     const val BTC_TO = "2MzUnALzSgniCX9FXrGeYqewSVhtfkywX2b"
+
+    // TODO: may be expired
+    const val FIREBASE_TOKEN = "eNC9lpjcxQM:APA91bHVC4o-vN_G_sO70Fdag0APLKwNWcAj-geZ3lBquAYjGwdhmm6swDTNbwU8tOJjdBdJSXHWAx-6pIMA5apoJViywG_LhbxQSVXUI7ZVT3CKs6UWg-k-65LNOSk-gEa3QjTswHjf"
 }
