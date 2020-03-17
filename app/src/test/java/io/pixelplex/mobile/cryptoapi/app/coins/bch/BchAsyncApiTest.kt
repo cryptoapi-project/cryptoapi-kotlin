@@ -6,13 +6,13 @@ import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.app.CoinsTest
 import io.pixelplex.mobile.cryptoapi.model.data.btc.BtcOutputStatus
 import io.pixelplex.mobile.cryptoapi.model.data.btc.BtcRawTransaction
+import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
 import java.math.BigInteger
 
 class BchAsyncApiTest {
-
     private val apiClient = CryptoApiFramework.getInstance(
         CoinsTest.CALL_TIMEOUT,
         CoinsTest.CONNECT_TIMEOUT,
@@ -159,6 +159,34 @@ class BchAsyncApiTest {
         try {
             val resp = apiClient.estimateFee()
             Assert.assertTrue(resp.isNotEmpty())
+        } catch (e: Exception) {
+            Assert.fail()
+        }
+    }
+
+    @Test
+    fun subscribeNotifications() = runBlocking {
+        try {
+            apiClient.subscribeNotifications(
+                listOf(TestValues.BCH_TEST_ADDRESS),
+                FirebaseToken(TestValues.FIREBASE_TOKEN)
+            ).let { resp ->
+                Assert.assertTrue(resp.token.isNotEmpty() && resp.addresses.count() > 0)
+            }
+        } catch (e: Exception) {
+            Assert.fail()
+        }
+    }
+
+    @Test
+    fun unsubscribeNotifications() = runBlocking {
+        try {
+            apiClient.unsubscribeNotifications(
+                listOf(TestValues.BCH_TEST_ADDRESS),
+                TestValues.FIREBASE_TOKEN
+            ).let { resp ->
+                Assert.assertTrue(resp.token.isNotEmpty())
+            }
         } catch (e: Exception) {
             Assert.fail()
         }
