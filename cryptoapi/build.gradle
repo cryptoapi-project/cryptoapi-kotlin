@@ -4,18 +4,20 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jetbrains.dokka'
 
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
 
 android {
-
     def globalConfiguration = rootProject.extensions.getByName("ext")
-
     compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
 
     defaultConfig {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
         targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
         versionCode globalConfiguration["androidVersionCode"]
-
+        buildConfigField 'String', 'CRYPTO_API_KEY', cryptoApiKey(properties['CRYPTO_API_KEY'])
     }
 
     buildTypes {
@@ -29,7 +31,6 @@ android {
         main.java.srcDirs += 'src/main/java'
     }
 }
-
 
 dependencies {
     testImplementation libraryDependencies.jUnit
@@ -49,3 +50,15 @@ configurations {
 }
 
 apply from: "$rootDir/config/publish.gradle"
+
+def cryptoApiKey(value){
+    def newValue = project.getProperties().get("cryptoApiKey")
+
+    if (newValue != null) {
+        value = newValue
+    } else if (value == null){
+        value = ""
+    }
+
+    return value
+}
