@@ -67,21 +67,8 @@ class CryptoApi(
         method: RequestMethod,
         body: String?
     ): Request {
-        val requestBuilder = Request.Builder()
-            //  .header(AUTH_HEADER_KEY, BEARER_FORMAT.format(token))
-            .url(url)
-
+        val requestBuilder = Request.Builder().url(url)
         buildRequest(method, requestBuilder, body)
-
-//        if (method == RequestMethod.POST) {
-//            requestBuilder.post(
-//                getRequestBody(body)
-//            )
-//        } else if (method == RequestMethod.DELETE) {
-//            requestBuilder.delete(
-//                getRequestBody(body)
-//            )
-//        }
 
         return requestBuilder.build()
     }
@@ -114,12 +101,10 @@ class CryptoApi(
         body?.let {
             it.toRequestBody(MEDIA_TYPE.toMediaTypeOrNull())
         } ?: EMPTY_BODY.toRequestBody(
-            MEDIA_TYPE.toMediaTypeOrNull())
+            MEDIA_TYPE.toMediaTypeOrNull()
+        )
 
     companion object {
-        //    private const val AUTH_HEADER_KEY = "Authorization"
-        //    private const val BEARER_FORMAT = "Bearer %s"
-
         private const val MEDIA_TYPE = "application/json; charset=utf-8"
         private const val EMPTY_BODY = ""
 
@@ -183,7 +168,6 @@ class CryptoApi(
 
         val requestBuilder =
             Request.Builder().url(httpBuilder.build())
-        //  .addHeader(AUTH_HEADER_KEY, String.format(BEARER_FORMAT, token))
 
         handleRequestByMethod(callMethod, params, requestBuilder)
 
