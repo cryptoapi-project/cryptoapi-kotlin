@@ -2,6 +2,7 @@ package io.pixelplex.mobile.cryptoapi.app
 
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -12,17 +13,14 @@ import kotlin.coroutines.suspendCoroutine
 class CoinsTest {
     @Test
     fun coinsNotNull() {
-
         runBlocking {
             try {
                 val result = suspendCoroutine<List<String>> {
                     CryptoApiFramework
                         .getInstance(
-                            CALL_TIMEOUT,
-                            CONNECT_TIMEOUT,
-                            READ_TIMEOUT,
-                            BuildConfig.CRYPTO_API_KEY,
-                            CryptoApi.URL.TESTNET
+                            CryptoApiConfiguration(
+                                url = CryptoApi.URL.TESTNET
+                            )
                         )
                         .coinsApi.getCoins(
                         { coins -> it.resume(coins) },
@@ -44,11 +42,9 @@ class CoinsTest {
             try {
                 val result = CryptoApiFramework
                     .getInstance(
-                        CALL_TIMEOUT,
-                        CONNECT_TIMEOUT,
-                        READ_TIMEOUT,
-                        BuildConfig.CRYPTO_API_KEY,
-                        CryptoApi.URL.TESTNET
+                        CryptoApiConfiguration(
+                            url = CryptoApi.URL.TESTNET
+                        )
                     )
                     .coinsAsyncApi.getCoins()
 
@@ -58,11 +54,5 @@ class CoinsTest {
                 Assert.fail()
             }
         }
-    }
-
-    companion object {
-        const val CALL_TIMEOUT = 30000L
-        const val READ_TIMEOUT = 30000L
-        const val CONNECT_TIMEOUT = 15000L
     }
 }

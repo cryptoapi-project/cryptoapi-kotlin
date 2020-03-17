@@ -4,6 +4,7 @@ import io.pixelplex.mobile.cryptoapi.BuildConfig
 import io.pixelplex.mobile.cryptoapi.model.generation.QueryParameter
 import io.pixelplex.mobile.cryptoapi.model.generation.QueryType
 import io.pixelplex.mobile.cryptoapi.model.generation.RequestParameter
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -18,11 +19,7 @@ import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 class CryptoApi(
-    private val callTimeout: Long,
-    private val connectTimeout: Long,
-    private val readTimeout: Long,
-    private val token: String,
-    private val url: URL
+    private val cryptoApiParams: CryptoApiConfiguration
 ) {
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -30,9 +27,9 @@ class CryptoApi(
 
     private val httpClient = OkHttpClient.Builder().apply {
         addInterceptor(logging)
-        callTimeout(callTimeout, TimeUnit.MILLISECONDS)
-        connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
-        readTimeout(readTimeout, TimeUnit.MILLISECONDS)
+        callTimeout(cryptoApiParams.callTimeout, TimeUnit.MILLISECONDS)
+        connectTimeout(cryptoApiParams.connectTimeout, TimeUnit.MILLISECONDS)
+        readTimeout(cryptoApiParams.readTimeOut, TimeUnit.MILLISECONDS)
     }.build()
 
     fun callApi(
@@ -44,7 +41,7 @@ class CryptoApi(
     ) {
         httpClient.newCall(
             makeRequest(
-                url.path.urlWithPath(params),
+                cryptoApiParams.url.path.urlWithPath(params),
                 method,
                 body
             )
@@ -119,7 +116,11 @@ class CryptoApi(
         callback: Callback,
         params: List<QueryParameter<*>> = emptyList()
     ) {
-        get(url.path.urlWithPath(path), params = params, responseCallback = callback)
+        get(
+            cryptoApiParams.url.path.urlWithPath(path),
+            params = params,
+            responseCallback = callback
+        )
     }
 
     operator fun get(
@@ -149,7 +150,7 @@ class CryptoApi(
             httpBuilder.addQueryParameter(param.name, param.value.toQueryParameter())
         }
 
-        httpBuilder.addQueryParameter(TOKEN, token)
+        httpBuilder.addQueryParameter(TOKEN, BuildConfig.CRYPTO_API_KEY)
 
         val requestBuilder =
             Request.Builder().url(httpBuilder.build())
@@ -187,5 +188,3 @@ class CryptoApi(
         GET
     }
 }
-
-

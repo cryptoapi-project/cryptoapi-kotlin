@@ -25,13 +25,14 @@ class MainActivity : AppCompatActivity() {
      * Crypto API libarary initializing
      */
     private val apiClient by lazy {
-        CryptoApiFramework.getInstance(
-            CALL_TIMEOUT,
-            CONNECT_TIMEOUT,
-            READ_TIMEOUT,
-            CRYPTO_API_KEY,
-            CryptoApi.URL.TESTNET
-        ).ethereumAsyncApi
+        val configuration = CryptoApiConfiguration(
+            callTimeout = CALL_TIMEOUT,
+            connectTimeout = CONNECT_TIMEOUT,
+            readTimeOut = READ_TIMEOUT,
+            url = CryptoApi.URL.TESTNET
+        )
+
+        CryptoApiFramework.getInstance(configuration).ethereumAsyncApi
     }
 
     /**
@@ -134,7 +135,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val PREFIX = "0x"
 
-        private const val CRYPTO_API_KEY = "YOUR_CRYPTO_API_KEY"
         private const val ETH_ADDRESS_1 = "SENDER_ADDRESS"
         private const val ETH_ADDRESS_2 = "RECIPIENT_ADDRESS"
 

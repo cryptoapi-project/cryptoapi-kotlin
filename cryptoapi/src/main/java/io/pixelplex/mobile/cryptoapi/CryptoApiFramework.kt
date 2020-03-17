@@ -2,7 +2,8 @@ package io.pixelplex.mobile.cryptoapi
 
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.generation.*
-import io.pixelplex.mobile.cryptoapi.wrapper.SingletonHolder
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
+import io.pixelplex.mobile.cryptoapi.wrapper.InstanceHolder
 
 /**
  * Delegates all logic to specific wrapper services which associated
@@ -11,19 +12,11 @@ import io.pixelplex.mobile.cryptoapi.wrapper.SingletonHolder
  * @author Sergey Krupenich
  */
 class CryptoApiFramework constructor(
-    callTimeout: Long,
-    connectTimeout: Long,
-    readTimeout: Long,
-    token: String,
-    url: CryptoApi.URL
+    cryptoApiParams: CryptoApiConfiguration
 ) {
     private val cryptoApi: CryptoApi =
         CryptoApi(
-            callTimeout,
-            connectTimeout,
-            readTimeout,
-            token,
-            url
+            cryptoApiParams
         )
 
     val coinsApi: CoinApi = CoinApiImpl(cryptoApi)
@@ -47,5 +40,5 @@ class CryptoApiFramework constructor(
     val bitcoinCashAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
 
     companion object :
-        SingletonHolder<CryptoApiFramework, Long, Long, Long, String, CryptoApi.URL>(::CryptoApiFramework)
+        InstanceHolder<CryptoApiFramework, CryptoApiConfiguration>(::CryptoApiFramework)
 }
