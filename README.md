@@ -20,35 +20,39 @@ implementation 'io.pixelplex.mobile.cryptoapi:cryptoapi:3.4.1'
 ```
 ## Setup
 
-Add file cryptoapi.properties into /app project folder.
+Add a crypto api key to local.properties into the root folder as below.
 
-cryptoapi.properties:
+local.properties:
 ```kotlin
 CRYPTO_API_KEY="YOUR_TOKEN"
 ```
-For setup framework use this simple code:
+For setup framework use simple code as below. All parameters are optional.
 ```kotlin
-private val apiClient = CryptoApiFramework.getInstance(
-        CALL_TIMEOUT,
-        CONNECT_TIMEOUT,
-        READ_TIMEOUT,
-        BuildConfig.CRYPTO_API_KEY
-    )
+val configuration = CryptoApiConfiguration(
+    callTimeout = CALL_TIMEOUT,
+    connectTimeout = CONNECT_TIMEOUT,
+    readTimeOut = READ_TIMEOUT
+)
+
+private val apiClient =
+    CryptoApiFramework.getInstance(configuration)
 ```
 
 ## Usage
 
 ### Networks
 
-CryptoAPI supports `MAINNET` and `TESTNET` chains. You can select chain type by `URL` field when setup framework (Mainnet by default)
+CryptoAPI supports `MAINNET` and `TESTNET` chains. You can select chain type by `URL` field when setup framework (Mainnet by default).
 ```kotlin
-private val apiClient = CryptoApiFramework.getInstance(
-        CALL_TIMEOUT,
-        CONNECT_TIMEOUT,
-        READ_TIMEOUT,
-        BuildConfig.CRYPTO_API_KEY,
-        CryptoApi.URL.TESTNET
-    )
+val configuration = CryptoApiConfiguration(
+    url = CryptoApi.URL.TESTNET
+    callTimeout = CALL_TIMEOUT,
+    connectTimeout = CONNECT_TIMEOUT,
+    readTimeOut = READ_TIMEOUT
+)
+
+private val apiClient =
+    CryptoApiFramework.getInstance(configuration)
 ```
 
 ### Servicies

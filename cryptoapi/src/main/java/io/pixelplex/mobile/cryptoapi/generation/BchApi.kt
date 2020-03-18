@@ -3,6 +3,8 @@ package io.pixelplex.mobile.cryptoapi.generation
 import io.pixelplex.mobile.cryptoapi.annotation.*
 import io.pixelplex.mobile.cryptoapi.model.common.ApiResult
 import io.pixelplex.mobile.cryptoapi.model.data.btc.*
+import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
+import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationResponse
 import io.pixelplex.mobile.cryptoapi.model.exception.ApiException
 
 
@@ -95,6 +97,22 @@ interface BchApi {
     @Get("estimate-fee")
     fun estimateFee(
         @CallbackSuccess onSuccess: (String) -> Unit,
+        @CallbackError onError: (ApiException) -> Unit
+    )
+
+    @Post("push-notifications/addresses/{addresses}/balance")
+    fun subscribeNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Body body: FirebaseToken,
+        @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
+        @CallbackError onError: (ApiException) -> Unit
+    )
+
+    @Delete("push-notifications/addresses/{addresses}/balance")
+    fun unsubscribeNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Query("firebase_token") firebaseToken: String,
+        @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 }

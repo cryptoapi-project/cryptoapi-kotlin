@@ -3,6 +3,8 @@ package io.pixelplex.mobile.cryptoapi.generation
 import io.pixelplex.mobile.cryptoapi.annotation.*
 import io.pixelplex.mobile.cryptoapi.model.common.ApiResult
 import io.pixelplex.mobile.cryptoapi.model.data.btc.*
+import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
+import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationResponse
 
 @Coin("btc")
 interface BtcAsyncApi {
@@ -71,4 +73,16 @@ interface BtcAsyncApi {
 
     @Get("estimate-fee")
     suspend fun estimateFee(): String
+
+    @Post("push-notifications/addresses/{addresses}/balance")
+    suspend fun subscribeNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Body body: FirebaseToken
+    ): NotificationResponse
+
+    @Delete("push-notifications/addresses/{addresses}/balance")
+    suspend fun unsubscribeNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Query("firebase_token") firebaseToken: String
+    ): NotificationResponse
 }

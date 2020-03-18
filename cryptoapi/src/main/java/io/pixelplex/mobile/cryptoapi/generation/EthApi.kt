@@ -2,6 +2,8 @@ package io.pixelplex.mobile.cryptoapi.generation
 
 import io.pixelplex.mobile.cryptoapi.annotation.*
 import io.pixelplex.mobile.cryptoapi.model.data.eth.*
+import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
+import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationResponse
 import io.pixelplex.mobile.cryptoapi.model.exception.ApiException
 
 @Coin("eth")
@@ -11,20 +13,20 @@ interface EthApi {
         private const val DEFAULT_PAGE_SIZE = 20
     }
 
-    @Get("network") //+
+    @Get("network")
     fun getNetwork(
         @CallbackSuccess onSuccess: (EthNetwork) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("addresses/{addresses}/balance") //+
+    @Get("addresses/{addresses}/balance")
     fun getBalances(
         @Path("addresses") addresses: List<String>,
         @CallbackSuccess onSuccess: (List<EthBalance>) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("addresses/{addresses}/transfers/") //+
+    @Get("addresses/{addresses}/transfers/")
     fun getTransfers(
         @Path("addresses") addresses: List<String>,
         @Query("positive") positive: Boolean,
@@ -34,14 +36,14 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Post("estimate-gas") //+
+    @Post("estimate-gas")
     fun estimateGas(
         @Body estimatedGas: EthEstimatedGasCall,
         @CallbackSuccess onSuccess: (EthEstimatedGas) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Post("contracts/{address}/call") //+
+    @Post("contracts/{address}/call")
     fun callContract(
         @Path("address") address: String,
         @Body body: EthContractCall,
@@ -49,21 +51,21 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Post("transactions/raw/send") //+
+    @Post("transactions/raw/send")
     fun sendRawTransaction(
         @Body body: EthTransactionRawCall,
         @CallbackSuccess onSuccess: (String) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Post("transactions/raw/decode") //+
+    @Post("transactions/raw/decode")
     fun decodeRawTransaction(
         @Body body: EthTransactionRawCall,
         @CallbackSuccess onSuccess: (EthTransactionRawDecodeResponse) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("addresses/{addresses}/transactions") //+
+    @Get("addresses/{addresses}/transactions")
     fun getExternalTransactions(
         @Path("addresses") addresses: List<String>,
         @Query("skip") skip: Int = 0,
@@ -72,14 +74,14 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("addresses/{addresses}") //+
+    @Get("addresses/{addresses}")
     fun getInfo(
         @Path("addresses") addresses: List<String>,
         @CallbackSuccess onSuccess: (List<EthInfo>) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("transactions") //+
+    @Get("transactions")
     fun getTransactions(
         @Query("from") from: String,
         @Query("to") to: String,
@@ -89,28 +91,28 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("transactions/{hash}") //+
+    @Get("transactions/{hash}")
     fun getTransaction(
         @Path("hash") hsh: String,
         @CallbackSuccess onSuccess: (EthTransaction) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("transactions/receipt/{hash}") //+
+    @Get("transactions/receipt/{hash}")
     fun getTransactionReceipt(
         @Path("hash") hsh: String,
         @CallbackSuccess onSuccess: (Receipt) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("contracts/{address}") //+
+    @Get("contracts/{address}")
     fun getContractInfo(
         @Path("address") address: String,
         @CallbackSuccess onSuccess: (EthContractBytecodeResponse) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("contracts/logs") //+
+    @Get("contracts/logs")
     fun getContractLogs(
         @Query("from_block") from: String,
         @Query("to_block") to: String,
@@ -120,7 +122,7 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("addresses/{addresses}/balance/tokens") //
+    @Get("addresses/{addresses}/balance/tokens")
     fun getTokenBalances(
         @Path("addresses") addresses: List<String>,
         @Query("skip") skip: Int = 0,
@@ -129,7 +131,7 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("addresses/{addresses}/balance/tokens/{token}") //
+    @Get("addresses/{addresses}/balance/tokens/{token}")
     fun getTokenBalances(
         @Path("addresses") addresses: List<String>,
         @Path("token") token: String,
@@ -139,7 +141,7 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("addresses/{addresses}/transfers/tokens/{token}") //+
+    @Get("addresses/{addresses}/transfers/tokens/{token}")
     fun getTokenTransfers(
         @Path("token") token: String,
         @Path("addresses") addresses: List<String>,
@@ -149,7 +151,7 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("tokens/{token}/transfers") //+
+    @Get("tokens/{token}/transfers")
     fun getTokenTransfers(
         @Path("token") token: String,
         @Query("skip") skip: Int = 0,
@@ -158,14 +160,14 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("tokens/{address}") //+
+    @Get("tokens/{address}")
     fun getTokenInfo(
         @Path("address") address: String,
         @CallbackSuccess onSuccess: (EthTokenInfo) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Get("tokens/search") //+
+    @Get("tokens/search")
     fun searchTokens(
         @Query("query") query: String,
         @Query("skip") skip: Int = 0,
@@ -175,4 +177,19 @@ interface EthApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
+    @Post("push-notifications/addresses/{addresses}/balance")
+    fun subscribeNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Body body: FirebaseToken,
+        @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
+        @CallbackError onError: (ApiException) -> Unit
+    )
+
+    @Delete("push-notifications/addresses/{addresses}/balance")
+    fun unsubscribeNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Query("firebase_token") firebaseToken: String,
+        @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
+        @CallbackError onError: (ApiException) -> Unit
+    )
 }

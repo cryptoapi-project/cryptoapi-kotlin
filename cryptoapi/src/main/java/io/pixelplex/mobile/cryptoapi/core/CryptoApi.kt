@@ -4,6 +4,7 @@ import io.pixelplex.mobile.cryptoapi.BuildConfig
 import io.pixelplex.mobile.cryptoapi.model.generation.QueryParameter
 import io.pixelplex.mobile.cryptoapi.model.generation.QueryType
 import io.pixelplex.mobile.cryptoapi.model.generation.RequestParameter
+import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -14,15 +15,12 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 class CryptoApi(
-    private val callTimeout: Long,
-    private val connectTimeout: Long,
-    private val readTimeout: Long,
-    private val token: String,
-    private val url: URL
+    private val cryptoApiParams: CryptoApiConfiguration
 ) {
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -30,9 +28,9 @@ class CryptoApi(
 
     private val httpClient = OkHttpClient.Builder().apply {
         addInterceptor(logging)
-        callTimeout(callTimeout, TimeUnit.MILLISECONDS)
-        connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
-        readTimeout(readTimeout, TimeUnit.MILLISECONDS)
+        callTimeout(cryptoApiParams.callTimeout, TimeUnit.MILLISECONDS)
+        connectTimeout(cryptoApiParams.connectTimeout, TimeUnit.MILLISECONDS)
+        readTimeout(cryptoApiParams.readTimeOut, TimeUnit.MILLISECONDS)
     }.build()
 
     fun callApi(
@@ -44,7 +42,7 @@ class CryptoApi(
     ) {
         httpClient.newCall(
             makeRequest(
-                url.path.urlWithPath(params),
+                cryptoApiParams.url.path.urlWithPath(params),
                 method,
                 body
             )
@@ -69,17 +67,31 @@ class CryptoApi(
         method: RequestMethod,
         body: String?
     ): Request {
-        val requestBuilder = Request.Builder()
-            //  .header(AUTH_HEADER_KEY, BEARER_FORMAT.format(token))
-            .url(url)
-
-        if (method == RequestMethod.POST) {
-            requestBuilder.post(
-                getRequestBody(body)
-            )
-        }
+        val requestBuilder = Request.Builder().url(url)
+        buildRequest(method, requestBuilder, body)
 
         return requestBuilder.build()
+    }
+
+    private fun buildRequest(
+        method: RequestMethod,
+        requestBuilder: Request.Builder,
+        body: String?
+    ) {
+        when (method) {
+            RequestMethod.POST -> {
+                requestBuilder.post(
+                    getRequestBody(body)
+                )
+            }
+            RequestMethod.DELETE -> {
+                requestBuilder.delete(
+                    getRequestBody(body)
+                )
+            }
+            else -> {
+            }
+        }
     }
 
     private fun String.urlWithPath(path: String): String =
@@ -89,12 +101,10 @@ class CryptoApi(
         body?.let {
             it.toRequestBody(MEDIA_TYPE.toMediaTypeOrNull())
         } ?: EMPTY_BODY.toRequestBody(
-            MEDIA_TYPE.toMediaTypeOrNull())
+            MEDIA_TYPE.toMediaTypeOrNull()
+        )
 
     companion object {
-        //    private const val AUTH_HEADER_KEY = "Authorization"
-        //    private const val BEARER_FORMAT = "Bearer %s"
-
         private const val MEDIA_TYPE = "application/json; charset=utf-8"
         private const val EMPTY_BODY = ""
 
@@ -117,19 +127,24 @@ class CryptoApi(
     fun callApi(
         path: String,
         callback: Callback,
-        params: List<QueryParameter<*>> = emptyList()
+        params: List<QueryParameter<*>> = emptyList(),
+        callMethod: String
     ) {
-        get(url.path.urlWithPath(path), params = params, responseCallback = callback)
+        get(
+            url = cryptoApiParams.url.path.urlWithPath(path),
+            params = params,
+            responseCallback = callback,
+            callMethod = callMethod
+        )
     }
 
     operator fun get(
         url: String,
         params: List<QueryParameter<*>> = emptyList(),
-        responseCallback: Callback
+        responseCallback: Callback,
+        callMethod: String
     ) {
-
         var requestUrl = url
-
         val paths = params.filter { it.type == QueryType.PATH }
 
         if (paths.isNotEmpty()) {
@@ -149,15 +164,12 @@ class CryptoApi(
             httpBuilder.addQueryParameter(param.name, param.value.toQueryParameter())
         }
 
-        httpBuilder.addQueryParameter(TOKEN, token)
+        httpBuilder.addQueryParameter(TOKEN, BuildConfig.CRYPTO_API_KEY)
 
         val requestBuilder =
             Request.Builder().url(httpBuilder.build())
-        //  .addHeader(AUTH_HEADER_KEY, String.format(BEARER_FORMAT, token))
 
-        params.filter { it.type == QueryType.BODY }.forEach { param ->
-            requestBuilder.post(getRequestBody(param.value.toGson()))
-        }
+        handleRequestByMethod(callMethod, params, requestBuilder)
 
         val request = requestBuilder.build()
         httpClient.newCall(request).enqueue(responseCallback)
@@ -174,18 +186,56 @@ class CryptoApi(
         }
     }
 
-    private fun RequestParameter<*>.toQueryParameter(): String {
-        return if (this.value is List<*>) {
+    private fun handleRequestByMethod(
+        callMethod: String,
+        params: List<QueryParameter<*>>,
+        requestBuilder: Request.Builder
+    ) {
+        when (RequestMethod.valueOf(callMethod.toUpperCase(Locale.getDefault()))) {
+            RequestMethod.POST -> {
+                requestPost(params, requestBuilder)
+            }
+            RequestMethod.DELETE -> {
+                requestDelete(params, requestBuilder)
+            }
+            else -> {
+            }
+        }
+    }
+
+    private fun requestPost(
+        params: List<QueryParameter<*>>,
+        requestBuilder: Request.Builder
+    ) {
+        params.filter { it.type == QueryType.BODY }.forEach { param ->
+            requestBuilder.post(getRequestBody(param.value.toGson()))
+        }
+    }
+
+    private fun requestDelete(
+        params: List<QueryParameter<*>>,
+        requestBuilder: Request.Builder
+    ) {
+        val bodyParams = params.filter { it.type == QueryType.BODY }
+        if (bodyParams.count() > 0) {
+            bodyParams.forEach { param ->
+                requestBuilder.delete(getRequestBody(param.value.toGson()))
+            }
+        } else {
+            requestBuilder.delete()
+        }
+    }
+
+    private fun RequestParameter<*>.toQueryParameter(): String =
+        if (this.value is List<*>) {
             (this.value!! as List<*>).joinToString(",")
         } else {
             this.value.toString()
         }
-    }
 
     enum class RequestMethod {
         POST,
-        GET
+        GET,
+        DELETE
     }
 }
-
-

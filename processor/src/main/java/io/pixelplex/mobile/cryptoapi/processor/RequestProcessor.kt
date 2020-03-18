@@ -17,13 +17,11 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.*
 import javax.tools.Diagnostic
 
-
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
 
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
-
         val outputDir = generatedDir
         if (outputDir == null) {
             messager.printMessage(
@@ -36,6 +34,7 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         val elements = getExecutableElements(
             roundEnv.getElementsAnnotatedWith(Get::class.java)
                     + roundEnv.getElementsAnnotatedWith(Post::class.java)
+                    + roundEnv.getElementsAnnotatedWith(Delete::class.java)
         )
 
         elements.forEach { (className, elements) ->
@@ -52,13 +51,11 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         )
     }
 
-    private fun getExecutableElements(elements: Set<Element>): Map<String, List<ExecutableElement>> {
-        return elements.filter { element -> element.kind == ElementKind.METHOD && element is ExecutableElement }
+    private fun getExecutableElements(elements: Set<Element>): Map<String, List<ExecutableElement>> =
+        elements.filter { element -> element.kind == ElementKind.METHOD && element is ExecutableElement }
             .map { it as ExecutableElement }.groupBy { getClassName(it) }
-    }
 
     private fun generateCode(className: String, elements: List<ExecutableElement>) {
-
         var hasSuspend = false
 
         if (elements.isNotEmpty()) {
@@ -94,12 +91,12 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
             typeSpec.addProperty(idProperty)
 
             elements.forEach { element ->
+                val method = getCallMethod(element)
                 if (element.parameters.map { getParamType(it) }.any { it.contains("kotlin.coroutines.Continuation") }) {
                     hasSuspend = true
-                    generateSuspendMethod(element, coinUrl, typeSpec)
-
+                    generateSuspendMethod(element, coinUrl, typeSpec, method)
                 } else {
-                    generateMethod(element, coinUrl, typeSpec)
+                    generateMethod(element, coinUrl, typeSpec, method)
                 }
             }
 
@@ -127,10 +124,22 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         }
     }
 
+    private fun getCallMethod(element: ExecutableElement) : String {
+        element.getAnnotation(Post::class.java)?.path?.let {
+            return Post::class.java.simpleName
+        }
+        element.getAnnotation(Delete::class.java)?.path?.let {
+            return Delete::class.java.simpleName
+        }
+
+        return Get::class.java.simpleName
+    }
+
     private fun generateMethod(
         element: ExecutableElement,
         coinUrl: String,
-        typeSpec: TypeSpec.Builder
+        typeSpec: TypeSpec.Builder,
+        method: String
     ) {
 
         val funcBuilder = FunSpec.builder(element.simpleName.toString())
@@ -190,13 +199,13 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                 }
             funcBuilder.addCode(
                 codeSnippetLine(
-                    "$API_CLIENT_PARAM_NAME.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, params = queryParams)"
+                    "$API_CLIENT_PARAM_NAME.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, params = queryParams, callMethod = \"$method\")"
                 )
             )
         } else {
             funcBuilder.addCode(
                 codeSnippetLine(
-                    "$API_CLIENT_PARAM_NAME.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback)"
+                    "$API_CLIENT_PARAM_NAME.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, callMethod = \"$method\")"
                 )
             )
         }
@@ -204,20 +213,18 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         typeSpec.addFunction(funcBuilder.build())
     }
 
-    private fun findErrorCallback(element: ExecutableElement): VariableElement? {
-        return element.parameters.first { it.getAnnotation(CallbackError::class.java) != null }
-    }
+    private fun findErrorCallback(element: ExecutableElement): VariableElement? =
+        element.parameters.first { it.getAnnotation(CallbackError::class.java) != null }
 
-    private fun findSuccessCallback(element: ExecutableElement): VariableElement? {
-        return element.parameters.first { it.getAnnotation(CallbackSuccess::class.java) != null }
-    }
+    private fun findSuccessCallback(element: ExecutableElement): VariableElement? =
+        element.parameters.first { it.getAnnotation(CallbackSuccess::class.java) != null }
 
     private fun generateSuspendMethod(
         element: ExecutableElement,
         coinUrl: String,
-        typeSpec: TypeSpec.Builder
+        typeSpec: TypeSpec.Builder,
+        method: String
     ) {
-
         val funcBuilder = FunSpec.builder(element.simpleName.toString())
             .addModifiers(KModifier.SUSPEND, KModifier.OVERRIDE)
             .addParameters(element.parameters.filter { !getParamType(it).contains("kotlin.coroutines.Continuation") }
@@ -243,7 +250,6 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                 """
             )
         }
-
 
         funcBuilder.addCode(
             """val callback = object: Callback {
@@ -287,13 +293,13 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                 }
             funcBuilder.addCode(
                 codeSnippetLine(
-                    "$API_CLIENT_PARAM_NAME.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, params = queryParams)"
+                    "$API_CLIENT_PARAM_NAME.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, params = queryParams, callMethod = \"$method\")"
                 )
             )
         } else {
             funcBuilder.addCode(
                 codeSnippetLine(
-                    "$API_CLIENT_PARAM_NAME.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback)"
+                    "$API_CLIENT_PARAM_NAME.callApi(path = \"${coinUrl + getPath(element)}\", callback = callback, callMethod = \"$method\")"
                 )
             )
         }
@@ -309,11 +315,10 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         }
     }
 
-    private fun codeSnippetLine(code: String): String {
-        return """$code 
+    private fun codeSnippetLine(code: String): String =
+        """$code 
 
         """.trimIndent()
-    }
 
     private fun getParamName(param: VariableElement): String? {
         param.getAnnotation(Query::class.java)?.name?.let { return it }
@@ -322,9 +327,8 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         return null
     }
 
-    private fun getParamType(param: VariableElement): String {
-        return param.asType().asTypeName().javaToKotlinType().toString()
-    }
+    private fun getParamType(param: VariableElement): String =
+        param.asType().asTypeName().javaToKotlinType().toString()
 
     private fun getQueryType(param: VariableElement): QueryType? {
         param.getAnnotation(Query::class.java)?.name?.let { return QueryType.QUERY }
@@ -351,14 +355,19 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
     private fun getPath(element: ExecutableElement): String {
         element.getAnnotation(Get::class.java)?.path?.let { return it }
         element.getAnnotation(Post::class.java)?.path?.let { return it }
-        throw IllegalArgumentException("method ${element.simpleName} must be annotated by GET or POST")
+        element.getAnnotation(Delete::class.java)?.path?.let { return it }
+        throw IllegalArgumentException("method ${element.simpleName} must be annotated by Get, Post, Delete")
     }
 
-    override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(Get::class.java.canonicalName, Post::class.java.canonicalName)
-    }
+    override fun getSupportedAnnotationTypes(): Set<String> =
+        setOf(
+            Get::class.java.canonicalName,
+            Post::class.java.canonicalName,
+            Delete::class.java.canonicalName
+        )
 
-    override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
+    override fun getSupportedSourceVersion(): SourceVersion =
+        SourceVersion.latestSupported()
 
     companion object {
         const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
@@ -368,9 +377,8 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
         private const val API_CLIENT_PARAM_NAME = "apiClient"
     }
 
-    private fun TypeName.javaToKotlinType(): TypeName {
-
-        return when (this) {
+    private fun TypeName.javaToKotlinType(): TypeName =
+        when (this) {
             is ParameterizedTypeName -> {
                 (rawType.javaToKotlinType() as ClassName).parameterizedBy(
                     *typeArguments.map {
@@ -395,5 +403,4 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                 }
             }
         }
-    }
 }
