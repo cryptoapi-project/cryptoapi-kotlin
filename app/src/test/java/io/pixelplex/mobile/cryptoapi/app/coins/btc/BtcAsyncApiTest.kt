@@ -160,32 +160,4 @@ class BtcAsyncApiTest {
             Assert.fail()
         }
     }
-
-    @Test
-    fun subscribeNotifications() = runBlocking {
-        try {
-            apiClient.subscribeNotifications(
-                listOf(TestValues.BTC_FROM),
-                FirebaseToken(TestValues.FIREBASE_TOKEN)
-            ).let { resp ->
-                Assert.assertTrue(resp.token.isNotEmpty() && resp.addresses.count() > 0)
-            }
-        } catch (e: Exception) {
-            Assert.fail()
-        }
-    }
-
-    @Test
-    fun unsubscribeNotifications() = runBlocking {
-        try {
-            apiClient.unsubscribeNotifications(
-                listOf(TestValues.BTC_FROM),
-                TestValues.FIREBASE_TOKEN
-            ).let { resp ->
-                Assert.assertTrue(resp.token.isNotEmpty())
-            }
-        } catch (e: Exception) {
-            Assert.fail()
-        }
-    }
 }
