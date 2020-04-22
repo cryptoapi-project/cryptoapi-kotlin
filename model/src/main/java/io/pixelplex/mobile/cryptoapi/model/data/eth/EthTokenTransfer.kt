@@ -42,7 +42,7 @@ data class EthTokensTransferItem(
     val from: String,
 
     @SerializedName("to")
-    val to: String,
+    val to: String?,
 
     @SerializedName("value")
     val value: String,

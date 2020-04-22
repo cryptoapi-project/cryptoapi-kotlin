@@ -48,7 +48,7 @@ data class EthTransferItem(
     val hash: String,
 
     @SerializedName("to")
-    val to: String,
+    val to: String?,
 
     @SerializedName("value")
     val value: String,
@@ -57,5 +57,8 @@ data class EthTransferItem(
     val gasPrice: Long,
 
     @SerializedName("internal")
-    val internal: Boolean
+    val internal: Boolean,
+
+    @SerializedName("input")
+    val input: String
 )

@@ -70,7 +70,7 @@ data class EthTransaction(
     val r: String,
 
     @SerializedName("internal_transactions")
-    val internalTransactions: List<String>,
+    val internalTransactions: List<InternalTransaction>,
 
     @SerializedName("confirmations")
     val confirmations: Int?,
@@ -78,6 +78,26 @@ data class EthTransaction(
     @SerializedName("receipt")
     val receipt: Receipt?
 ) : CryptoApiResponse
+
+/**
+ * Contains info about internal transaction item
+ */
+data class InternalTransaction (
+    @SerializedName("to")
+    val to: String?,
+
+    @SerializedName("from")
+    val from: String,
+
+    @SerializedName("value")
+    val value: String,
+
+    @SerializedName("is_suicide")
+    val is_suicide: Boolean,
+
+    @SerializedName("type")
+    val type: String
+)
 
 /**
  * Combines all fields of ETH receipt
