@@ -172,7 +172,14 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                             ${errorCalback.simpleName}(ApiException.create(e))
                          }
                     } else {
-                        ${errorCalback.simpleName}(ApiException.create(fromJson<ErrorResponse>(response.body?.string()!!)))
+                    
+                        val code = response.code.toString()
+
+                      if (code.startsWith("50")) {
+                          ${errorCalback.simpleName}(ApiException.create(ErrorResponse(listOf(io.pixelplex.mobile.cryptoapi.model.common.Error(message = response.message)), response.code)))
+                      } else {
+                          ${errorCalback.simpleName}(ApiException.create(fromJson<ErrorResponse>(response.body?.string()!!)))
+                      }
                     }
                     }
                 }
@@ -266,7 +273,13 @@ class RequestProcessor : KotlinAbstractProcessor(), KotlinMetadataUtils {
                                 it.resumeWithException(ApiException.create(e))
                             }
                         } else {
-                            it.resumeWithException(ApiException.create(fromJson<ErrorResponse>(response.body?.string()!!)))
+                            val code = response.code.toString()
+
+                              if (code.startsWith("50")) {
+                                  it.resumeWithException(ApiException.create(ErrorResponse(listOf(io.pixelplex.mobile.cryptoapi.model.common.Error(message = response.message)), response.code)))
+                              } else {
+                                  it.resumeWithException(ApiException.create(fromJson<ErrorResponse>(response.body?.string()!!)))
+                              }
                         }
                     }
                 }
