@@ -8,6 +8,7 @@ import io.pixelplex.mobile.cryptoapi.core.CryptoApi
  * @author Sergey Krupenich
  */
 data class CryptoApiConfiguration(
+    val authorizationToken : String,
     val url: CryptoApi.URL = CryptoApi.URL.MAINNET,
     val callTimeout: Long = CALL_TIMEOUT,
     val connectTimeout: Long = CONNECT_TIMEOUT,

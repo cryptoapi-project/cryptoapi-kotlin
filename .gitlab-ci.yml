@@ -17,7 +17,7 @@ stages:
 build_release:
   <<: *build_template_def
   script:
-    - ./gradlew :cryptoapi:assembleRelease --stacktrace -PcryptoApiKey=\"$cryptoApiKey\"
+    - ./gradlew :cryptoapi:assembleRelease --stacktrace
 
 unit_test:
   stage: test
@@ -33,7 +33,7 @@ pages:
   only:
     - release
   script:
-    - ./gradlew :cryptoapi:clean :cryptoapi:jvadoc --stacktrace
+    - ./gradlew :cryptoapi:clean :cryptoapi:javadoc --stacktrace
     - mkdir docs
     - mv cryptoapi/build/javadoc/* docs
   artifacts:
@@ -43,6 +43,8 @@ pages:
 maven_publishing:
   stage: publish
   script:
-    - ./gradlew clean bundle -PcryptoApiKey=\"$cryptoApiKey\"
-    - ./gradlew bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar -PlibraryVersion=$libraryVersion -PcryptoApiKey=\"$cryptoApiKey\"
+    - ./gradlew clean bundle
+    - ./gradlew bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar -PlibraryVersion=$CI_COMMIT_TAG
   when: manual
+  only:
+    - tags

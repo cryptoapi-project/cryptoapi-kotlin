@@ -1,8 +1,8 @@
 package io.pixelplex.mobile.cryptoapi.app.coins.eth
 
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
+import io.pixelplex.mobile.cryptoapi.app.BuildConfig
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
-import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -11,7 +11,8 @@ import org.junit.Test
 class AsyncApiTest {
     private val apiClient = CryptoApiFramework.getInstance(
         CryptoApiConfiguration(
-            url = CryptoApi.URL.TESTNET
+            url = CryptoApi.URL.TESTNET,
+            authorizationToken = BuildConfig.CRYPTO_API_KEY
         )
     ).ethereumAsyncApi
 

@@ -1,6 +1,7 @@
 package io.pixelplex.mobile.cryptoapi.app.rates
 
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
+import io.pixelplex.mobile.cryptoapi.app.BuildConfig
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.model.common.HistoryRateModel
 import io.pixelplex.mobile.cryptoapi.model.common.RateModel
@@ -16,7 +17,8 @@ class RatesTest {
     val ratesApi = CryptoApiFramework
         .getInstance(
             CryptoApiConfiguration(
-                url = CryptoApi.URL.TESTNET
+                url = CryptoApi.URL.TESTNET,
+                authorizationToken = BuildConfig.CRYPTO_API_KEY
             )
         )
         .ratesApi
@@ -24,7 +26,8 @@ class RatesTest {
     val ratesAsyncApi = CryptoApiFramework
         .getInstance(
             CryptoApiConfiguration(
-                url = CryptoApi.URL.TESTNET
+                url = CryptoApi.URL.TESTNET,
+                authorizationToken = BuildConfig.CRYPTO_API_KEY
             )
         )
         .ratesAsyncApi

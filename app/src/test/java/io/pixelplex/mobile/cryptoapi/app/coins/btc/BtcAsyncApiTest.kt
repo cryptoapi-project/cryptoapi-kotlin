@@ -1,10 +1,10 @@
 package io.pixelplex.mobile.cryptoapi.app.coins.btc
 
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
+import io.pixelplex.mobile.cryptoapi.app.BuildConfig
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.model.data.btc.BtcOutputStatus
 import io.pixelplex.mobile.cryptoapi.model.data.btc.BtcRawTransaction
-import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -14,7 +14,8 @@ import java.math.BigInteger
 class BtcAsyncApiTest {
     private val apiClient = CryptoApiFramework.getInstance(
         CryptoApiConfiguration(
-            url = CryptoApi.URL.TESTNET
+            url = CryptoApi.URL.TESTNET,
+            authorizationToken = BuildConfig.CRYPTO_API_KEY
         )
     ).bitcoinAsyncApi
 

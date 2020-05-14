@@ -24,6 +24,13 @@ android {
 
         buildConfigField 'String', 'CRYPTO_API_KEY', cryptoApiKey(properties['CRYPTO_API_KEY'])
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
     buildTypes {
 
         release {
@@ -32,9 +39,10 @@ android {
         }
     }
 }
+
 def cryptoApiKey(value){
 
-    def newValue = project.getProperties().get("cryptoApiKey")
+    def newValue = properties.get("cryptoApiKey")
 
     if (newValue != null) {
         value = newValue
