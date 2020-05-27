@@ -39,6 +39,10 @@ class CryptoApiFramework constructor(
 
     val bitcoinCashAsyncApi: BchAsyncApi = BchAsyncApiImpl(cryptoApi)
 
+    val litecoinApi: LtcApi = LtcApiImpl(cryptoApi)
+
+    val litecoinAsyncApi: LtcAsyncApi = LtcAsyncApiImpl(cryptoApi)
+
     companion object :
         InstanceHolder<CryptoApiFramework, CryptoApiConfiguration>(::CryptoApiFramework)
 }

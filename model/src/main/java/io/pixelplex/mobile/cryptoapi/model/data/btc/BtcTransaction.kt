@@ -36,10 +36,10 @@ data class BtcTransaction(
     val hash: String,
 
     @SerializedName("input_count")
-    val inputCount: String,
+    val inputCount: BigInteger,
 
     @SerializedName("output_count")
-    val outputCount: String,
+    val outputCount: BigInteger,
 
     @SerializedName("inputs")
     val inputs: List<Input>,
@@ -63,7 +63,10 @@ data class BtcTransaction(
         val sequenceNumber: BigInteger,
 
         @SerializedName("script")
-        val script: String
+        val script: String?,
+
+        @SerializedName("satoshis")
+        val satoshis: String?
     )
 
     data class Output(
