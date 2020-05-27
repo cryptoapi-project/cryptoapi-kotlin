@@ -44,5 +44,5 @@ maven_publishing:
   stage: publish
   script:
     - ./gradlew clean bundle -PcryptoApiKey=\"$cryptoApiKey\"
-    - ./gradlew bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar -PlibraryVersion=$libraryVersion
+    - ./gradlew bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar -PlibraryVersion=$libraryVersion -PcryptoApiKey=\"$cryptoApiKey\"
   when: manual
