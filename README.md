@@ -9,14 +9,14 @@ CryptoApiLibrary is Kotlin API Wrapper framework. Designed to receive informatio
 <dependency>
 	<groupId>io.pixelplex.mobile.cryptoapi</groupId>
 	<artifactId>cryptoapi</artifactId>
-	<version>0.3.7</version>
+	<version>0.4.0</version>
 	<type>pom</type>
 </dependency>
 ```
 
 or Gradle:
 ```
-implementation 'io.pixelplex.mobile.cryptoapi:cryptoapi:0.3.7'
+implementation 'io.pixelplex.mobile.cryptoapi:cryptoapi:0.4.0'
 ```
 ## Setup
 
@@ -64,7 +64,7 @@ ETH (sync/async)
 
 The MIT License (MIT)
 
-Copyright (c) 2019 PixelPlex Inc. <https://pixelplex.io>
+Copyright (c) 2020 PixelPlex Inc. <https://pixelplex.io>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
