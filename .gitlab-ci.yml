@@ -54,5 +54,7 @@ maven_publishing:
     - ./gradlew :model:build :cryptoapi:build -no-parallel -PlibraryVersion=$CI_COMMIT_TAG
     - ./gradlew bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar -PlibraryVersion=$CI_COMMIT_TAG
   when: manual
+  only:
+    - tags
   tags:
     - android
