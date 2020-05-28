@@ -7,8 +7,8 @@ ext {
 
     publishedGroupId = 'io.pixelplex.mobile.cryptoapi'
     libraryName = 'cryptoapi'
-    artifact = 'cryptoapi'
-
+    artifact = POM_ARTIFACT_ID
+    packagingType = POM_PACKAGING
     libraryDescription = 'Framework for working with CryptoAPI'
 
     gitUrl = 'https://github.com/cryptoapi-project/cryptoapi-kotlin'
@@ -49,7 +49,7 @@ group = publishedGroupId
 install {
     repositories.mavenInstaller {
         pom.project {
-            packaging 'jar'
+            packaging packagingType
             groupId publishedGroupId
             artifactId artifact
 
