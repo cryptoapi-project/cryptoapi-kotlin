@@ -5,19 +5,16 @@ import io.pixelplex.mobile.cryptoapi.model.generation.QueryParameter
 import io.pixelplex.mobile.cryptoapi.model.generation.QueryType
 import io.pixelplex.mobile.cryptoapi.model.generation.RequestParameter
 import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
-import okhttp3.Call
-import okhttp3.Callback
+import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
+
 
 class CryptoApi(
     private val cryptoApiParams: CryptoApiConfiguration
@@ -164,7 +161,7 @@ class CryptoApi(
             httpBuilder.addQueryParameter(param.name, param.value.toQueryParameter())
         }
 
-        httpBuilder.addQueryParameter(TOKEN, BuildConfig.CRYPTO_API_KEY)
+        httpBuilder.addQueryParameter(TOKEN, cryptoApiParams.authorizationToken)
 
         val requestBuilder =
             Request.Builder().url(httpBuilder.build())

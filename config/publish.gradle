@@ -43,7 +43,7 @@ if (libraryVersion == null && project.hasProperty("libraryVersion")) {
     libraryVersion = project.findProperty("libraryVersion")
 }
 
-version = "0.3.6"
+version = libraryVersion
 group = publishedGroupId
 
 install {

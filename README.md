@@ -9,26 +9,21 @@ CryptoApiLibrary is Kotlin API Wrapper framework. Designed to receive informatio
 <dependency>
 	<groupId>io.pixelplex.mobile.cryptoapi</groupId>
 	<artifactId>cryptoapi</artifactId>
-	<version>3.4.1</version>
+	<version>0.3.7</version>
 	<type>pom</type>
 </dependency>
 ```
 
 or Gradle:
 ```
-implementation 'io.pixelplex.mobile.cryptoapi:cryptoapi:3.4.1'
+implementation 'io.pixelplex.mobile.cryptoapi:cryptoapi:0.3.7'
 ```
 ## Setup
 
-Add a crypto api key to local.properties into the root folder as below.
-
-local.properties:
-```kotlin
-CRYPTO_API_KEY="YOUR_TOKEN"
-```
 For setup framework use simple code as below. All parameters are optional.
 ```kotlin
 val configuration = CryptoApiConfiguration(
+    authorizationToken = "<YOUR-API-TOKEN>",
     callTimeout = CALL_TIMEOUT,
     connectTimeout = CONNECT_TIMEOUT,
     readTimeOut = READ_TIMEOUT
@@ -45,6 +40,7 @@ private val apiClient =
 CryptoAPI supports `MAINNET` and `TESTNET` chains. You can select chain type by `URL` field when setup framework (Mainnet by default).
 ```kotlin
 val configuration = CryptoApiConfiguration(
+    authorizationToken = "<YOUR-API-TOKEN>",
     url = CryptoApi.URL.TESTNET
     callTimeout = CALL_TIMEOUT,
     connectTimeout = CONNECT_TIMEOUT,

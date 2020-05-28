@@ -19,7 +19,8 @@ class CoinsTest {
                     CryptoApiFramework
                         .getInstance(
                             CryptoApiConfiguration(
-                                url = CryptoApi.URL.TESTNET
+                                url = CryptoApi.URL.TESTNET,
+                                authorizationToken = BuildConfig.CRYPTO_API_KEY
                             )
                         )
                         .coinsApi.getCoins(
@@ -43,7 +44,8 @@ class CoinsTest {
                 val result = CryptoApiFramework
                     .getInstance(
                         CryptoApiConfiguration(
-                            url = CryptoApi.URL.TESTNET
+                            url = CryptoApi.URL.TESTNET,
+                            authorizationToken = BuildConfig.CRYPTO_API_KEY
                         )
                     )
                     .coinsAsyncApi.getCoins()
