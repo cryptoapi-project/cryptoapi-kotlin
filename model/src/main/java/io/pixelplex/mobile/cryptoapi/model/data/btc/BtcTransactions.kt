@@ -5,14 +5,20 @@ import java.math.BigInteger
 
 data class BtcTransactions(
 
+    @SerializedName("block_height_or_hash")
+    val blockHeightOrHash: BigInteger,
+
     @SerializedName("skip")
     val skippedCount: BigInteger,
 
     @SerializedName("limit")
     val limitCount: BigInteger,
 
-    @SerializedName("count")
-    val count: BigInteger,
+    @SerializedName("from")
+    val from: String?,
+
+    @SerializedName("to")
+    val to: String?,
 
     @SerializedName("items")
     val items: List<BtcTransaction>

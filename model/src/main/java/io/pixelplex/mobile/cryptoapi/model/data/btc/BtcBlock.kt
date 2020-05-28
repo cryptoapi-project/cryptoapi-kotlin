@@ -38,9 +38,6 @@ data class BtcBlock(
     @SerializedName("reward")
     val reward: BigInteger,
 
-    @SerializedName("transaction_count")
-    val transactionCount: BigInteger,
-
-    @SerializedName("transactions")
-    val transactions: List<String>
+    @SerializedName("count_transactions")
+    val transactionCount: BigInteger
 )

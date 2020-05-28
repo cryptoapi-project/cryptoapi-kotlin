@@ -22,12 +22,16 @@ data class BtcNetwork(
     val hashRate: BigDecimal,
 
     @SerializedName(DIFFICULTY_KEY)
-    val difficulty: BigDecimal
+    val difficulty: BigDecimal,
+
+    @SerializedName(ESTIMATE_FEE_KEY)
+    val estimateFee: Double
 ) : CryptoApiResponse {
     companion object {
         const val LAST_BLOCK_KEY = "last_block"
         const val COUNT_TRANSACTIONS_KEY = "count_transactions"
         const val HASH_RATE_KEY = "hashrate"
         const val DIFFICULTY_KEY = "difficulty"
+        const val ESTIMATE_FEE_KEY = "estimate_fee"
     }
 }
