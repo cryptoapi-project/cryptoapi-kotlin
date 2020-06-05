@@ -4,6 +4,7 @@ import io.pixelplex.mobile.cryptoapi.annotation.*
 import io.pixelplex.mobile.cryptoapi.model.data.eth.*
 import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationResponse
+import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationType
 
 @Coin("eth")
 interface EthAsyncApi {
@@ -135,15 +136,16 @@ interface EthAsyncApi {
         @Query("types") types: List<String>
     ): EthTokenSearch
 
-    @Post("push-notifications/addresses/{addresses}/balance")
+    @Post("push-notifications/addresses/{addresses}")
     suspend fun subscribeNotifications(
         @Path("addresses") addresses: List<String>,
         @Body body: FirebaseToken
     ): NotificationResponse
 
-    @Delete("push-notifications/addresses/{addresses}/balance")
+    @Delete("push-notifications/addresses/{addresses}")
     suspend fun unsubscribeNotifications(
         @Path("addresses") addresses: List<String>,
-        @Query("firebase_token") firebaseToken: String
+        @Query("firebase_token") token: String,
+        @Query("types") types: List<String>
     ): NotificationResponse
 }

@@ -100,7 +100,7 @@ interface BchApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Post("push-notifications/addresses/{addresses}/balance")
+    @Post("push-notifications/addresses/{addresses}")
     fun subscribeNotifications(
         @Path("addresses") addresses: List<String>,
         @Body body: FirebaseToken,
@@ -108,10 +108,11 @@ interface BchApi {
         @CallbackError onError: (ApiException) -> Unit
     )
 
-    @Delete("push-notifications/addresses/{addresses}/balance")
+    @Delete("push-notifications/addresses/{addresses}")
     fun unsubscribeNotifications(
         @Path("addresses") addresses: List<String>,
-        @Query("firebase_token") firebaseToken: String,
+        @Query("firebase_token") token: String,
+        @Query("types") types: List<String>,
         @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )

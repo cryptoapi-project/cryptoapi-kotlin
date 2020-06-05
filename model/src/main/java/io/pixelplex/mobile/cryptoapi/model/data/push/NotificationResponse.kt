@@ -7,5 +7,8 @@ data class NotificationResponse (
     val addresses: List<String>,
 
     @SerializedName("token")
-    val token: String
+    val token: String,
+    
+    @SerializedName("types")
+    val types: List<NotificationType>
 )

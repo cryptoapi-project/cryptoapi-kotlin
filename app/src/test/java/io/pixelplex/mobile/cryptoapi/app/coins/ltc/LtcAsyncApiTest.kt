@@ -5,6 +5,9 @@ import io.pixelplex.mobile.cryptoapi.app.BuildConfig
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
 import io.pixelplex.mobile.cryptoapi.model.data.btc.BtcOutputStatus
 import io.pixelplex.mobile.cryptoapi.model.data.btc.BtcRawTransaction
+import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
+import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationType
+import io.pixelplex.mobile.cryptoapi.model.data.push.convertNotificationTypes
 import io.pixelplex.mobile.cryptoapi.wrapper.CryptoApiConfiguration
 import kotlinx.coroutines.runBlocking
 import org.bitcoinj.core.*
@@ -194,6 +197,39 @@ class LtcAsyncApiTest {
             Assert.fail()
         }
     }
+
+// TODO: uncomment and change tokens run the tests below
+//    @Test
+//    fun subscribe() = runBlocking {
+//        try {
+//            apiClient.subscribeNotifications(
+//                listOf(TestValues.LTC_FROM),
+//                FirebaseToken(
+//                    token = "fJeptHhFubg:APA91bFLeyoCHJ-uRBMcL-S6PgHTWVnps5vuQHVr6EOleWBcwdhep8TxosltldQXmbfFz4oVXvZWNimQE9IBncnqYLC7c1qcZNEZrF5X_aIltkLIx-bUEaaRvN2m2SfLWqLbgF_9vtom",
+//                    typesParam = convertNotificationTypes(NotificationType.OUTGOING, NotificationType.INCOMING)
+//                )
+//            ).let { resp ->
+//                Assert.assertTrue(resp.token.isNotEmpty())
+//            }
+//        } catch (e: Exception) {
+//            Assert.fail()
+//        }
+//    }
+//
+//    @Test
+//    fun unsubscribe() = runBlocking {
+//        try {
+//            apiClient.unsubscribeNotifications(
+//                listOf(TestValues.LTC_FROM),
+//                "fJeptHhFubg:APA91bFLeyoCHJ-uRBMcL-S6PgHTWVnps5vuQHVr6EOleWBcwdhep8TxosltldQXmbfFz4oVXvZWNimQE9IBncnqYLC7c1qcZNEZrF5X_aIltkLIx-bUEaaRvN2m2SfLWqLbgF_9vtom",
+//                listOf(NotificationType.OUTGOING.toString(), NotificationType.INCOMING.toString())
+//            ).let { resp ->
+//                Assert.assertTrue(resp.token.isNotEmpty())
+//            }
+//        } catch (e: Exception) {
+//            Assert.fail()
+//        }
+//    }
 
     private suspend fun approximateFee(address: String, amount: BigDecimal): String {
         val (source, private) = generateFakeTransactionSource()
