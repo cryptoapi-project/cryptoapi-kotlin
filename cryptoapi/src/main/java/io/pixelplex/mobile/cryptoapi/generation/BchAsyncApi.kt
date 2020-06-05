@@ -75,15 +75,16 @@ interface BchAsyncApi {
     @Get("estimate-fee")
     suspend fun estimateFee(): String
 
-    @Post("push-notifications/addresses/{addresses}/balance")
+    @Post("push-notifications/addresses/{addresses}")
     suspend fun subscribeNotifications(
         @Path("addresses") addresses: List<String>,
         @Body body: FirebaseToken
     ): NotificationResponse
 
-    @Delete("push-notifications/addresses/{addresses}/balance")
+    @Delete("push-notifications/addresses/{addresses}")
     suspend fun unsubscribeNotifications(
         @Path("addresses") addresses: List<String>,
-        @Query("firebase_token") firebaseToken: String
+        @Query("firebase_token") token: String,
+        @Query("types") types: List<String>
     ): NotificationResponse
 }
