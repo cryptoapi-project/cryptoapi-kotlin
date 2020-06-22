@@ -382,6 +382,7 @@ class AsyncApiTest {
                 Assert.fail()
             }
         } catch (e: Exception) {
+            Assert.assertTrue(true)
         }
     }
 
