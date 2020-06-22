@@ -126,7 +126,7 @@ class AsyncApiTest {
     fun getEthTransactionsExternal() = runBlocking {
         try {
             apiClient.getExternalTransactions(
-                TestValues.ethTransactionExternal.typedParams.getList()
+                TestValues.ethTransactionExternal2.typedParams.getList()
             ).let { resp ->
                 Assert.assertNotNull(resp)
             }
@@ -298,18 +298,6 @@ class AsyncApiTest {
             }
         } catch (e: Exception) {
             Assert.fail()
-        }
-    }
-
-    @Test
-    fun tokensBalancesFail() = runBlocking {
-        try {
-            apiClient.getTokenBalances(
-                listOf(TestValues.ethTokensBalancesBody.address)
-            ).let { resp ->
-                Assert.assertTrue(resp.items.size == 0)
-            }
-        } catch (e: Exception) {
         }
     }
 

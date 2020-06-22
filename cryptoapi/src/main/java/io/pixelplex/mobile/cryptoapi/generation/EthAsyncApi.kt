@@ -53,6 +53,7 @@ interface EthAsyncApi {
     @Get("addresses/{addresses}/transactions")
     suspend fun getExternalTransactions(
         @Path("addresses") addresses: List<String>,
+        @Query("pending") pending: PendingType = PendingType.INCLUDE,
         @Query("skip") skip: Int = 0,
         @Query("limit") limit: Int = DEFAULT_PAGE_SIZE
     ): EthTransactionExternal
