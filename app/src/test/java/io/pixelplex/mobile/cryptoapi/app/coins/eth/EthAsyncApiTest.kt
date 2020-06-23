@@ -3,6 +3,7 @@ package io.pixelplex.mobile.cryptoapi.app.coins.eth
 import io.pixelplex.mobile.cryptoapi.CryptoApiFramework
 import io.pixelplex.mobile.cryptoapi.app.BuildConfig
 import io.pixelplex.mobile.cryptoapi.core.CryptoApi
+import io.pixelplex.mobile.cryptoapi.model.data.push.EthTokenFirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationType
 import io.pixelplex.mobile.cryptoapi.model.data.push.convertNotificationTypes
@@ -410,6 +411,44 @@ class AsyncApiTest {
 //            apiClient.unsubscribeNotifications(
 //                listOf(TestValues.ETH_ADDRESS_1),
 //                "fJeptHhFubg:APA91bFLeyoCHJ-uRBMcL-S6PgHTWVnps5vuQHVr6EOleWBcwdhep8TxosltldQXmbfFz4oVXvZWNimQE9IBncnqYLC7c1qcZNEZrF5X_aIltkLIx-bUEaaRvN2m2SfLWqLbgF_9vtom",
+//                listOf(NotificationType.OUTGOING.toString(), NotificationType.INCOMING.toString())
+//            ).let { resp ->
+//                Assert.assertTrue(resp.token.isNotEmpty())
+//            }
+//        } catch (e: Exception) {
+//            Assert.fail()
+//        }
+//    }
+
+// TODO: uncomment and change tokens run the tests below to test ETH token subscribe
+//    @Test
+//    fun subscribe() = runBlocking {
+//        try {
+//            apiClient.subscribeTokenNotifications(
+//                listOf("0x13e879e897a0c4657a0096fd22542613259a14e8"),
+//                EthTokenFirebaseToken(
+//                    token = "d2IMYG9FRPyLnTrq2VS3JY:APA91bHe7fp6PEbZ16LFfDXk3F6Zo4V2M7rzL5gwiP7-xxTv2Ed35lRHzDFhCtzdAqqqaZooCa66dNa4YcC6kpd04dzDdhHThTaYupjcv1FStTRW0H3iosh3YEfOtH6gdNO3iA_XNsEj",
+//                    typesParam = convertNotificationTypes(
+//                        NotificationType.OUTGOING,
+//                        NotificationType.INCOMING
+//                    ),
+//                    tokenAddress = "0x2fbdf70bbfc329a6b6bd6a83d83918127c9c0f45"
+//                )
+//            ).let { resp ->
+//                Assert.assertTrue(resp.token.isNotEmpty())
+//            }
+//        } catch (e: Exception) {
+//            Assert.fail()
+//        }
+//    }
+//
+//    @Test
+//    fun unsubscribe() = runBlocking {
+//        try {
+//            apiClient.unsubscribeTokenNotifications(
+//                listOf("0x13e879e897a0c4657a0096fd22542613259a14e8"),
+//                "d2IMYG9FRPyLnTrq2VS3JY:APA91bHe7fp6PEbZ16LFfDXk3F6Zo4V2M7rzL5gwiP7-xxTv2Ed35lRHzDFhCtzdAqqqaZooCa66dNa4YcC6kpd04dzDdhHThTaYupjcv1FStTRW0H3iosh3YEfOtH6gdNO3iA_XNsEj",
+//                "0x2fbdf70bbfc329a6b6bd6a83d83918127c9c0f45",
 //                listOf(NotificationType.OUTGOING.toString(), NotificationType.INCOMING.toString())
 //            ).let { resp ->
 //                Assert.assertTrue(resp.token.isNotEmpty())
