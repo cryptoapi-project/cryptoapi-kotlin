@@ -6,6 +6,7 @@ import io.pixelplex.mobile.cryptoapi.model.data.push.EthTokenFirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationResponse
 import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationType
+import java.math.BigInteger
 
 @Coin("eth")
 interface EthAsyncApi {
@@ -69,7 +70,8 @@ interface EthAsyncApi {
         @Query("from") from: String,
         @Query("to") to: String,
         @Query("skip") skip: Int = 0,
-        @Query("limit") limit: Int = DEFAULT_PAGE_SIZE
+        @Query("limit") limit: Int = DEFAULT_PAGE_SIZE,
+        @Query("pending") pending: PendingType = PendingType.INCLUDE
     ): EthTransactions
 
     @Get("transactions/{hash}")
