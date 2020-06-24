@@ -6,6 +6,7 @@ import io.pixelplex.mobile.cryptoapi.model.data.push.EthTokenFirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationResponse
 import io.pixelplex.mobile.cryptoapi.model.exception.ApiException
+import java.math.BigInteger
 
 @Coin("eth")
 interface EthApi {
@@ -89,6 +90,7 @@ interface EthApi {
         @Query("to") to: String,
         @Query("skip") skip: Int = 0,
         @Query("limit") limit: Int = DEFAULT_PAGE_SIZE,
+        @Query("pending") pending: PendingType = PendingType.INCLUDE,
         @CallbackSuccess onSuccess: (EthTransactions) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
