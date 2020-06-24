@@ -2,6 +2,7 @@ package io.pixelplex.mobile.cryptoapi.model.data.eth
 
 import com.google.gson.annotations.SerializedName
 import io.pixelplex.mobile.cryptoapi.model.common.CryptoApiResponse
+import java.util.*
 
 /**
  * Implementation of [CryptoApiResponse]
@@ -37,7 +38,7 @@ data class EthTransactionExternalItem(
     val blockHash: String,
 
     @SerializedName("block_number")
-    val blockNumber: Long,
+    val blockNumber: Long?,
 
     @SerializedName("utc")
     val utc: String,
@@ -78,3 +79,15 @@ data class EthTransactionExternalItem(
     @SerializedName("r")
     val r: String
 )
+
+enum class PendingType(val value: String) {
+    INCLUDE("include"),
+
+    EXCLUDE("exclude"),
+
+    ONLY("only");
+
+    override fun toString(): String {
+        return super.toString().toLowerCase(Locale.ROOT)
+    }
+}

@@ -11,6 +11,18 @@ data class FirebaseToken (
     val typesParam: String? = null
 )
 
+data class EthTokenFirebaseToken (
+    @SerializedName("firebase_token")
+    val token: String,
+
+    @SerializedName("token_address")
+    val tokenAddress: String,
+
+    @SerializedName("types")
+    val typesParam: String? = null
+)
+
+
 enum class NotificationType {
     @SerializedName("outgoing")
     OUTGOING,

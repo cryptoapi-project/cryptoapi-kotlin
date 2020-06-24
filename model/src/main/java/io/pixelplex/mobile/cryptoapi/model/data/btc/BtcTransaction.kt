@@ -6,7 +6,7 @@ import java.math.BigInteger
 data class BtcTransaction(
 
     @SerializedName("block_height")
-    val blockHeight: BigInteger,
+    val blockHeight: BigInteger?,
 
     @SerializedName("block_hash")
     val blockHash: String,

@@ -2,6 +2,7 @@ package io.pixelplex.mobile.cryptoapi.generation
 
 import io.pixelplex.mobile.cryptoapi.annotation.*
 import io.pixelplex.mobile.cryptoapi.model.data.eth.*
+import io.pixelplex.mobile.cryptoapi.model.data.push.EthTokenFirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationResponse
 import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationType
@@ -53,6 +54,7 @@ interface EthAsyncApi {
     @Get("addresses/{addresses}/transactions")
     suspend fun getExternalTransactions(
         @Path("addresses") addresses: List<String>,
+        @Query("pending") pending: PendingType = PendingType.INCLUDE,
         @Query("skip") skip: Int = 0,
         @Query("limit") limit: Int = DEFAULT_PAGE_SIZE
     ): EthTransactionExternal
@@ -146,6 +148,20 @@ interface EthAsyncApi {
     suspend fun unsubscribeNotifications(
         @Path("addresses") addresses: List<String>,
         @Query("firebase_token") token: String,
+        @Query("types") types: List<String>
+    ): NotificationResponse
+
+    @Post("push-notifications/addresses/{addresses}/tokens")
+    suspend fun subscribeTokenNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Body body: EthTokenFirebaseToken
+    ): NotificationResponse
+
+    @Delete("push-notifications/addresses/{addresses}/tokens")
+    suspend fun unsubscribeTokenNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Query("firebase_token") token: String,
+        @Query("token_address") tokenAddress: String,
         @Query("types") types: List<String>
     ): NotificationResponse
 }

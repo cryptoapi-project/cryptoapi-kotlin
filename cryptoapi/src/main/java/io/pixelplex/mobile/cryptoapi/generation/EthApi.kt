@@ -2,6 +2,7 @@ package io.pixelplex.mobile.cryptoapi.generation
 
 import io.pixelplex.mobile.cryptoapi.annotation.*
 import io.pixelplex.mobile.cryptoapi.model.data.eth.*
+import io.pixelplex.mobile.cryptoapi.model.data.push.EthTokenFirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.FirebaseToken
 import io.pixelplex.mobile.cryptoapi.model.data.push.NotificationResponse
 import io.pixelplex.mobile.cryptoapi.model.exception.ApiException
@@ -68,6 +69,7 @@ interface EthApi {
     @Get("addresses/{addresses}/transactions")
     fun getExternalTransactions(
         @Path("addresses") addresses: List<String>,
+        @Query("pending") pending: PendingType = PendingType.INCLUDE,
         @Query("skip") skip: Int = 0,
         @Query("limit") limit: Int = DEFAULT_PAGE_SIZE,
         @CallbackSuccess onSuccess: (EthTransactionExternal) -> Unit,
@@ -189,6 +191,24 @@ interface EthApi {
     fun unsubscribeNotifications(
         @Path("addresses") addresses: List<String>,
         @Query("firebase_token") token: String,
+        @Query("types") types: List<String>,
+        @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
+        @CallbackError onError: (ApiException) -> Unit
+    )
+
+    @Post("push-notifications/addresses/{addresses}/tokens")
+    suspend fun subscribeTokenNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Body body: EthTokenFirebaseToken,
+        @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
+        @CallbackError onError: (ApiException) -> Unit
+    )
+
+    @Delete("push-notifications/addresses/{addresses}/tokens")
+    suspend fun unsubscribeTokenNotifications(
+        @Path("addresses") addresses: List<String>,
+        @Query("firebase_token") token: String,
+        @Query("token_address") tokenAddress: String,
         @Query("types") types: List<String>,
         @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
         @CallbackError onError: (ApiException) -> Unit

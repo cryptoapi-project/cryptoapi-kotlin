@@ -30,6 +30,10 @@ object TestValues {
             ETH_ADDRESS_1,
             ETH_ADDRESS_2
         )
+    val ethAddresses2 =
+        EthTypedParams(
+            "0x033f6b3147eba5ab0913409d46ac3082fcdb5cf8"
+        )
     val badEthAddresses =
         EthTypedParams(
             ETH_ADDRESS_1,
@@ -57,6 +61,13 @@ object TestValues {
             typedParams = ethAddresses,
             skip = 0,
             limit = 1
+        )
+
+    val ethTransactionExternal2 =
+        EthTransactionExternalCall(
+            typedParams = ethAddresses2,
+            skip = 0,
+            limit = 0
         )
 
     val badEthTransactionExternal =

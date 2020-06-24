@@ -62,9 +62,7 @@ interface BchAsyncApi {
     @Get("addresses/{addresses}/outputs")
     suspend fun getOutputs(
         @Query("status") status: BtcOutputStatus,
-        @Path("addresses") addresses: List<String>,
-        @Query("skip") skip: Int = 0,
-        @Query("limit") limit: Int = MAX_PAGE_SIZE
+        @Path("addresses") addresses: List<String>
     ): List<BtcOutput>
 
     @Get("addresses/{addresses}")
