@@ -68,7 +68,7 @@ data class EthTransactionExternalItem(
     val transactionIndex: Int,
 
     @SerializedName("value")
-    val value: Long,
+    val value: String,
 
     @SerializedName("v")
     val v: String,
