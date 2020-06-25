@@ -199,7 +199,7 @@ interface EthApi {
     )
 
     @Post("push-notifications/addresses/{addresses}/tokens")
-    suspend fun subscribeTokenNotifications(
+    fun subscribeTokenNotifications(
         @Path("addresses") addresses: List<String>,
         @Body body: EthTokenFirebaseToken,
         @CallbackSuccess onSuccess: (NotificationResponse) -> Unit,
@@ -207,7 +207,7 @@ interface EthApi {
     )
 
     @Delete("push-notifications/addresses/{addresses}/tokens")
-    suspend fun unsubscribeTokenNotifications(
+    fun unsubscribeTokenNotifications(
         @Path("addresses") addresses: List<String>,
         @Query("firebase_token") token: String,
         @Query("token_address") tokenAddress: String,
