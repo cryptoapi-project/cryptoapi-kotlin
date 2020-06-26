@@ -34,6 +34,7 @@ interface EthApi {
         @Query("positive") positive: Boolean,
         @Query("skip") skip: Int = 0,
         @Query("limit") limit: Int = DEFAULT_PAGE_SIZE,
+        @Query("pending") pending: PendingType = PendingType.INCLUDE,
         @CallbackSuccess onSuccess: (EthTransfer) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )

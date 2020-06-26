@@ -23,12 +23,13 @@ interface EthAsyncApi {
         @Path("addresses") addresses: List<String>
     ): List<EthBalance>
 
-    @Get("addresses/{addresses}/transfers/")
+    @Get("addresses/{addresses}/transfers")
     suspend fun getTransfers(
         @Path("addresses") addresses: List<String>,
         @Query("positive") positive: Boolean,
         @Query("skip") skip: Int = 0,
-        @Query("limit") limit: Int = DEFAULT_PAGE_SIZE
+        @Query("limit") limit: Int = DEFAULT_PAGE_SIZE,
+        @Query("pending") pending: PendingType = PendingType.INCLUDE
     ): EthTransfer
 
     @Post("estimate-gas")
