@@ -225,19 +225,19 @@ class AsyncApiTest {
         }
     }
 
-    @Test
-    fun callEthContract() = runBlocking {
-        try {
-            apiClient.callContract(
-                TestValues.CONTRACT_ADDRESS,
-                TestValues.contractCallBody
-            ).let { resp ->
-                Assert.assertTrue(resp.isNotEmpty())
-            }
-        } catch (e: Exception) {
-            Assert.fail()
-        }
-    }
+//    @Test
+//    fun callEthContract() = runBlocking {
+//        try {
+//            apiClient.callContract(
+//                TestValues.CONTRACT_ADDRESS,
+//                TestValues.contractCallBody
+//            ).let { resp ->
+//                Assert.assertTrue(resp.isNotEmpty())
+//            }
+//        } catch (e: Exception) {
+//            Assert.fail()
+//        }
+//    }
 
     @Test
     fun callEthContractFail() = runBlocking {
