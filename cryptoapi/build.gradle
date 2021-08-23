@@ -6,7 +6,7 @@ apply plugin: 'org.jetbrains.dokka'
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
-    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+    compileSdkVersion androidTargetSdkVersion
 
     defaultConfig {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
@@ -23,6 +23,13 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/java'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    kotlinOptions {
+        jvmTarget = '1.6' // Java 7 not supported by kotlinOptions jvmTarget
     }
 }
 
@@ -43,4 +50,4 @@ configurations {
     detekt
 }
 
-apply from: "$rootDir/config/publish.gradle"
+apply from: "${rootDir}/config/publish-module.gradle"
