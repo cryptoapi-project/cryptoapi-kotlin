@@ -6,24 +6,28 @@ apply from: 'config/dependencies.gradle'
 // Contains all information about base library configuration
 apply from: 'config/configuration.gradle'
 
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
+
 buildscript {
 
     ext.kotlin_version = '1.3.61'
 
     ext.maven_version = '1.4.1'
-    ext.bintray_version = '1.8.4'
     ext.dokka_version = '0.10.1'
+
+    ext.gradle_nexus_version = '1.1.0'
 
     repositories {
         google()
-        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 
     dependencies {
+        classpath "io.github.gradle-nexus:publish-plugin:$gradle_nexus_version"
         classpath 'com.android.tools.build:gradle:3.6.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.github.dcendents:android-maven-gradle-plugin:$maven_version"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintray_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -34,3 +38,5 @@ buildscript {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+apply from: "$rootDir/config/publish-root.gradle"

@@ -52,7 +52,7 @@ maven_publishing:
     - ./gradlew clean
     - ./gradlew :cryptoapi:compileReleaseSources -PlibraryVersion=$CI_COMMIT_TAG
     - ./gradlew :model:build :cryptoapi:build -no-parallel -PlibraryVersion=$CI_COMMIT_TAG
-    - ./gradlew bintrayUpload -PbintrayUser=$bintrayUserVar -PbintrayApiKey=$bintrayApiKeyVar -PlibraryVersion=$CI_COMMIT_TAG
+    - ./gradlew publishReleasePublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository -no-parallel -PlibraryVersion=$CI_COMMIT_TAG
   when: manual
   only:
     - tags

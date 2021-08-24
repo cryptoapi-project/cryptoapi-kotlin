@@ -1,0 +1,124 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'org.jetbrains.dokka'
+
+ext {
+    publishedGroupId = 'io.apikey'
+    libraryName = 'cryptoapi'
+    artifact = POM_ARTIFACT_ID
+    packagingType = POM_PACKAGING
+    libraryDescription = 'Framework for working with CryptoAPI'
+
+    gitUrl = 'https://github.com/cryptoapi-project/cryptoapi-kotlin'
+    siteUrl = 'https://apikey.io'
+
+    licenseName = 'MIT LICENSE'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+Properties properties = new Properties()
+
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+
+// Library version
+def libraryVersion = properties.getProperty("libraryVersion")
+if (libraryVersion == null && project.hasProperty("libraryVersion")) {
+    libraryVersion = project.findProperty("libraryVersion")
+
+    if (libraryVersion != null){
+        libraryVersion = libraryVersion.replace("\"", "")
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from "$projectDir/src/main/java"
+}
+
+task javadocJar(type: Jar, dependsOn: dokka) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles framework docs with Dokka"
+    classifier = "javadoc"
+    from(dokka)
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+group = publishedGroupId
+version = libraryVersion
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+
+                groupId publishedGroupId
+                artifactId artifact
+
+                if (project.plugins.findPlugin("com.android.library")) {
+                    from components.release
+                } else {
+                    from components.java
+                }
+
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    name = libraryName
+                    description = libraryDescription
+                    url = siteUrl
+                    packaging = packagingType
+
+                    licenses {
+                        license {
+                            name = licenseName
+                            url = licenseUrl
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'pixelplex'
+                            name = 'pixelplex inc'
+                            email = 'info@pixelplex.io'
+                        }
+                    }
+                    scm {
+                        connection = gitUrl
+                        developerConnection = gitUrl
+                        url = siteUrl
+                    }
+                }
+                pom.withXml {
+                    def dependenciesNode = asNode().getAt('dependencies')[0] ?: asNode().appendNode('dependencies')
+                    // Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    configurations.implementation.allDependencies.each {
+                        // Ensure dependencies such as fileTree are not included.
+                        if (it.name != 'unspecified') {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            rootProject.ext["signing.keyId"],
+            rootProject.ext["signing.key"],
+            rootProject.ext["signing.password"],
+    )
+    sign publishing.publications
+}
