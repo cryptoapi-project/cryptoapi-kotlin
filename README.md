@@ -1,12 +1,23 @@
-[ ![Download](https://api.bintray.com/packages/pixelplex/mobile/cryptoapi-stable/images/download.svg) ](https://bintray.com/pixelplex/mobile/cryptoapi-stable/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/io.apikey/cryptoapi.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.apikey%22%20AND%20a:%22cryptoapi%22)
+
 # CryptoApiLibrary
 
 CryptoApiLibrary is Kotlin API Wrapper framework. Designed to receive information about transactions, balances and send transactions.
 
 ## Install
+```
+<dependency>
+  <groupId>io.apikey</groupId>
+  <artifactId>cryptoapi</artifactId>
+  <version><version></version>
+  <type>aar</type>
+</dependency>
+```
+
+or Gradle:
 
 ```
-implementation 'io.apikey.cryptoapi:cryptoapi:0.4.8'
+implementation 'io.apikey:cryptoapi:<version>'
 ```
 ## Setup
 
