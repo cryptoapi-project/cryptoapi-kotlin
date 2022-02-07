@@ -60,5 +60,8 @@ data class EthTransferItem(
     val internal: Boolean,
 
     @SerializedName("input")
-    val input: String
+    val input: String,
+
+    @SerializedName("status")
+    val status: Boolean?
 )
