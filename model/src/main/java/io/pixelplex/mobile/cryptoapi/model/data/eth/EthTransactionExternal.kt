@@ -77,7 +77,10 @@ data class EthTransactionExternalItem(
     val s: String,
 
     @SerializedName("r")
-    val r: String
+    val r: String,
+
+    @SerializedName("status")
+    val status: Boolean?
 )
 
 enum class PendingType(val value: String) {
