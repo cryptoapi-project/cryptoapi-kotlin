@@ -57,7 +57,7 @@ class BchAsyncApiTest {
     fun getTransaction() = runBlocking {
         try {
             val resp = apiClient.getTransaction(TestValues.TRANSACTION_HASH)
-            Assert.assertTrue(resp.blockHash.isNotEmpty())
+            Assert.assertTrue(!resp.blockHash.isNullOrEmpty())
         } catch (e: Exception) {
             Assert.fail()
         }
