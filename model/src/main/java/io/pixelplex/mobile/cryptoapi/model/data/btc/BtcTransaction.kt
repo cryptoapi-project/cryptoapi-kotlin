@@ -9,10 +9,10 @@ data class BtcTransaction(
     val blockHeight: BigInteger?,
 
     @SerializedName("block_hash")
-    val blockHash: String,
+    val blockHash: String?,
 
     @SerializedName("block_time")
-    val blockTime: String,
+    val blockTime: String?,
 
     @SerializedName("mempool_time")
     val memPoolTime: String?,
