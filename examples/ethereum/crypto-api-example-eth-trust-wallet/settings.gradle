@@ -1,0 +1,25 @@
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+    google()
+    mavenCentral()
+  }
+}
+
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+  repositories {
+    google()
+    mavenCentral()
+    maven {
+      url = uri("https://maven.pkg.github.com/trustwallet/wallet-core")
+      credentials {
+        username = "<GITHUB_USER_NAME>"
+        password = "<GITHUB_USER_TOKEN>"
+      }
+    }
+  }
+}
+
+rootProject.name = "crypto-api-example-eth-trust-wallet"
+include ':app'
