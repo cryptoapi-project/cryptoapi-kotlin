@@ -79,6 +79,8 @@ interface LtcApi {
     fun getOutputs(
         @Query("status") status: String,
         @Path("addresses") addresses: List<String>,
+        @Query("skip") skip: Int = 0,
+        @Query("limit") limit: Int = DEFAULT_PAGE_SIZE,
         @CallbackSuccess onSuccess: (List<BtcOutput>) -> Unit,
         @CallbackError onError: (ApiException) -> Unit
     )
